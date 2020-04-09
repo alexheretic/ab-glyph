@@ -1,0 +1,17 @@
+[package]
+name = "ab_glyph_rasterizer"
+version = "0.1.0"
+authors = ["Alex Butler <alexheretic@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+# no_std float stuff
+libm = { version = "0.2.1", optional = true }
+
+[dev-dependencies]
+# don't add any, instead use ./dev
+
+[features]
+default = ["std"]
+# Activates usage of std.
+std = []
