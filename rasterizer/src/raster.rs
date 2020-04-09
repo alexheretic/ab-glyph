@@ -128,23 +128,17 @@ impl Rasterizer {
         let flatness_squared = longlen * longlen - shortlen * shortlen;
 
         if n < MAX_RECURSION_DEPTH && flatness_squared > OBJSPACE_FLATNESS_SQUARED {
-            let x01 = (p0.x + p1.x) / 2.0;
-            let y01 = (p0.y + p1.y) / 2.0;
-            let x12 = (p1.x + p2.x) / 2.0;
-            let y12 = (p1.y + p2.y) / 2.0;
-            let x23 = (p2.x + p3.x) / 2.0;
-            let y23 = (p2.y + p3.y) / 2.0;
+            let p01 = lerp(0.5, p0, p1);
+            let p12 = lerp(0.5, p1, p2);
+            let p23 = lerp(0.5, p2, p3);
 
-            let xa = (x01 + x12) / 2.0;
-            let ya = (y01 + y12) / 2.0;
-            let xb = (x12 + x23) / 2.0;
-            let yb = (y12 + y23) / 2.0;
+            let pa = lerp(0.5, p01, p12);
+            let pb = lerp(0.5, p12, p23);
 
-            let mx = (xa + xb) / 2.0;
-            let my = (ya + yb) / 2.0;
+            let mp = lerp(0.5, pa, pb);
 
-            self.tesselate_cubic(p0, point(x01, y01), point(xa, ya), point(mx, my), n + 1);
-            self.tesselate_cubic(point(mx, my), point(xb, yb), point(x23, y23), p3, n + 1);
+            self.tesselate_cubic(p0, p01, pa, mp, n + 1);
+            self.tesselate_cubic(mp, pb, p23, p3, n + 1);
         } else {
             self.draw_line(p0, p3);
         }
