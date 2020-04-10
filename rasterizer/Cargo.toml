@@ -3,6 +3,11 @@ name = "ab_glyph_rasterizer"
 version = "0.1.0"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2018"
+description = "Coverage rasterization for lines, quadratic & cubic beziers"
+repository = "https://github.com/alexheretic/gfx-glyph"
+keywords = ["text", "ttf", "otf", "font"]
+license = "Apache-2.0"
+readme="README.md"
 
 [dependencies]
 # no_std float stuff

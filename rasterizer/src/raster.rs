@@ -15,6 +15,12 @@ pub struct Rasterizer {
 }
 
 impl Rasterizer {
+    /// Allocates a new rasterizer that can draw onto a `width` x `height` alpha grid.
+    ///
+    /// ```
+    /// use ab_glyph_rasterizer::Rasterizer;
+    /// let mut rasterizer = Rasterizer::new(14, 38);
+    /// ```
     pub fn new(width: usize, height: usize) -> Self {
         Self {
             width,
@@ -23,10 +29,24 @@ impl Rasterizer {
         }
     }
 
+    /// Returns the dimensions the rasterizer was built to draw to.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::*;
+    /// let rasterizer = Rasterizer::new(9, 8);
+    /// assert_eq!((9, 8), rasterizer.dimensions());
+    /// ```
     pub fn dimensions(&self) -> (usize, usize) {
         (self.width, self.height)
     }
 
+    /// Adds a straight line from `p0` to `p1` to the outline.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::*;
+    /// # let mut rasterizer = Rasterizer::new(9, 8);
+    /// rasterizer.draw_line(point(0.0, 0.48), point(1.22, 0.48));
+    /// ```
     pub fn draw_line(&mut self, p0: Point, p1: Point) {
         if (p0.y - p1.y).abs() < core::f32::EPSILON {
             return;
@@ -80,6 +100,13 @@ impl Rasterizer {
         }
     }
 
+    /// Adds a quadratic Bézier curve from `p0` to `p2` to the outline using `p1` as the control.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::*;
+    /// # let mut rasterizer = Rasterizer::new(14, 38);
+    /// rasterizer.draw_quad(point(6.2, 34.5), point(7.2, 34.5), point(9.2, 34.0));
+    /// ```
     pub fn draw_quad(&mut self, p0: Point, p1: Point, p2: Point) {
         let devx = p0.x - 2.0 * p1.x + p2.x;
         let devy = p0.y - 2.0 * p1.y + p2.y;
@@ -102,6 +129,19 @@ impl Rasterizer {
         self.draw_line(p, p2);
     }
 
+    /// Adds a cubic Bézier curve from `p0` to `p3` to the outline using `p1` as the control
+    /// at the beginning of the curve and `p2` at the end of the curve.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::*;
+    /// # let mut rasterizer = Rasterizer::new(12, 20);
+    /// rasterizer.draw_cubic(
+    ///     point(10.3, 16.4),
+    ///     point(8.6, 16.9),
+    ///     point(7.7, 16.5),
+    ///     point(8.2, 15.2),
+    /// );
+    /// ```
     pub fn draw_cubic(&mut self, p0: Point, p1: Point, p2: Point, p3: Point) {
         self.tesselate_cubic(p0, p1, p2, p3, 0);
     }
@@ -144,6 +184,17 @@ impl Rasterizer {
         }
     }
 
+    /// Run a callback for each pixel index & alpha, with indices in `0..width * height`.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::*;
+    /// # let (width, height) = (1, 1);
+    /// # let mut rasterizer = Rasterizer::new(width, height);
+    /// let mut pixels = vec![0u8; width * height];
+    /// rasterizer.for_each_pixel(|index, alpha| {
+    ///     pixels[index] = (alpha * 255.0).round() as u8;
+    /// });
+    /// ```
     pub fn for_each_pixel<O: FnMut(usize, f32)>(&self, mut px_fn: O) {
         let mut acc = 0.0;
         self.a[..self.width * self.height]
@@ -155,12 +206,31 @@ impl Rasterizer {
             });
     }
 
+    /// Run a callback for each pixel x position, y position & alpha.
+    ///
+    /// Convenience wrapper for `for_each_pixel`.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::*;
+    /// # let (width, height) = (1, 1);
+    /// # let mut rasterizer = Rasterizer::new(width, height);
+    /// # struct Img;
+    /// # impl Img { fn set_pixel(&self, x: u32, y: u32, a: u8) {} }
+    /// # let image = Img;
+    /// rasterizer.for_each_pixel_2d(|x, y, alpha| {
+    ///     image.set_pixel(x, y, (alpha * 255.0).round() as u8);
+    /// });
+    /// ```
     pub fn for_each_pixel_2d<O: FnMut(u32, u32, f32)>(&self, mut px_fn: O) {
         let width32 = self.width as u32;
         self.for_each_pixel(|idx, alpha| px_fn(idx as u32 % width32, idx as u32 / width32, alpha));
     }
 }
 
+/// ```
+/// let rasterizer = ab_glyph_rasterizer::Rasterizer::new(3, 4);
+/// assert_eq!(&format!("{:?}", rasterizer), "Rasterizer { width: 3, height: 4 }");
+/// ```
 impl core::fmt::Debug for Rasterizer {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("Rasterizer")

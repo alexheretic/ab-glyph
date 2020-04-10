@@ -21,8 +21,11 @@ macro_rules! bench_draw {
             });
         });
         // ensure the byte array has changed (and not discarded by optimization?).
-        assert_ne!(&target as &[u8], &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]);
-    }}
+        assert_ne!(
+            &target as &[u8],
+            &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]
+        );
+    }};
 }
 
 /// Calls draw_* outline functions without timing the `for_each_pixel` (accumulation).
@@ -45,8 +48,11 @@ macro_rules! bench_draw_outline {
         // draw into the byte array
         rasterizer.for_each_pixel(|idx, alpha| target[idx] = (alpha * 255.0) as u8);
         // ensure the byte array has changed (and not discarded by optimization?).
-        assert_ne!(&target as &[u8], &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]);
-    }}
+        assert_ne!(
+            &target as &[u8],
+            &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]
+        );
+    }};
 }
 
 /// Calls `for_each_pixel` on a pre-outlined rasterizer.
@@ -68,8 +74,11 @@ macro_rules! bench_accumulate {
             });
         });
         // ensure the byte array has changed (and not discarded by optimization?).
-        assert_ne!(&target as &[u8], &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]);
-    }}
+        assert_ne!(
+            &target as &[u8],
+            &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]
+        );
+    }};
 }
 
 fn draw_ttf_w(c: &mut Criterion) {
@@ -85,23 +94,48 @@ fn accumulate_ttf_w(c: &mut Criterion) {
 }
 
 fn draw_ttf_tailed_e(c: &mut Criterion) {
-    bench_draw!(c, "draw_ttf_tailed_e", dev::rasterize_ttf_tailed_e, (98, 158));
+    bench_draw!(
+        c,
+        "draw_ttf_tailed_e",
+        dev::rasterize_ttf_tailed_e,
+        (98, 158)
+    );
 }
 
 fn draw_otf_tailed_e(c: &mut Criterion) {
-    bench_draw!(c, "draw_otf_tailed_e", dev::rasterize_otf_tailed_e, (106, 183));
+    bench_draw!(
+        c,
+        "draw_otf_tailed_e",
+        dev::rasterize_otf_tailed_e,
+        (106, 183)
+    );
 }
 
 fn draw_ttf_biohazard(c: &mut Criterion) {
-    bench_draw!(c, "draw_ttf_biohazard", dev::rasterize_ttf_biohazard, (294, 269));
+    bench_draw!(
+        c,
+        "draw_ttf_biohazard",
+        dev::rasterize_ttf_biohazard,
+        (294, 269)
+    );
 }
 
 fn draw_outline_ttf_biohazard(c: &mut Criterion) {
-    bench_draw_outline!(c, "draw_outline_ttf_biohazard", dev::rasterize_ttf_biohazard, (294, 269));
+    bench_draw_outline!(
+        c,
+        "draw_outline_ttf_biohazard",
+        dev::rasterize_ttf_biohazard,
+        (294, 269)
+    );
 }
 
 fn accumulate_ttf_biohazard(c: &mut Criterion) {
-    bench_accumulate!(c, "accumulate_ttf_biohazard", dev::rasterize_ttf_biohazard, (294, 269));
+    bench_accumulate!(
+        c,
+        "accumulate_ttf_biohazard",
+        dev::rasterize_ttf_biohazard,
+        (294, 269)
+    );
 }
 
 criterion_group!(

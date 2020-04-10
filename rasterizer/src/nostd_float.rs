@@ -1,3 +1,4 @@
+/// Basic required float operations.
 pub(crate) trait FloatExt {
     fn floor(self) -> Self;
     fn ceil(self) -> Self;
