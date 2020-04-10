@@ -1,4 +1,4 @@
-#[derive(Copy, Clone, Debug, PartialOrd, PartialEq)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
