@@ -160,3 +160,12 @@ impl Rasterizer {
         self.for_each_pixel(|idx, alpha| px_fn(idx as u32 % width32, idx as u32 / width32, alpha));
     }
 }
+
+impl core::fmt::Debug for Rasterizer {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        f.debug_struct("Rasterizer")
+            .field("width", &self.width)
+            .field("height", &self.height)
+            .finish()
+    }
+}
