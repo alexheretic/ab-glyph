@@ -1,4 +1,5 @@
 use criterion::{criterion_group, criterion_main, Criterion};
+use std::time::Duration;
 
 /// Runs a single rasterization function benchmark.
 /// Calls draw_* outline function then `for_each_pixel` into a byte array.
@@ -104,15 +105,20 @@ fn accumulate_ttf_biohazard(c: &mut Criterion) {
 }
 
 criterion_group!(
-    draw_benches,
-    draw_ttf_w,
-    draw_outline_ttf_w,
-    accumulate_ttf_w,
-    draw_ttf_tailed_e,
-    draw_otf_tailed_e,
-    draw_ttf_biohazard,
-    draw_outline_ttf_biohazard,
-    accumulate_ttf_biohazard,
+    name = draw_benches;
+    config = Criterion::default()
+        .sample_size(200)
+        .warm_up_time(Duration::from_secs(2))
+        .measurement_time(Duration::from_secs(3))
+        .noise_threshold(0.025);
+    targets = draw_ttf_w,
+        draw_outline_ttf_w,
+        accumulate_ttf_w,
+        draw_ttf_tailed_e,
+        draw_otf_tailed_e,
+        draw_ttf_biohazard,
+        draw_outline_ttf_biohazard,
+        accumulate_ttf_biohazard,
 );
 
 criterion_main!(draw_benches);
