@@ -3,6 +3,11 @@ name = "ab_glyph"
 version = "0.0.0"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2018"
+description = "Glyph stuff"
+repository = "https://github.com/alexheretic/ab-glyph"
+# keywords = ["text", "ttf", "otf", "font"]
+license = "Apache-2.0"
+# readme="README.md"
 
 [dependencies]
 
