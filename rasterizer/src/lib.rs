@@ -26,6 +26,9 @@ extern crate alloc;
 #[cfg(all(feature = "libm", not(feature = "std")))]
 mod nostd_float;
 
+#[cfg(not(any(feature = "libm", feature = "std")))]
+compile_error!("You need to activate either the `std` or `libm` feature.");
+
 mod geometry;
 mod raster;
 
