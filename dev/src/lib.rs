@@ -168,54 +168,51 @@ pub fn rasterize_otf_tailed_e() -> Rasterizer {
     r
 }
 
-/// Draw a 300px 'ę' character from Exo-Light.ttf.
+/// Draw a 300px 'ę' character from Exo2-Light.ttf.
 #[rustfmt::skip]
 pub fn rasterize_ttf_tailed_e() -> Rasterizer {
-    let mut r = Rasterizer::new(98, 158);
-    r.draw_quad(point(94.32054, 115.80813), point(79.42213, 125.28894), point(79.42213, 135.89842));
-    r.draw_quad(point(79.42213, 135.89842), point(79.42213, 140.41309), point(84.2754, 143.57336));
-    r.draw_quad(point(84.2754, 143.57336), point(89.12867, 146.73364), point(97.02935, 146.73364));
-    r.draw_line(point(97.02935, 146.73364), point(97.02935, 156.66592));
-    r.draw_quad(point(97.02935, 156.66592), point(94.77201, 156.89165), point(91.16027, 156.89165));
-    r.draw_quad(point(91.16027, 156.89165), point(87.54853, 156.89165), point(81.9052, 154.86005));
-    r.draw_quad(point(81.9052, 154.86005), point(76.261856, 152.82845), point(72.87585, 148.08804));
-    r.draw_quad(point(72.87585, 148.08804), point(68.812645, 142.21896), point(68.812645, 136.80136));
-    r.draw_quad(point(68.812645, 136.80136), point(68.812645, 131.38374), point(73.32732, 125.62754));
-    r.draw_quad(point(73.32732, 125.62754), point(77.84199, 119.87133), point(87.54853, 115.80813));
-    r.draw_line(point(87.54853, 115.80813), point(94.32054, 115.80813));
-    r.draw_line(point(94.32054, 115.80813), point(94.32054, 115.80813));
-    r.draw_quad(point(4.1399555, 97.185104), point(0.6410837, 84.205414), point(0.6410837, 65.69526));
-    r.draw_quad(point(0.6410837, 65.69526), point(0.6410837, 47.185097), point(1.7697515, 37.591423));
-    r.draw_quad(point(1.7697515, 37.591423), point(2.8984203, 27.997742), point(5.720091, 21.22573));
-    r.draw_quad(point(5.720091, 21.22573), point(8.541761, 14.45372), point(12.1535, 10.390518));
-    r.draw_quad(point(12.1535, 10.390518), point(15.765238, 6.3273087), point(21.860046, 4.069977));
-    r.draw_quad(point(21.860046, 4.069977), point(32.01806, 0.2325058), point(50.753952, 0.2325058));
-    r.draw_quad(point(50.753952, 0.2325058), point(72.650116, 0.2325058), point(80.55079, 4.521446));
-    r.draw_quad(point(80.55079, 4.521446), point(89.12867, 9.036118), point(92.28894, 16.93679));
-    r.draw_quad(point(92.28894, 16.93679), point(96.57788, 26.869072), point(96.57788, 41.316025));
-    r.draw_quad(point(96.57788, 41.316025), point(96.57788, 55.762978), point(89.0158, 61.970654));
-    r.draw_quad(point(89.0158, 61.970654), point(81.45373, 68.17833), point(65.652374, 68.17833));
-    r.draw_line(point(65.652374, 68.17833), point(13.5079, 68.17833));
-    r.draw_quad(point(13.5079, 68.17833), point(13.5079, 99.78104), point(25.020317, 106.10158));
-    r.draw_quad(point(25.020317, 106.10158), point(30.212189, 109.26185), point(40.14447, 109.26185));
-    r.draw_quad(point(40.14447, 109.26185), point(73.55305, 109.26185), point(94.32054, 106.32732));
-    r.draw_line(point(94.32054, 106.32732), point(94.32054, 115.80813));
-    r.draw_quad(point(94.32054, 115.80813), point(71.972916, 122.12867), point(41.27314, 122.12867));
-    r.draw_quad(point(41.27314, 122.12867), point(24.794582, 122.12867), point(16.216705, 116.14673));
-    r.draw_quad(point(16.216705, 116.14673), point(7.6388264, 110.16479), point(4.1399555, 97.185104));
-    r.draw_line(point(4.1399555, 97.185104), point(4.1399555, 97.185104));
-    r.draw_line(point(13.5079, 55.537247), point(65.652374, 55.537247));
-    r.draw_quad(point(65.652374, 55.537247), point(74.455986, 55.537247), point(79.08353, 52.715576));
-    r.draw_quad(point(79.08353, 52.715576), point(83.71106, 49.893906), point(83.71106, 41.090294));
-    r.draw_quad(point(83.71106, 41.090294), point(83.71106, 32.286682), point(82.2438, 26.530472));
-    r.draw_quad(point(82.2438, 26.530472), point(80.77653, 20.774261), point(76.48759, 17.72686));
-    r.draw_quad(point(76.48759, 17.72686), point(72.19865, 14.679459), point(66.78104, 13.889389));
-    r.draw_quad(point(66.78104, 13.889389), point(61.363434, 13.099319), point(52.221222, 13.099319));
-    r.draw_quad(point(52.221222, 13.099319), point(43.079006, 13.099319), point(38.45147, 13.43792));
-    r.draw_quad(point(38.45147, 13.43792), point(33.82393, 13.77652), point(29.083523, 15.24379));
-    r.draw_quad(point(29.083523, 15.24379), point(24.343117, 16.71106), point(21.860046, 19.41986));
-    r.draw_quad(point(21.860046, 19.41986), point(19.376976, 22.12867), point(17.119638, 26.869072));
-    r.draw_quad(point(17.119638, 26.869072), point(13.5079, 34.995483), point(13.5079, 55.537247));
-    r.draw_line(point(13.5079, 55.537247), point(13.5079, 55.537247));
+    let mut r = Rasterizer::new(106, 177);
+    r.draw_quad(point(55.25, 0.75), point(81.25, 0.75), point(93.375, 10.25));
+    r.draw_quad(point(93.375, 10.25), point(105.5, 19.75), point(105.75, 38.5));
+    r.draw_quad(point(105.75, 38.5), point(106.0, 54.75), point(99.375, 63.5));
+    r.draw_quad(point(99.375, 63.5), point(92.75, 72.25), point(77.75, 72.25));
+    r.draw_line(point(77.75, 72.25), point(17.75, 72.25));
+    r.draw_quad(point(17.75, 72.25), point(18.5, 88.75), point(23.125, 97.875));
+    r.draw_quad(point(23.125, 97.875), point(27.75, 107.0), point(36.75, 110.625));
+    r.draw_quad(point(36.75, 110.625), point(45.75, 114.25), point(59.5, 114.25));
+    r.draw_quad(point(59.5, 114.25), point(70.0, 114.25), point(81.375, 113.375));
+    r.draw_quad(point(81.375, 113.375), point(92.75, 112.5), point(101.25, 111.25));
+    r.draw_line(point(101.25, 111.25), point(103.0, 122.0));
+    r.draw_quad(point(103.0, 122.0), point(97.75, 124.0), point(89.625, 125.375));
+    r.draw_quad(point(89.625, 125.375), point(81.5, 126.75), point(72.875, 127.375));
+    r.draw_quad(point(72.875, 127.375), point(64.25, 128.0), point(57.5, 128.0));
+    r.draw_quad(point(57.5, 128.0), point(37.0, 128.0), point(24.625, 121.625));
+    r.draw_quad(point(24.625, 121.625), point(12.25, 115.25), point(6.5, 101.25));
+    r.draw_quad(point(6.5, 101.25), point(0.75, 87.25), point(0.75, 64.0));
+    r.draw_quad(point(0.75, 64.0), point(0.75, 40.5), point(6.375, 26.625));
+    r.draw_quad(point(6.375, 26.625), point(12.0, 12.75), point(24.0, 6.75));
+    r.draw_quad(point(24.0, 6.75), point(36.0, 0.75), point(55.25, 0.75));
+    r.draw_line(point(55.25, 0.75), point(55.25, 0.75));
+    r.draw_quad(point(56.0, 14.5), point(42.0, 14.5), point(33.625, 18.625));
+    r.draw_quad(point(33.625, 18.625), point(25.25, 22.75), point(21.5, 32.625));
+    r.draw_quad(point(21.5, 32.625), point(17.75, 42.5), point(17.5, 59.75));
+    r.draw_line(point(17.5, 59.75), point(74.25, 59.75));
+    r.draw_quad(point(74.25, 59.75), point(83.5, 59.75), point(86.75, 53.75));
+    r.draw_quad(point(86.75, 53.75), point(90.0, 47.75), point(89.75, 38.75));
+    r.draw_quad(point(89.75, 38.75), point(89.5, 26.0), point(81.5, 20.25));
+    r.draw_quad(point(81.5, 20.25), point(73.5, 14.5), point(56.0, 14.5));
+    r.draw_line(point(56.0, 14.5), point(56.0, 14.5));
+    r.draw_line(point(95.25, 121.5), point(103.0, 122.0));
+    r.draw_quad(point(103.0, 122.0), point(97.0, 128.5), point(91.75, 135.625));
+    r.draw_quad(point(91.75, 135.625), point(86.5, 142.75), point(83.25, 151.5));
+    r.draw_quad(point(83.25, 151.5), point(79.25, 161.5), point(85.375, 164.625));
+    r.draw_quad(point(85.375, 164.625), point(91.5, 167.75), point(104.0, 163.75));
+    r.draw_line(point(104.0, 163.75), point(106.0, 170.25));
+    r.draw_quad(point(106.0, 170.25), point(91.25, 176.75), point(82.625, 175.125));
+    r.draw_quad(point(82.625, 175.125), point(74.0, 173.5), point(71.25, 167.0));
+    r.draw_quad(point(71.25, 167.0), point(68.5, 160.5), point(71.5, 151.75));
+    r.draw_quad(point(71.5, 151.75), point(73.75, 145.5), point(79.25, 137.875));
+    r.draw_quad(point(79.25, 137.875), point(84.75, 130.25), point(95.25, 121.5));
+    r.draw_line(point(95.25, 121.5), point(95.25, 121.5));
     r
 }

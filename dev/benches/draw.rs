@@ -98,7 +98,7 @@ fn draw_ttf_tailed_e(c: &mut Criterion) {
         c,
         "draw_ttf_tailed_e",
         dev::rasterize_ttf_tailed_e,
-        (98, 158)
+        (106, 177)
     );
 }
 
