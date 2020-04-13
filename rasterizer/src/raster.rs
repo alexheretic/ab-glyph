@@ -48,7 +48,7 @@ impl Rasterizer {
     /// rasterizer.draw_line(point(0.0, 0.48), point(1.22, 0.48));
     /// ```
     pub fn draw_line(&mut self, p0: Point, p1: Point) {
-        if (p0.y - p1.y).abs() < core::f32::EPSILON {
+        if (p0.y - p1.y).abs() <= core::f32::EPSILON {
             return;
         }
         let (dir, p0, p1) = if p0.y < p1.y {
