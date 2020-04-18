@@ -1,0 +1,26 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - run: rustup update stable
+    - run: rustup target add thumbv6m-none-eabi
+    - uses: actions/checkout@v2
+    - run: cargo test
+    - run: cargo test --benches
+    - name: Build no_std
+      run: (cd rasterizer && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
+
+  rustfmt:
+    runs-on: ubuntu-latest
+    steps:
+    - run: rustup update stable
+    - uses: actions/checkout@v2
+    - run: cargo fmt -- --check
