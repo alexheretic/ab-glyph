@@ -1,4 +1,6 @@
 use crate::{glyph::*, outlined::*};
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 pub(crate) struct OutlineCurveBuilder {
     h_px_factor: f32,
@@ -16,7 +18,7 @@ impl OutlineCurveBuilder {
             v_px_factor,
             last: <_>::default(),
             last_move: None,
-            outline: <_>::default(),
+            outline: Vec::new(),
         }
     }
 

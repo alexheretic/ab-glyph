@@ -1,4 +1,6 @@
 use crate::glyph::*;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 
 #[derive(Clone, Debug)]
 pub struct OutlinedGlyph {

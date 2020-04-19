@@ -1,9 +1,11 @@
 //! **ttf_parser** crate specific code.
-
 mod outliner;
 mod owned;
 
 pub use owned::*;
+
+#[cfg(all(feature = "libm-math", not(feature = "std")))]
+use crate::nostd_float::FloatExt;
 
 use crate::*;
 

@@ -96,7 +96,7 @@ pub trait ScaleFont<F: Font> {
     #[inline]
     fn as_scaled(&self, scale: PxScale) -> PxScaleFontRef<'_, F>
     where
-        Self: std::marker::Sized,
+        Self: core::marker::Sized,
     {
         PxScaleFontRef {
             font: self.font(),

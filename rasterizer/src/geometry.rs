@@ -1,3 +1,6 @@
+#[cfg(all(feature = "libm", not(feature = "std")))]
+use crate::nostd_float::FloatExt;
+
 /// An (x, y) coordinate.
 #[derive(Clone, Copy, Default, PartialEq, PartialOrd)]
 pub struct Point {

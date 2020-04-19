@@ -37,7 +37,7 @@ pub trait Font {
     #[inline]
     fn as_scaled(&self, scale: PxScale) -> PxScaleFontRef<'_, Self>
     where
-        Self: std::marker::Sized,
+        Self: core::marker::Sized,
     {
         PxScaleFontRef { font: &self, scale }
     }
@@ -45,7 +45,7 @@ pub trait Font {
     #[inline]
     fn into_scaled(self, scale: PxScale) -> PxScaleFont<Self>
     where
-        Self: std::marker::Sized,
+        Self: core::marker::Sized,
     {
         PxScaleFont { font: self, scale }
     }
