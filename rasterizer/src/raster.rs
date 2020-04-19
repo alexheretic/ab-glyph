@@ -153,18 +153,8 @@ impl Rasterizer {
         const OBJSPACE_FLATNESS_SQUARED: f32 = OBJSPACE_FLATNESS * OBJSPACE_FLATNESS;
         const MAX_RECURSION_DEPTH: u8 = 16;
 
-        let dx0 = p1.x - p0.x;
-        let dy0 = p1.y - p0.y;
-        let dx1 = p2.x - p1.x;
-        let dy1 = p2.y - p1.y;
-        let dx2 = p3.x - p2.x;
-        let dy2 = p3.y - p2.y;
-        let dx = p3.x - p0.x;
-        let dy = p3.y - p0.y;
-        let longlen = (dx0 * dx0 + dy0 * dy0).sqrt()
-            + (dx1 * dx1 + dy1 * dy1).sqrt()
-            + (dx2 * dx2 + dy2 * dy2).sqrt();
-        let shortlen = (dx * dx + dy * dy).sqrt();
+        let longlen = p0.distance_to(p1) + p1.distance_to(p2) + p2.distance_to(p3);
+        let shortlen = p0.distance_to(p3);
         let flatness_squared = longlen * longlen - shortlen * shortlen;
 
         if n < MAX_RECURSION_DEPTH && flatness_squared > OBJSPACE_FLATNESS_SQUARED {

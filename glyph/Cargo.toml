@@ -5,11 +5,18 @@ authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2018"
 description = "Glyph stuff"
 repository = "https://github.com/alexheretic/ab-glyph"
-# keywords = ["text", "ttf", "otf", "font"]
+keywords = ["text", "ttf", "otf", "font", "truetype", "opentype"]
 license = "Apache-2.0"
-# readme="README.md"
+readme="README.md"
 
 [dependencies]
+ttf-parser = { version = "0.5", default-features = false }
+ab_glyph_rasterizer = { path = "../rasterizer", default-features = false }
 
 [dev-dependencies]
 # don't add any, instead use ./dev
+
+[features]
+default = ["std"]
+# Activates usage of std.
+std = ["ttf-parser/default", "ab_glyph_rasterizer/default"]

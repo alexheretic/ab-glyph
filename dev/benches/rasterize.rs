@@ -1,3 +1,5 @@
+//! ab_glyph_rasterizer benchmarks
+
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::time::Duration;
 
@@ -81,49 +83,49 @@ macro_rules! bench_accumulate {
     }};
 }
 
-fn draw_ttf_w(c: &mut Criterion) {
-    bench_draw!(c, "draw_ttf_w", dev::rasterize_ttf_w, (9, 8));
+fn rasterize_ttf_w(c: &mut Criterion) {
+    bench_draw!(c, "rasterize_ttf_w", dev::rasterize_ttf_w, (9, 8));
 }
 
-fn draw_outline_ttf_w(c: &mut Criterion) {
-    bench_draw_outline!(c, "draw_outline_ttf_w", dev::rasterize_ttf_w, (9, 8));
+fn rasterize_outline_ttf_w(c: &mut Criterion) {
+    bench_draw_outline!(c, "rasterize_outline_ttf_w", dev::rasterize_ttf_w, (9, 8));
 }
 
 fn accumulate_ttf_w(c: &mut Criterion) {
     bench_accumulate!(c, "accumulate_ttf_w", dev::rasterize_ttf_w, (9, 8));
 }
 
-fn draw_ttf_tailed_e(c: &mut Criterion) {
+fn rasterize_ttf_tailed_e(c: &mut Criterion) {
     bench_draw!(
         c,
-        "draw_ttf_tailed_e",
+        "rasterize_ttf_tailed_e",
         dev::rasterize_ttf_tailed_e,
         (106, 177)
     );
 }
 
-fn draw_otf_tailed_e(c: &mut Criterion) {
+fn rasterize_otf_tailed_e(c: &mut Criterion) {
     bench_draw!(
         c,
-        "draw_otf_tailed_e",
+        "rasterize_otf_tailed_e",
         dev::rasterize_otf_tailed_e,
         (106, 183)
     );
 }
 
-fn draw_ttf_biohazard(c: &mut Criterion) {
+fn rasterize_ttf_biohazard(c: &mut Criterion) {
     bench_draw!(
         c,
-        "draw_ttf_biohazard",
+        "rasterize_ttf_biohazard",
         dev::rasterize_ttf_biohazard,
         (294, 269)
     );
 }
 
-fn draw_outline_ttf_biohazard(c: &mut Criterion) {
+fn rasterize_outline_ttf_biohazard(c: &mut Criterion) {
     bench_draw_outline!(
         c,
-        "draw_outline_ttf_biohazard",
+        "rasterize_outline_ttf_biohazard",
         dev::rasterize_ttf_biohazard,
         (294, 269)
     );
@@ -145,13 +147,13 @@ criterion_group!(
         .warm_up_time(Duration::from_secs(2))
         .measurement_time(Duration::from_secs(3))
         .noise_threshold(0.025);
-    targets = draw_ttf_w,
-        draw_outline_ttf_w,
+    targets = rasterize_ttf_w,
+        rasterize_outline_ttf_w,
         accumulate_ttf_w,
-        draw_ttf_tailed_e,
-        draw_otf_tailed_e,
-        draw_ttf_biohazard,
-        draw_outline_ttf_biohazard,
+        rasterize_ttf_tailed_e,
+        rasterize_otf_tailed_e,
+        rasterize_ttf_biohazard,
+        rasterize_outline_ttf_biohazard,
         accumulate_ttf_biohazard,
 );
 
