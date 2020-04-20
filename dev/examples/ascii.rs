@@ -48,35 +48,37 @@ fn draw_ascii<F: Font>(font: F) {
 
     println!("width: {}, height: {}", px_width, px_height);
 
-    // Rasterise directly into ASCII art.
-    let mut pixel_data = vec![b' '; px_width * px_height];
-    let mapping = b"@#x+=:-. "; // The approximation of greyscale
-    let mapping_scale = (mapping.len() - 1) as f32;
+    // Rasterise to a f32 alpha vec
+    let mut pixel_data = vec![0.0; px_width * px_height];
     for g in glyphs {
         if let Some(og) = scaled_font.outline(g) {
             let bounds = og.bounds();
             og.draw(|x, y, v| {
-                // v should be in the range 0.0 to 1.0
-                let i = ((1.0 - v) * mapping_scale + 0.5) as usize;
-                // so something's wrong if you get $ in the output.
-                let c = mapping.get(i).copied().unwrap_or(b' ');
                 let x = x as f32 + bounds.min.x;
                 let y = y as f32 + bounds.min.y;
                 // There's still a possibility that the glyph clips the boundaries of the bitmap
                 if x >= 0.0 && (x as usize) < px_width && y >= 0.0 && (y as usize) < px_height {
-                    pixel_data[(x as usize + y as usize * px_width)] = c;
+                    // save the coverage alpha
+                    pixel_data[(x as usize + y as usize * px_width)] += v;
                 }
             });
         }
     }
 
-    // Print it out
+    let mapping = b"@#x+=:-. "; // The approximation of greyscale
+    let mapping_scale = (mapping.len() - 1) as f32;
+
+    // map the alpha values to a ascii character & print
     let stdout = std::io::stdout();
     let mut handle = stdout.lock();
     handle.write_all(b"\n").unwrap();
-    (0..px_height)
-        .map(|j| &pixel_data[j * px_width..(j + 1) * px_width])
-        .skip_while(|row| row.iter().all(|p| *p == b' '))
+    pixel_data
+        .into_iter()
+        .map(|alpha| ((1.0 - alpha) * mapping_scale + 0.5) as usize)
+        .map(|index| mapping[index.max(0).min(mapping.len() - 1)])
+        .collect::<Vec<_>>()
+        .chunks_exact(px_width)
+        .skip_while(|row| row.iter().all(|c| *c == b' '))
         .for_each(|row| {
             handle.write_all(row).unwrap();
             handle.write_all(b"\n").unwrap();
