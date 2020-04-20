@@ -2,7 +2,7 @@
 use ab_glyph::*;
 use std::io::Write;
 
-const TEXT: &str = "RustType";
+const TEXT: &str = "ab_glyph";
 
 fn main() {
     if let Some(font_path) = std::env::args().nth(1) {
@@ -16,9 +16,9 @@ fn main() {
         });
         draw_ascii(font);
     } else {
-        eprintln!("No font specified ... using Exo2-Light.ttf");
+        eprintln!("No font specified ... using Exo2-Light.otf");
         let font =
-            ttf_parser::Font::from_data(include_bytes!("../fonts/Exo2-Light.ttf"), 0).unwrap();
+            ttf_parser::Font::from_data(include_bytes!("../fonts/Exo2-Light.otf"), 0).unwrap();
         draw_ascii(font);
     };
 }
@@ -49,17 +49,17 @@ fn draw_ascii<F: Font>(font: F) {
     println!("width: {}, height: {}", px_width, px_height);
 
     // Rasterise directly into ASCII art.
-    let mut pixel_data = vec![b'@'; px_width * px_height];
-    let mapping = b"@%#x+=:-. "; // The approximation of greyscale
+    let mut pixel_data = vec![b' '; px_width * px_height];
+    let mapping = b"@#x+=:-. "; // The approximation of greyscale
     let mapping_scale = (mapping.len() - 1) as f32;
     for g in glyphs {
         if let Some(og) = scaled_font.outline(g) {
             let bounds = og.bounds();
             og.draw(|x, y, v| {
                 // v should be in the range 0.0 to 1.0
-                let i = (v * mapping_scale + 0.5) as usize;
+                let i = ((1.0 - v) * mapping_scale + 0.5) as usize;
                 // so something's wrong if you get $ in the output.
-                let c = mapping.get(i).copied().unwrap_or(b'$');
+                let c = mapping.get(i).copied().unwrap_or(b' ');
                 let x = x as f32 + bounds.min.x;
                 let y = y as f32 + bounds.min.y;
                 // There's still a possibility that the glyph clips the boundaries of the bitmap
@@ -73,10 +73,13 @@ fn draw_ascii<F: Font>(font: F) {
     // Print it out
     let stdout = std::io::stdout();
     let mut handle = stdout.lock();
-    for j in 0..px_height {
-        handle
-            .write_all(&pixel_data[j * px_width..(j + 1) * px_width])
-            .unwrap();
-        handle.write_all(b"\n").unwrap();
-    }
+    handle.write_all(b"\n").unwrap();
+    (0..px_height)
+        .map(|j| &pixel_data[j * px_width..(j + 1) * px_width])
+        .skip_while(|row| row.iter().all(|p| *p == b' '))
+        .for_each(|row| {
+            handle.write_all(row).unwrap();
+            handle.write_all(b"\n").unwrap();
+        });
+    handle.write_all(b"\n").unwrap();
 }
