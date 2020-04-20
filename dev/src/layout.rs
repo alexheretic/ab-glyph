@@ -1,6 +1,8 @@
 use ab_glyph::{point, Font, Glyph, Point, PxScaleFontRef, ScaleFont};
 
 /// Simple paragraph layout for glyphs into `target`.
+///
+/// This is for testing and examples.
 pub fn layout_paragraph<'a, F: 'a + Font, SF: Into<PxScaleFontRef<'a, F>>>(
     font: SF,
     position: Point,
