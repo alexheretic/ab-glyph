@@ -1,5 +1,5 @@
 //! Render example where each glyph pixel is output as an ascii character.
-use ab_glyph::{point, ttf_parser, Font, PxScale, ScaleFont};
+use ab_glyph::{point, Font, FontRef, FontVec, PxScale, ScaleFont};
 use std::io::Write;
 
 const TEXT: &str = "ab_glyph";
@@ -8,7 +8,7 @@ fn main() {
     if let Some(font_path) = std::env::args().nth(1) {
         let font_path = std::env::current_dir().unwrap().join(font_path);
         let data = std::fs::read(&font_path).unwrap();
-        let font = ttf_parser::OwnedFont::try_from_vec(data, 0).unwrap_or_else(|| {
+        let font = FontVec::try_from_vec(data).unwrap_or_else(|_| {
             panic!(format!(
                 "error constructing a Font from data at {:?}",
                 font_path
@@ -17,8 +17,7 @@ fn main() {
         draw_ascii(font);
     } else {
         eprintln!("No font specified ... using Exo2-Light.otf");
-        let font =
-            ttf_parser::Font::from_data(include_bytes!("../fonts/Exo2-Light.otf"), 0).unwrap();
+        let font = FontRef::try_from_slice(include_bytes!("../fonts/Exo2-Light.otf")).unwrap();
         draw_ascii(font);
     };
 }

@@ -1,5 +1,7 @@
-use crate::{glyph::*, outlined::*, scale::*};
+use crate::{Glyph, GlyphId, OutlinedGlyph, PxScale, PxScaleFont, PxScaleFontRef};
+use core::fmt;
 
+/// Functionality required from font data.
 pub trait Font {
     /// Unscaled glyph ascent.
     fn ascent(&self) -> f32;
@@ -29,9 +31,8 @@ pub trait Font {
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32;
 
     /// Compute glyph pixel-scaled outline curves & pixel bounding box.
-    ///
-    /// Note: The outline curves are relative to position `(0, 0)` rather than the
-    /// glyph position.
+    // Implemtation note: The outline curves are relative to position `(0, 0)` rather than the
+    // glyph position.
     fn outline(&self, glyph: Glyph) -> Option<OutlinedGlyph>;
 
     #[inline]
@@ -50,3 +51,16 @@ pub trait Font {
         PxScaleFont { font: self, scale }
     }
 }
+
+/// Invalid font data error.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct InvalidFont;
+
+impl fmt::Display for InvalidFont {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "InvalidFont")
+    }
+}
+
+#[cfg(feature = "std")]
+impl std::error::Error for InvalidFont {}

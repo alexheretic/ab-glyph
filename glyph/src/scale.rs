@@ -1,4 +1,4 @@
-use crate::*;
+use crate::{Font, Glyph, GlyphId, OutlinedGlyph};
 
 /// Pixel scale.
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
@@ -17,17 +17,19 @@ impl From<f32> for PxScale {
     }
 }
 
-/// A font with an associated pixel scale.
+/// A [`Font`](trait.Font.html) with an associated pixel scale.
 pub trait ScaleFont<F: Font> {
     fn scale(&self) -> PxScale;
 
     fn font(&self) -> &F;
 
+    /// Scale factor for unscaled font horizontal values.
     #[inline]
     fn h_factor(&self) -> f32 {
         self.scale().x / self.font().height()
     }
 
+    /// Scale factor for unscaled font vertical values.
     #[inline]
     fn v_factor(&self) -> f32 {
         self.scale().y / self.font().height()
@@ -105,6 +107,7 @@ pub trait ScaleFont<F: Font> {
     }
 }
 
+/// A [`Font`](trait.Font.html) reference and an associated pixel scale.
 #[derive(Copy, Clone, Debug)]
 pub struct PxScaleFontRef<'a, F> {
     pub font: &'a F,
@@ -123,6 +126,7 @@ impl<F: Font> ScaleFont<F> for PxScaleFontRef<'_, F> {
     }
 }
 
+/// A [`Font`](trait.Font.html) and an associated pixel scale.
 #[derive(Clone, Debug)]
 pub struct PxScaleFont<F> {
     pub font: F,

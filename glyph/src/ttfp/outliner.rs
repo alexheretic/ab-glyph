@@ -1,4 +1,4 @@
-use crate::{glyph::*, outlined::*};
+use crate::{OutlineCurve, Point};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
@@ -28,7 +28,7 @@ impl OutlineCurveBuilder {
     }
 }
 
-impl ttf_parser::OutlineBuilder for OutlineCurveBuilder {
+impl owned_ttf_parser::OutlineBuilder for OutlineCurveBuilder {
     #[inline]
     fn move_to(&mut self, x: f32, y: f32) {
         self.last = Point {

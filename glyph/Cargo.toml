@@ -3,15 +3,15 @@ name = "ab_glyph"
 version = "0.0.0"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2018"
-description = "Glyph stuff"
+description = "API for loading, scaling, positioning and rasterising OpenType fonts."
 repository = "https://github.com/alexheretic/ab-glyph"
-keywords = ["text", "ttf", "otf", "font", "truetype", "opentype"]
+keywords = ["text", "ttf", "truetype", "otf", "opentype", "font"]
 license = "Apache-2.0"
 readme="README.md"
 
 [dependencies]
-ttf-parser = { version = "0.5", default-features = false }
-ab_glyph_rasterizer = { path = "../rasterizer", default-features = false }
+owned_ttf_parser = { version = "0.5.1", default-features = false }
+ab_glyph_rasterizer = { version = "0.1.1", path = "../rasterizer", default-features = false }
 # no_std float stuff
 libm = { version = "0.2.1", optional = true }
 
@@ -21,6 +21,6 @@ libm = { version = "0.2.1", optional = true }
 [features]
 default = ["std"]
 # Activates usage of std.
-std = ["ttf-parser/default", "ab_glyph_rasterizer/default"]
+std = ["owned_ttf_parser/default", "ab_glyph_rasterizer/default"]
 # Uses libm when not using std. This needs to be active in that case.
 libm-math = ["libm", "ab_glyph_rasterizer/libm"]

@@ -1,4 +1,4 @@
-use ab_glyph::*;
+use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
 use ab_glyph_rasterizer::Rasterizer;
 use image::{DynamicImage, LumaA};
 use std::io::Cursor;
@@ -44,7 +44,7 @@ fn reference_draw_ttf_w() {
 
 #[test]
 fn reference_outline_draw_ttf_w() {
-    let font = ttf_parser::Font::from_data(DEJA_VU_MONO, 0).unwrap();
+    let font = FontRef::try_from_slice(DEJA_VU_MONO).unwrap();
     let new_image = outline_draw(font, 'w', 16.0);
     new_image.save("../target/new_outlined_ttf_w.png").unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_w.png"));
@@ -59,7 +59,7 @@ fn reference_draw_ttf_iota() {
 
 #[test]
 fn reference_outline_draw_ttf_iota() {
-    let font = ttf_parser::Font::from_data(OPENS_SANS_ITALIC, 0).unwrap();
+    let font = FontRef::try_from_slice(OPENS_SANS_ITALIC).unwrap();
     let new_image = outline_draw(font, 'ΐ', 60.0);
     new_image
         .save("../target/new_outlined_ttf_iota.png")
@@ -76,7 +76,7 @@ fn reference_draw_ttf_biohazard() {
 
 #[test]
 fn reference_outline_draw_ttf_biohazard() {
-    let font = ttf_parser::Font::from_data(DEJA_VU_MONO, 0).unwrap();
+    let font = FontRef::try_from_slice(DEJA_VU_MONO).unwrap();
     let new_image = outline_draw(font, '\u{2623}', 600.0);
     new_image
         .save("../target/new_outlined_ttf_biohazard.png")
@@ -93,7 +93,7 @@ fn reference_draw_otf_tailed_e() {
 
 #[test]
 fn reference_outline_draw_otf_tailed_e() {
-    let font = ttf_parser::Font::from_data(EXO2_OTF, 0).unwrap();
+    let font = FontRef::try_from_slice(EXO2_OTF).unwrap();
     let new_image = outline_draw(font, 'ę', 300.0);
     new_image
         .save("../target/new_outlined_otf_tailed_e.png")
@@ -110,7 +110,7 @@ fn reference_draw_ttf_tailed_e() {
 
 #[test]
 fn reference_outline_draw_ttf_tailed_e() {
-    let font = ttf_parser::Font::from_data(EXO2_TTF, 0).unwrap();
+    let font = FontRef::try_from_slice(EXO2_TTF).unwrap();
     let new_image = outline_draw(font, 'ę', 300.0);
     new_image
         .save("../target/new_outlined_ttf_tailed_e.png")
