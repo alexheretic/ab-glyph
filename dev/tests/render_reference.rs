@@ -1,4 +1,4 @@
-use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
+use ab_glyph::{Font, FontRef, ScaleFont};
 use ab_glyph_rasterizer::Rasterizer;
 use image::{DynamicImage, LumaA};
 use std::io::Cursor;
@@ -119,9 +119,9 @@ fn reference_outline_draw_ttf_tailed_e() {
 }
 
 fn outline_draw<F: Font>(font: F, c: char, scale: f32) -> image::GrayAlphaImage {
-    let font = font.into_scaled(PxScale::from(scale));
+    let font = font.into_scaled(scale);
 
-    let glyph = font.outline(font.glyph(c)).unwrap();
+    let glyph = font.outline(font.scaled_glyph(c)).unwrap();
     let bounds = glyph.bounds();
 
     let mut glyph_image =

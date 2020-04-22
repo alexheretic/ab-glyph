@@ -4,6 +4,8 @@ mod outliner;
 #[cfg(all(feature = "libm-math", not(feature = "std")))]
 use crate::nostd_float::FloatExt;
 use crate::{point, Font, Glyph, GlyphId, InvalidFont, OutlinedGlyph, Rect, ScaleFont};
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 use owned_ttf_parser::AsFontRef;
 
 impl From<GlyphId> for owned_ttf_parser::GlyphId {
@@ -17,6 +19,17 @@ impl From<GlyphId> for owned_ttf_parser::GlyphId {
 /// See [`Font`](trait.Font.html) for more methods.
 ///
 /// Also see the owned version [`FontVec`](struct.FontVec.html).
+///
+/// # Example
+/// ```
+/// use ab_glyph::{Font, FontRef};
+///
+/// # fn main() -> Result<(), ab_glyph::InvalidFont> {
+/// let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
+///
+/// assert_eq!(font.descent(), -201.0);
+/// # Ok(()) }
+/// ```
 #[derive(Clone)]
 pub struct FontRef<'font>(owned_ttf_parser::Font<'font>);
 
@@ -72,7 +85,7 @@ impl<'font> FontRef<'font> {
 /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
 /// let font = FontVec::try_from_vec_and_index(owned_font_data, 0)?;
 ///
-/// assert_eq!(font.descent() as i32, -201);
+/// assert_eq!(font.descent(), -201.0);
 /// # Ok(()) }
 /// ```
 pub struct FontVec(owned_ttf_parser::OwnedFont);

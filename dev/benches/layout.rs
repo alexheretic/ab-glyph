@@ -1,4 +1,4 @@
-use ab_glyph::{point, ttf_parser, Font, PxScale};
+use ab_glyph::*;
 use blake2::{Blake2s, Digest};
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::io::Write;
@@ -14,13 +14,13 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
          clause and sometimes one or more subordinate clauses.";
 
     c.bench_function("layout_a_sentence", |b| {
-        let font = ttf_parser::Font::from_data(OPENS_SANS_ITALIC, 0).unwrap();
+        let font = FontRef::try_from_slice(OPENS_SANS_ITALIC).unwrap();
         let mut glyphs = vec![];
 
         b.iter(|| {
             glyphs.clear();
             dev::layout_paragraph(
-                font.as_scaled(PxScale::from(25.0)),
+                font.as_scaled(25.0),
                 point(100.0, 25.0),
                 600.0,
                 SENTENCE,
@@ -49,13 +49,13 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
     });
 
     c.bench_function("layout_a_sentence (try_from_vec)", |b| {
-        let font = ttf_parser::OwnedFont::try_from_vec(OPENS_SANS_ITALIC.to_vec(), 0).unwrap();
+        let font = FontVec::try_from_vec(OPENS_SANS_ITALIC.to_vec()).unwrap();
         let mut glyphs = vec![];
 
         b.iter(|| {
             glyphs.clear();
             dev::layout_paragraph(
-                font.as_scaled(PxScale::from(25.0)),
+                font.as_scaled(25.0),
                 point(100.0, 25.0),
                 600.0,
                 SENTENCE,
@@ -84,13 +84,13 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
     });
 
     c.bench_function("layout_a_sentence (exo2-otf)", |b| {
-        let font = ttf_parser::Font::from_data(EXO2_OTF, 0).unwrap();
+        let font = FontRef::try_from_slice(EXO2_OTF).unwrap();
         let mut glyphs = vec![];
 
         b.iter(|| {
             glyphs.clear();
             dev::layout_paragraph(
-                font.as_scaled(PxScale::from(25.0)),
+                font.as_scaled(25.0),
                 point(100.0, 25.0),
                 600.0,
                 SENTENCE,
@@ -119,13 +119,13 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
     });
 
     c.bench_function("layout_a_sentence (exo2-ttf)", |b| {
-        let font = ttf_parser::Font::from_data(EXO2_TTF, 0).unwrap();
+        let font = FontRef::try_from_slice(EXO2_TTF).unwrap();
         let mut glyphs = vec![];
 
         b.iter(|| {
             glyphs.clear();
             dev::layout_paragraph(
-                font.as_scaled(PxScale::from(25.0)),
+                font.as_scaled(25.0),
                 point(100.0, 25.0),
                 600.0,
                 SENTENCE,

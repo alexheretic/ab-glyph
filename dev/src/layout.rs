@@ -1,16 +1,18 @@
-use ab_glyph::{point, Font, Glyph, Point, PxScaleFontRef, ScaleFont};
+use ab_glyph::{point, Font, Glyph, Point, ScaleFont};
 
 /// Simple paragraph layout for glyphs into `target`.
 ///
 /// This is for testing and examples.
-pub fn layout_paragraph<'a, F: 'a + Font, SF: Into<PxScaleFontRef<'a, F>>>(
+pub fn layout_paragraph<F, SF>(
     font: SF,
     position: Point,
     max_width: f32,
     text: &str,
     target: &mut Vec<Glyph>,
-) {
-    let font = font.into();
+) where
+    F: Font,
+    SF: ScaleFont<F>,
+{
     let v_advance = font.height() + font.line_gap();
     let mut caret = position + point(0.0, font.ascent());
     let mut last_glyph: Option<Glyph> = None;
@@ -22,7 +24,7 @@ pub fn layout_paragraph<'a, F: 'a + Font, SF: Into<PxScaleFontRef<'a, F>>>(
             }
             continue;
         }
-        let mut glyph = font.glyph(c);
+        let mut glyph = font.scaled_glyph(c);
         if let Some(previous) = last_glyph.take() {
             caret.x += font.kern(previous.id, glyph.id);
         }

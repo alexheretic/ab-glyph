@@ -1,5 +1,4 @@
 //! ab_glyph_rasterizer benchmarks
-
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::time::Duration;
 

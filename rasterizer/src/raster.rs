@@ -5,7 +5,7 @@ use crate::nostd_float::FloatExt;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-use crate::geometry::*;
+use crate::geometry::{lerp, Point};
 
 /// Coverage rasterizer for lines, quadratic & cubic beziers.
 pub struct Rasterizer {

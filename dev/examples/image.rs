@@ -25,10 +25,10 @@ fn draw_image<F: Font>(font: F) {
     // The font size to use
     let scale = PxScale::from(45.0);
 
-    let scaled_font = font.into_scaled(scale);
+    let scaled_font = font.as_scaled(scale);
 
     let mut glyphs = Vec::new();
-    dev::layout_paragraph(&scaled_font, point(20.0, 20.0), 9999.0, TEXT, &mut glyphs);
+    dev::layout_paragraph(scaled_font, point(20.0, 20.0), 9999.0, TEXT, &mut glyphs);
 
     // Use a dark red colour
     let colour = (150, 0, 0);

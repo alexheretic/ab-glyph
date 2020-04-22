@@ -1,6 +1,13 @@
 use crate::{Font, Glyph, GlyphId, OutlinedGlyph};
 
 /// Pixel scale.
+///
+/// # Example
+/// ```
+/// use ab_glyph::PxScale;
+///
+/// let uniform_scale_24px = PxScale::from(24.0);
+/// ```
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 pub struct PxScale {
     /// Horizontal scale in pixels.
@@ -17,10 +24,34 @@ impl From<f32> for PxScale {
     }
 }
 
-/// A [`Font`](trait.Font.html) with an associated pixel scale.
+/// A [`Font`](trait.Font.html) with an associated pixel scale. This can be used to provide
+/// pixel scale values for glyph advances, heights etc.
+///
+/// # Example
+/// ```
+/// use ab_glyph::{Font, FontRef, PxScale, ScaleFont};
+///
+/// # fn main() -> Result<(), ab_glyph::InvalidFont> {
+/// let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
+///
+/// // Associate the font with a scale of 45px
+/// let scaled_font = font.as_scaled(PxScale::from(45.0));
+///
+/// assert_eq!(scaled_font.height(), 45.0);
+/// assert_eq!(scaled_font.h_advance(scaled_font.glyph_id('b')), 21.225);
+///
+/// // Replace associated scale with another
+/// let scaled_font = scaled_font.with_scale(180.0);
+///
+/// assert_eq!(scaled_font.height(), 180.0);
+/// assert_eq!(scaled_font.h_advance(scaled_font.glyph_id('b')), 84.9);
+/// # Ok(()) }
+/// ```
 pub trait ScaleFont<F: Font> {
+    /// Returns the pixel scale associated with this font.
     fn scale(&self) -> PxScale;
 
+    /// Returns a font reference.
     fn font(&self) -> &F;
 
     /// Scale factor for unscaled font horizontal values.
@@ -65,10 +96,25 @@ pub trait ScaleFont<F: Font> {
         self.font().glyph_id(c)
     }
 
-    /// Convenience method for `font.glyph_id(c).scaled(scale)` using the font scale.
+    /// Construct a [`Glyph`](struct.Glyph.html) with the font's pixel scale at
+    /// position `point(0.0, 0.0)`.
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf")).unwrap();
+    /// let scaled_font = font.as_scaled(50.0);
+    ///
+    /// let a1 = scaled_font.scaled_glyph('a');
+    /// let a2 = font.glyph_id('a').with_scale(50.0); // equivalent
+    ///
+    /// # assert_eq!(a1.id, a2.id);
+    /// assert_eq!(a1.scale, PxScale::from(50.0));
+    /// assert_eq!(a1.position, point(0.0, 0.0));
+    /// ```
     #[inline]
-    fn glyph(&self, c: char) -> Glyph {
-        self.font().glyph_id(c).scaled(self.scale())
+    fn scaled_glyph(&self, c: char) -> Glyph {
+        self.font().glyph_id(c).with_scale(self.scale())
     }
 
     /// Pixel scaled horizontal advance for a given glyph.
@@ -94,43 +140,33 @@ pub trait ScaleFont<F: Font> {
     fn outline(&self, glyph: Glyph) -> Option<OutlinedGlyph> {
         self.font().outline(glyph)
     }
-
-    #[inline]
-    fn as_scaled(&self, scale: PxScale) -> PxScaleFontRef<'_, F>
-    where
-        Self: core::marker::Sized,
-    {
-        PxScaleFontRef {
-            font: self.font(),
-            scale,
-        }
-    }
 }
 
-/// A [`Font`](trait.Font.html) reference and an associated pixel scale.
-#[derive(Copy, Clone, Debug)]
-pub struct PxScaleFontRef<'a, F> {
-    pub font: &'a F,
-    pub scale: PxScale,
-}
-
-impl<F: Font> ScaleFont<F> for PxScaleFontRef<'_, F> {
+impl<F: Font, SF: ScaleFont<F>> ScaleFont<F> for &SF {
     #[inline]
     fn scale(&self) -> PxScale {
-        self.scale
+        (*self).scale()
     }
 
     #[inline]
     fn font(&self) -> &F {
-        self.font
+        (*self).font()
     }
 }
 
 /// A [`Font`](trait.Font.html) and an associated pixel scale.
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct PxScaleFont<F> {
     pub font: F,
     pub scale: PxScale,
+}
+
+impl<F> PxScaleFont<F> {
+    #[inline]
+    pub fn with_scale<S: Into<PxScale>>(mut self, scale: S) -> Self {
+        self.scale = scale.into();
+        self
+    }
 }
 
 impl<F: Font> ScaleFont<F> for PxScaleFont<F> {
@@ -142,23 +178,5 @@ impl<F: Font> ScaleFont<F> for PxScaleFont<F> {
     #[inline]
     fn font(&self) -> &F {
         &self.font
-    }
-}
-
-impl<F: Font> PxScaleFont<F> {
-    #[inline]
-    pub fn with_scale(mut self, scale: PxScale) -> PxScaleFont<F> {
-        self.scale = scale;
-        self
-    }
-}
-
-impl<'a, F: Font> From<&'a PxScaleFont<F>> for PxScaleFontRef<'a, F> {
-    #[inline]
-    fn from(sf: &'a PxScaleFont<F>) -> Self {
-        Self {
-            font: &sf.font,
-            scale: sf.scale,
-        }
     }
 }
