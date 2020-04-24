@@ -1,4 +1,4 @@
-use crate::{Glyph, GlyphId, OutlinedGlyph, PxScale, PxScaleFont};
+use crate::{Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont};
 
 /// Functionality required from font data.
 ///
@@ -31,10 +31,24 @@ pub trait Font {
     /// Returns additional unscaled kerning to apply for a particular pair of glyph ids.
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32;
 
-    /// Compute glyph pixel-scaled outline curves & pixel bounding box.
-    // Implemtation note: The outline curves are relative to position `(0, 0)` rather than the
-    // glyph position.
-    fn outline(&self, glyph: Glyph) -> Option<OutlinedGlyph>;
+    /// Compute unscaled glyph outline curves & bounding box.
+    fn outline(&self, id: GlyphId) -> Option<Outline>;
+
+    /// The number of glyphs present in this font. Glyph identifiers for this
+    /// font will always be in the range `0..self.glyph_count()`
+    fn glyph_count(&self) -> usize;
+
+    /// Compute glyph outline ready for drawing.
+    #[inline]
+    fn outline_glyph(&self, glyph: Glyph) -> Option<OutlinedGlyph>
+    where
+        Self: Sized,
+    {
+        use crate::ScaleFont;
+        let outline = self.outline(glyph.id)?;
+        let scale_factor = self.as_scaled(glyph.scale).scale_factor();
+        Some(OutlinedGlyph::new(glyph, outline, scale_factor))
+    }
 
     /// Construct a [`PxScaleFontRef`](struct.PxScaleFontRef.html) by associating with the
     /// given pixel `scale`.
@@ -55,7 +69,7 @@ pub trait Font {
     #[inline]
     fn as_scaled<S: Into<PxScale>>(&self, scale: S) -> PxScaleFont<&'_ Self>
     where
-        Self: core::marker::Sized,
+        Self: Sized,
     {
         PxScaleFont {
             font: &self,
@@ -114,7 +128,12 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
-    fn outline(&self, glyph: Glyph) -> Option<OutlinedGlyph> {
+    fn outline(&self, glyph: GlyphId) -> Option<Outline> {
         (*self).outline(glyph)
+    }
+
+    #[inline]
+    fn glyph_count(&self) -> usize {
+        (*self).glyph_count()
     }
 }

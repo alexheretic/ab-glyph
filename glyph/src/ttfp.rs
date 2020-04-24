@@ -3,7 +3,7 @@ mod outliner;
 
 #[cfg(all(feature = "libm-math", not(feature = "std")))]
 use crate::nostd_float::FloatExt;
-use crate::{point, Font, Glyph, GlyphId, InvalidFont, OutlinedGlyph, Rect, ScaleFont};
+use crate::*;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 use owned_ttf_parser::AsFontRef;
@@ -184,47 +184,30 @@ macro_rules! impl_font {
                     .unwrap_or_default()
             }
 
-            fn outline(&self, glyph: Glyph) -> Option<OutlinedGlyph> {
-                let (h_px_factor, v_px_factor) = {
-                    let scaled = self.as_scaled(glyph.scale);
-                    (scaled.h_factor(), scaled.v_factor())
-                };
+            fn outline(&self, id: GlyphId) -> Option<Outline> {
+                let mut outliner = outliner::OutlineCurveBuilder::default();
 
-                let mut outliner = outliner::OutlineCurveBuilder::new(h_px_factor, v_px_factor);
-                let ttf_bounds = self
-                    .0
-                    .as_font()
-                    .outline_glyph(glyph.id.into(), &mut outliner)?;
-
-                let position = glyph.position;
                 let owned_ttf_parser::Rect {
                     x_min,
                     y_min,
                     x_max,
                     y_max,
-                } = ttf_bounds;
+                } = self.0.as_font().outline_glyph(id.into(), &mut outliner)?;
 
-                // Use subpixel fraction in floor/ceil rounding to elimate rounding error
-                // from identical subpixel positions
-                let (x_trunc, x_fract) = (position.x.trunc(), position.x.fract());
-                let (y_trunc, y_fract) = (position.y.trunc(), position.y.fract());
-
-                let px_bounds = Rect {
-                    min: point(
-                        (x_min as f32 * h_px_factor + x_fract).floor() + x_trunc,
-                        (-y_max as f32 * v_px_factor + y_fract).floor() + y_trunc,
-                    ),
-                    max: point(
-                        (x_max as f32 * h_px_factor + x_fract).ceil() + x_trunc,
-                        (-y_min as f32 * v_px_factor + y_fract).ceil() + y_trunc,
-                    ),
+                let bounds = Rect {
+                    min: point(x_min as f32, y_max as f32),
+                    max: point(x_max as f32, y_min as f32),
                 };
 
-                Some(OutlinedGlyph::new(
-                    glyph,
-                    px_bounds,
-                    outliner.take_outline(),
-                ))
+                Some(Outline {
+                    bounds,
+                    curves: outliner.take_outline(),
+                })
+            }
+
+            #[inline]
+            fn glyph_count(&self) -> usize {
+                self.0.as_font().number_of_glyphs() as _
             }
         }
     };

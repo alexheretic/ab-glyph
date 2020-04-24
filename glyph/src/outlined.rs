@@ -1,25 +1,63 @@
-use crate::{Glyph, Point};
+use crate::{point, Glyph, Point, PxScaleFactor};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
+
+// A "raw" collection of outline curves for a glyph, unscaled & unpositioned.
+#[derive(Clone, Debug)]
+pub struct Outline {
+    /// Unscaled bounding box.
+    pub bounds: Rect,
+    /// Unscaled & unpositioned outline curves.
+    pub curves: Vec<OutlineCurve>,
+}
+
+impl Outline {
+    /// Convert unscaled bounds into pixel bounds at a given scale & position.
+    pub fn px_bounds(&self, scale_factor: PxScaleFactor, position: Point) -> Rect {
+        let Rect { min, max } = self.bounds;
+
+        // Use subpixel fraction in floor/ceil rounding to elimate rounding error
+        // from identical subpixel positions
+        let (x_trunc, x_fract) = (position.x.trunc(), position.x.fract());
+        let (y_trunc, y_fract) = (position.y.trunc(), position.y.fract());
+
+        Rect {
+            min: point(
+                (min.x * scale_factor.horizontal + x_fract).floor() + x_trunc,
+                (min.y * -scale_factor.vertical + y_fract).floor() + y_trunc,
+            ),
+            max: point(
+                (max.x * scale_factor.horizontal + x_fract).ceil() + x_trunc,
+                (max.y * -scale_factor.vertical + y_fract).ceil() + y_trunc,
+            ),
+        }
+    }
+}
 
 /// A glyph that has been outlined at a scale & position.
 #[derive(Clone, Debug)]
 pub struct OutlinedGlyph {
     glyph: Glyph,
     // Pixel scale bounds.
-    bounds: Rect,
-    // Relatively positioned (from point(0, 0)) pixel-scale outline curves.
-    outline: Vec<OutlineCurve>,
+    px_bounds: Rect,
+    // Scale factor
+    scale_factor: PxScaleFactor,
+    // Raw outline
+    outline: Outline,
 }
 
 impl OutlinedGlyph {
     /// Constructs an `OutlinedGlyph` from the source `Glyph`, pixel bounds
     /// & relatively positioned outline curves.
     #[inline]
-    pub fn new(glyph: Glyph, bounds: Rect, outline: Vec<OutlineCurve>) -> Self {
+    pub fn new(glyph: Glyph, outline: Outline, scale_factor: PxScaleFactor) -> Self {
+        // work this out now as it'll usually be used more than once
+        let px_bounds = outline.px_bounds(scale_factor, glyph.position);
+
         Self {
             glyph,
-            bounds,
+            px_bounds,
+            scale_factor,
             outline,
         }
     }
@@ -33,7 +71,7 @@ impl OutlinedGlyph {
     /// Conservative whole number pixel bounding box for this glyph.
     #[inline]
     pub fn bounds(&self) -> Rect {
-        self.bounds
+        self.px_bounds
     }
 
     /// Draw this glyph outline using a pixel & coverage handling function.
@@ -42,25 +80,45 @@ impl OutlinedGlyph {
     /// with a coverage value in the range `[0.0, 1.0]`.
     pub fn draw<O: FnMut(u32, u32, f32)>(&self, o: O) {
         use ab_glyph_rasterizer::Rasterizer;
-        let offset = self.glyph.position - self.bounds.min;
-        let (w, h) = (self.bounds.width() as usize, self.bounds.height() as usize);
+        let h_factor = self.scale_factor.horizontal;
+        let v_factor = -self.scale_factor.vertical;
+        let offset = self.glyph.position - self.px_bounds.min;
+        let (w, h) = (
+            self.px_bounds.width() as usize,
+            self.px_bounds.height() as usize,
+        );
+
+        let scale_up = |&Point { x, y }| point(x * h_factor, y * v_factor);
 
         self.outline
+            .curves
             .iter()
             .fold(Rasterizer::new(w, h), |mut rasterizer, curve| match curve {
                 OutlineCurve::Line(p0, p1) => {
-                    rasterizer.draw_line(*p0 + offset, *p1 + offset);
-                    // eprintln!("r.draw_line({:?}, {:?});", *p0 + offset, *p1 + offset);
+                    // eprintln!("r.draw_line({:?}, {:?});",
+                    //     scale_up(p0) + offset, scale_up(p1) + offset);
+                    rasterizer.draw_line(scale_up(p0) + offset, scale_up(p1) + offset);
                     rasterizer
                 }
                 OutlineCurve::Quad(p0, p1, p2) => {
-                    rasterizer.draw_quad(*p0 + offset, *p1 + offset, *p2 + offset);
-                    // eprintln!("r.draw_quad({:?}, {:?}, {:?});", *p0 + offset, *p1 + offset, *p2 + offset);
+                    // eprintln!("r.draw_quad({:?}, {:?}, {:?});",
+                    //     scale_up(p0) + offset, scale_up(p1) + offset, scale_up(p2) + offset);
+                    rasterizer.draw_quad(
+                        scale_up(p0) + offset,
+                        scale_up(p1) + offset,
+                        scale_up(p2) + offset,
+                    );
                     rasterizer
                 }
                 OutlineCurve::Cubic(p0, p1, p2, p3) => {
-                    rasterizer.draw_cubic(*p0 + offset, *p1 + offset, *p2 + offset, *p3 + offset);
-                    // eprintln!("r.draw_cubic({:?}, {:?}, {:?}, {:?});", *p0 + offset, *p1 + offset, *p2 + offset, *p3 + offset);
+                    // eprintln!("r.draw_cubic({:?}, {:?}, {:?}, {:?});",
+                    //     scale_up(p0) + offset, scale_up(p1) + offset, scale_up(p2) + offset, scale_up(p3) + offset);
+                    rasterizer.draw_cubic(
+                        scale_up(p0) + offset,
+                        scale_up(p1) + offset,
+                        scale_up(p2) + offset,
+                        scale_up(p3) + offset,
+                    );
                     rasterizer
                 }
             })

@@ -24,6 +24,12 @@ impl From<f32> for PxScale {
     }
 }
 
+#[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+pub struct PxScaleFactor {
+    pub horizontal: f32,
+    pub vertical: f32,
+}
+
 /// A [`Font`](trait.Font.html) with an associated pixel scale. This can be used to provide
 /// pixel scale values for glyph advances, heights etc.
 ///
@@ -56,26 +62,34 @@ pub trait ScaleFont<F: Font> {
 
     /// Scale factor for unscaled font horizontal values.
     #[inline]
-    fn h_factor(&self) -> f32 {
+    fn h_scale_factor(&self) -> f32 {
         self.scale().x / self.font().height()
     }
 
     /// Scale factor for unscaled font vertical values.
     #[inline]
-    fn v_factor(&self) -> f32 {
+    fn v_scale_factor(&self) -> f32 {
         self.scale().y / self.font().height()
+    }
+
+    #[inline]
+    fn scale_factor(&self) -> PxScaleFactor {
+        PxScaleFactor {
+            horizontal: self.h_scale_factor(),
+            vertical: self.v_scale_factor(),
+        }
     }
 
     /// Pixel scaled glyph ascent.
     #[inline]
     fn ascent(&self) -> f32 {
-        self.v_factor() * self.font().ascent()
+        self.v_scale_factor() * self.font().ascent()
     }
 
     /// Pixel scaled glyph descent.
     #[inline]
     fn descent(&self) -> f32 {
-        self.v_factor() * self.font().descent()
+        self.v_scale_factor() * self.font().descent()
     }
 
     /// Pixel scaled height `ascent - descent`.
@@ -87,7 +101,7 @@ pub trait ScaleFont<F: Font> {
     /// Pixel scaled line gap.
     #[inline]
     fn line_gap(&self) -> f32 {
-        self.v_factor() * self.font().line_gap()
+        self.v_scale_factor() * self.font().line_gap()
     }
 
     /// Lookup a `GlyphId` matching a given `char`.
@@ -120,25 +134,35 @@ pub trait ScaleFont<F: Font> {
     /// Pixel scaled horizontal advance for a given glyph.
     #[inline]
     fn h_advance(&self, id: GlyphId) -> f32 {
-        self.h_factor() * self.font().h_advance(id)
+        self.h_scale_factor() * self.font().h_advance(id)
     }
 
     /// Pixel scaled horizontal side bearing for a given glyph.
     #[inline]
     fn h_side_bearing(&self, id: GlyphId) -> f32 {
-        self.h_factor() * self.font().h_side_bearing(id)
+        self.h_scale_factor() * self.font().h_side_bearing(id)
     }
 
     /// Returns additional pixel scaled kerning to apply for a particular pair of glyphs.
     #[inline]
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
-        self.h_factor() * self.font().kern(first, second)
+        self.h_scale_factor() * self.font().kern(first, second)
     }
 
-    /// Compute glyph pixel-scaled outline curves & pixel bounding box.
+    /// The number of glyphs present in this font. Glyph identifiers for this
+    /// font will always be in the range `0..self.glyph_count()`
     #[inline]
-    fn outline(&self, glyph: Glyph) -> Option<OutlinedGlyph> {
-        self.font().outline(glyph)
+    fn glyph_count(&self) -> usize {
+        self.font().glyph_count()
+    }
+
+    /// Compute glyph outline ready for drawing.
+    ///
+    /// Note this method does not make use of the associated scale, as `Glyph`
+    /// already includes one of it's own.
+    #[inline]
+    fn outline_glyph(&self, glyph: Glyph) -> Option<OutlinedGlyph> {
+        self.font().outline_glyph(glyph)
     }
 }
 

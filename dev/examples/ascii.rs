@@ -50,7 +50,7 @@ fn draw_ascii<F: Font>(font: F) {
     // Rasterise to a f32 alpha vec
     let mut pixel_data = vec![0.0; px_width * px_height];
     for g in glyphs {
-        if let Some(og) = scaled_font.outline(g) {
+        if let Some(og) = scaled_font.outline_glyph(g) {
             let bounds = og.bounds();
             og.draw(|x, y, v| {
                 let x = x as f32 + bounds.min.x;

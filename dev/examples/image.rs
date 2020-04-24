@@ -47,7 +47,7 @@ fn draw_image<F: Font>(font: F) {
 
     // Loop through the glyphs in the text, positing each one on a line
     for glyph in glyphs {
-        if let Some(outlined) = scaled_font.outline(glyph) {
+        if let Some(outlined) = scaled_font.outline_glyph(glyph) {
             let bounds = outlined.bounds();
             // Draw the glyph into the image per-pixel by using the draw closure
             outlined.draw(|x, y, v| {

@@ -29,7 +29,7 @@ fn bench_layout_and_draw(c: &mut Criterion) {
 
             glyphs
                 .drain(..)
-                .filter_map(|g| font.outline(g))
+                .filter_map(|g| font.outline_glyph(g))
                 .for_each(|outlined| outlined.draw(|_, _, c| coverage_sum += c));
         });
 
@@ -55,7 +55,7 @@ fn bench_layout_and_draw(c: &mut Criterion) {
 
             glyphs
                 .drain(..)
-                .filter_map(|g| font.outline(g))
+                .filter_map(|g| font.outline_glyph(g))
                 .for_each(|outlined| outlined.draw(|_, _, c| coverage_sum += c));
         });
 
