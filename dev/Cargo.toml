@@ -11,6 +11,7 @@ ab_glyph = { path = "../glyph" }
 image = { version = "0.23", default-features = false, features = ["png"] }
 criterion = "0.3"
 blake2 = "0.8"
+approx = "0.3.2"
 
 [[bench]]
 name = "rasterize"
@@ -18,4 +19,8 @@ harness = false
 
 [[bench]]
 name = "layout"
+harness = false
+
+[[bench]]
+name = "layout_draw"
 harness = false

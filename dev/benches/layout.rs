@@ -7,12 +7,12 @@ const OPENS_SANS_ITALIC: &[u8] = include_bytes!("../fonts/OpenSans-Italic.ttf");
 const EXO2_TTF: &[u8] = include_bytes!("../fonts/Exo2-Light.ttf");
 const EXO2_OTF: &[u8] = include_bytes!("../fonts/Exo2-Light.otf");
 
-fn bench_layout_a_sentence(c: &mut Criterion) {
-    const SENTENCE: &str =
-        "a set of words that is complete in itself, typically containing a subject and predicate, \
-         conveying a statement, question, exclamation, or command, and consisting of a main \
-         clause and sometimes one or more subordinate clauses.";
+const SENTENCE: &str =
+    "a set of words that is complete in itself, typically containing a subject and predicate, \
+     conveying a statement, question, exclamation, or command, and consisting of a main \
+     clause and sometimes one or more subordinate clauses.";
 
+fn bench_layout_a_sentence(c: &mut Criterion) {
     c.bench_function("layout_a_sentence", |b| {
         let font = FontRef::try_from_slice(OPENS_SANS_ITALIC).unwrap();
         let mut glyphs = vec![];
@@ -153,10 +153,9 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
         );
     });
 }
-
 criterion_group!(
-    name = benches;
+    name = layout_benches;
     config = Criterion::default().sample_size(400);
     targets = bench_layout_a_sentence);
 
-criterion_main!(benches);
+criterion_main!(layout_benches);
