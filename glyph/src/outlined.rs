@@ -1,3 +1,5 @@
+#[cfg(all(feature = "libm-math", not(feature = "std")))]
+use crate::nostd_float::FloatExt;
 use crate::{point, Glyph, Point, PxScaleFactor};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;

@@ -1,8 +1,6 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
 mod outliner;
 
-#[cfg(all(feature = "libm-math", not(feature = "std")))]
-use crate::nostd_float::FloatExt;
 use crate::*;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
