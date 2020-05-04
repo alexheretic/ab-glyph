@@ -18,14 +18,13 @@ macro_rules! bench_draw {
                 // call outline functions
                 let rasterizer = $raster_fn();
                 // draw into the byte array
-                rasterizer.for_each_pixel(|idx, alpha| target[idx] = (alpha * 255.0) as u8)
+                rasterizer.for_each_pixel(|idx, alpha| target[idx] = (alpha * 255.0) as u8);
+
+                // ensure the byte array has changed (and not discarded by optimization?).
+                assert!(target.iter().any(|a| *a != 0), "target not written to?");
             });
         });
-        // ensure the byte array has changed (and not discarded by optimization?).
-        assert_ne!(
-            &target as &[u8],
-            &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]
-        );
+
     }};
 }
 
@@ -49,10 +48,7 @@ macro_rules! bench_draw_outline {
         // draw into the byte array
         rasterizer.for_each_pixel(|idx, alpha| target[idx] = (alpha * 255.0) as u8);
         // ensure the byte array has changed (and not discarded by optimization?).
-        assert_ne!(
-            &target as &[u8],
-            &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]
-        );
+        assert!(target.iter().any(|a| *a != 0), "target not written to?");
     }};
 }
 
@@ -71,14 +67,11 @@ macro_rules! bench_accumulate {
         $criterion.bench_function($bench_name, |b| {
             b.iter(|| {
                 // draw into the byte array
-                rasterizer.for_each_pixel(|idx, alpha| target[idx] = (alpha * 255.0) as u8)
+                rasterizer.for_each_pixel(|idx, alpha| target[idx] = (alpha * 255.0) as u8);
+                // ensure the byte array has changed (and not discarded by optimization?).
+                assert!(target.iter().any(|a| *a != 0), "target not written to?");
             });
         });
-        // ensure the byte array has changed (and not discarded by optimization?).
-        assert_ne!(
-            &target as &[u8],
-            &[0u8; $const_dimensions.0 * $const_dimensions.1] as &[u8]
-        );
     }};
 }
 
