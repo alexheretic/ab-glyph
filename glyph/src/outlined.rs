@@ -148,7 +148,7 @@ pub enum OutlineCurve {
 }
 
 /// A rectangle, with top-left corner at `min`, and bottom-right corner at `max`.
-#[derive(Copy, Clone, Debug, Default)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
 pub struct Rect {
     pub min: Point,
     pub max: Point,

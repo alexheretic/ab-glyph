@@ -15,7 +15,7 @@ pub use ab_glyph_rasterizer::point;
 /// let q_id: GlyphId = font.glyph_id('q');
 /// # Ok(()) }
 /// ```
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct GlyphId(pub u16);
 
 impl GlyphId {
@@ -55,7 +55,7 @@ impl GlyphId {
 }
 
 /// A glyph with pixel scale & position.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct Glyph {
     /// Glyph id.
     pub id: GlyphId,
