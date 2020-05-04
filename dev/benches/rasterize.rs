@@ -24,7 +24,6 @@ macro_rules! bench_draw {
                 assert!(target.iter().any(|a| *a != 0), "target not written to?");
             });
         });
-
     }};
 }
 

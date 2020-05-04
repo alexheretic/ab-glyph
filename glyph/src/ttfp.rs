@@ -4,6 +4,7 @@ mod outliner;
 use crate::*;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
+use core::fmt;
 use owned_ttf_parser::AsFontRef;
 
 impl From<GlyphId> for owned_ttf_parser::GlyphId {
@@ -30,6 +31,12 @@ impl From<GlyphId> for owned_ttf_parser::GlyphId {
 /// ```
 #[derive(Clone)]
 pub struct FontRef<'font>(owned_ttf_parser::Font<'font>);
+
+impl fmt::Debug for FontRef<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "FontRef")
+    }
+}
 
 impl<'font> FontRef<'font> {
     /// Creates an `FontRef` from a byte-slice.
@@ -87,6 +94,12 @@ impl<'font> FontRef<'font> {
 /// # Ok(()) }
 /// ```
 pub struct FontVec(owned_ttf_parser::OwnedFont);
+
+impl fmt::Debug for FontVec {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "FontVec")
+    }
+}
 
 impl FontVec {
     /// Creates an `FontVec` from owned data.
