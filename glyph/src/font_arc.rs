@@ -19,11 +19,11 @@ use core::fmt;
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
-pub struct FontArc(Arc<dyn Font>);
+pub struct FontArc(Arc<dyn Font + Send + Sync + 'static>);
 
 impl FontArc {
     #[inline]
-    pub fn new<F: Font + 'static>(font: F) -> Self {
+    pub fn new<F: Font + Send + Sync + 'static>(font: F) -> Self {
         Self(Arc::new(font))
     }
 
@@ -122,9 +122,9 @@ impl From<FontRef<'static>> for FontArc {
         Self::new(font)
     }
 }
-impl From<Arc<dyn Font>> for FontArc {
+impl From<Arc<dyn Font + Send + Sync + 'static>> for FontArc {
     #[inline]
-    fn from(font: Arc<dyn Font>) -> Self {
+    fn from(font: Arc<dyn Font + Send + Sync + 'static>) -> Self {
         Self(font)
     }
 }
