@@ -23,3 +23,20 @@ no_std environments are supported using `alloc` & [`libm`](https://github.com/ru
 ```toml
 ab_glyph = { default-features = false, features = ["libm-math"] }
 ```
+
+## Comparison with [`rusttype`](https://gitlab.redox-os.org/redox-os/rusttype)
+ab_glyph is a rewrite of rusttype made after I added .otf support for the latter and saw some performance issue's
+with the rusttype API.
+
+ab_glyph is a more focussed API concentrating on high performance for both .ttf & .otf fonts.
+
+When laying out glyphs into paragraph, ab_glyph is faster than rusttype using .ttf fonts &
+**much** faster for .otf fonts.
+
+```
+group                               ab-glyph                    rusttype 0.9
+-----                               --------                    ------------
+layout_a_sentence                   1.00     19.3±0.14µs        1.31     25.3±0.35µs
+layout_a_sentence (exo2-otf)        1.00     11.1±0.12µs        8.85     98.1±1.17µs
+layout_a_sentence (exo2-ttf)        1.00     11.1±0.08µs        1.56     17.3±0.14µs
+```
