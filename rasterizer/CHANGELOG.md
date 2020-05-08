@@ -1,4 +1,4 @@
-# Unreleased
+# 0.1.2
 * For `Point` implement `Sub`, `Add`, `SubAssign`, `AddAssign`, `PartialEq`, `PartialOrd`, `From<(x, y)>`,
   `From<[x, y]>` for easier use downstream.
 * Switch `Point` `Debug` implementation to output `point(1.2, 3.4)` smaller representation referring to the `point` fn.
