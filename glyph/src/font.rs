@@ -2,7 +2,8 @@ use crate::{Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont};
 
 /// Functionality required from font data.
 ///
-/// See [`FontRef`](struct.FontRef.html) & [`FontVec`](struct.FontVec.html).
+/// See [`FontArc`](struct.FontArc.html), [`FontRef`](struct.FontRef.html) &
+/// [`FontVec`](struct.FontVec.html).
 pub trait Font {
     /// Unscaled glyph ascent.
     fn ascent(&self) -> f32;

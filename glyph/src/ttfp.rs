@@ -26,7 +26,7 @@ impl From<GlyphId> for owned_ttf_parser::GlyphId {
 /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
 /// let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
 ///
-/// assert_eq!(font.descent(), -201.0);
+/// assert_eq!(font.glyph_id('s'), ab_glyph::GlyphId(56));
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
@@ -90,7 +90,7 @@ impl<'font> FontRef<'font> {
 /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
 /// let font = FontVec::try_from_vec_and_index(owned_font_data, 0)?;
 ///
-/// assert_eq!(font.descent(), -201.0);
+/// assert_eq!(font.glyph_id('s'), ab_glyph::GlyphId(56));
 /// # Ok(()) }
 /// ```
 pub struct FontVec(owned_ttf_parser::OwnedFont);

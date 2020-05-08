@@ -8,20 +8,27 @@ use core::fmt;
 ///
 /// # Example
 /// ```
-/// use ab_glyph::{Font, FontArc, FontVec};
+/// use ab_glyph::{Font, FontArc};
 ///
 /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
-/// # let font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
-/// let font_vec = FontVec::try_from_vec(font_data)?;
-/// let font_arc = FontArc::from(font_vec);
+/// let font = FontArc::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
 ///
-/// assert_eq!(font_arc.descent(), -201.0);
+/// assert_eq!(font.glyph_id('s'), ab_glyph::GlyphId(56));
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
 pub struct FontArc(Arc<dyn Font + Send + Sync + 'static>);
 
 impl FontArc {
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
+    /// # let font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
+    /// # let font_vec = FontVec::try_from_vec(font_data)?;
+    /// let font_arc = FontArc::new(font_vec);
+    /// # Ok(()) }
+    /// ```
     #[inline]
     pub fn new<F: Font + Send + Sync + 'static>(font: F) -> Self {
         Self(Arc::new(font))
