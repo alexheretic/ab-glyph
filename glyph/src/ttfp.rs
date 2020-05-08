@@ -1,7 +1,7 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
 mod outliner;
 
-use crate::*;
+use crate::{point, Font, GlyphId, InvalidFont, Outline, Rect};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 use core::fmt;

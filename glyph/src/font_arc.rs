@@ -1,4 +1,4 @@
-use crate::*;
+use crate::{Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
 
