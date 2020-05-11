@@ -36,7 +36,6 @@ When laying out glyphs into paragraph, ab_glyph is faster than rusttype using .t
 ```
 group                               ab-glyph                    rusttype 0.9
 -----                               --------                    ------------
-layout_a_sentence                   1.00     19.3±0.14µs        1.31     25.3±0.35µs
-layout_a_sentence (exo2-otf)        1.00     11.1±0.12µs        8.85     98.1±1.17µs
 layout_a_sentence (exo2-ttf)        1.00     11.1±0.08µs        1.56     17.3±0.14µs
+layout_a_sentence (exo2-otf)        1.00     11.1±0.12µs        8.85     98.1±1.17µs
 ```
