@@ -24,6 +24,7 @@ impl From<f32> for PxScale {
     }
 }
 
+/// 2D scale factors for use with unscaled metrics.
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 pub struct PxScaleFactor {
     pub horizontal: f32,
