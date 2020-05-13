@@ -13,7 +13,8 @@ readme="README.md"
 owned_ttf_parser = { version = "0.5.1", default-features = false }
 ab_glyph_rasterizer = { version = "0.1.2", path = "../rasterizer", default-features = false }
 # no_std float stuff
-libm = { version = "0.2.1", optional = true }
+# renamed to enable a "libm" feature
+libm2 = { package = "libm", version = "0.2.1", optional = true }
 
 [dev-dependencies]
 # don't add any, instead use ./dev
@@ -23,4 +24,4 @@ default = ["std"]
 # Activates usage of std.
 std = ["owned_ttf_parser/default", "ab_glyph_rasterizer/default"]
 # Uses libm when not using std. This needs to be active in that case.
-libm-math = ["libm", "ab_glyph_rasterizer/libm"]
+libm = ["libm2", "ab_glyph_rasterizer/libm"]

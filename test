@@ -10,6 +10,6 @@ cargo test
 cargo test --benches
 echo "==> no_std"
 (cd rasterizer && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
-(cd glyph && cargo build --target thumbv6m-none-eabi --no-default-features --features libm-math)
+(cd glyph && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
 echo "==> rustfmt"
 cargo fmt -- --check
