@@ -63,13 +63,13 @@ pub trait ScaleFont<F: Font> {
     /// Scale factor for unscaled font horizontal values.
     #[inline]
     fn h_scale_factor(&self) -> f32 {
-        self.scale().x / self.font().height()
+        self.scale().x / self.font().height_unscaled()
     }
 
     /// Scale factor for unscaled font vertical values.
     #[inline]
     fn v_scale_factor(&self) -> f32 {
-        self.scale().y / self.font().height()
+        self.scale().y / self.font().height_unscaled()
     }
 
     #[inline]
@@ -83,13 +83,13 @@ pub trait ScaleFont<F: Font> {
     /// Pixel scaled glyph ascent.
     #[inline]
     fn ascent(&self) -> f32 {
-        self.v_scale_factor() * self.font().ascent()
+        self.v_scale_factor() * self.font().ascent_unscaled()
     }
 
     /// Pixel scaled glyph descent.
     #[inline]
     fn descent(&self) -> f32 {
-        self.v_scale_factor() * self.font().descent()
+        self.v_scale_factor() * self.font().descent_unscaled()
     }
 
     /// Pixel scaled height `ascent - descent`.
@@ -101,7 +101,7 @@ pub trait ScaleFont<F: Font> {
     /// Pixel scaled line gap.
     #[inline]
     fn line_gap(&self) -> f32 {
-        self.v_scale_factor() * self.font().line_gap()
+        self.v_scale_factor() * self.font().line_gap_unscaled()
     }
 
     /// Lookup a `GlyphId` matching a given `char`.
@@ -134,19 +134,19 @@ pub trait ScaleFont<F: Font> {
     /// Pixel scaled horizontal advance for a given glyph.
     #[inline]
     fn h_advance(&self, id: GlyphId) -> f32 {
-        self.h_scale_factor() * self.font().h_advance(id)
+        self.h_scale_factor() * self.font().h_advance_unscaled(id)
     }
 
     /// Pixel scaled horizontal side bearing for a given glyph.
     #[inline]
     fn h_side_bearing(&self, id: GlyphId) -> f32 {
-        self.h_scale_factor() * self.font().h_side_bearing(id)
+        self.h_scale_factor() * self.font().h_side_bearing_unscaled(id)
     }
 
     /// Returns additional pixel scaled kerning to apply for a particular pair of glyphs.
     #[inline]
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
-        self.h_scale_factor() * self.font().kern(first, second)
+        self.h_scale_factor() * self.font().kern_unscaled(first, second)
     }
 
     /// The number of glyphs present in this font. Glyph identifiers for this

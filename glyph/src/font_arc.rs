@@ -72,18 +72,18 @@ impl fmt::Debug for FontArc {
 
 impl Font for FontArc {
     #[inline]
-    fn ascent(&self) -> f32 {
-        self.0.ascent()
+    fn ascent_unscaled(&self) -> f32 {
+        self.0.ascent_unscaled()
     }
 
     #[inline]
-    fn descent(&self) -> f32 {
-        self.0.descent()
+    fn descent_unscaled(&self) -> f32 {
+        self.0.descent_unscaled()
     }
 
     #[inline]
-    fn line_gap(&self) -> f32 {
-        self.0.line_gap()
+    fn line_gap_unscaled(&self) -> f32 {
+        self.0.line_gap_unscaled()
     }
 
     #[inline]
@@ -92,18 +92,18 @@ impl Font for FontArc {
     }
 
     #[inline]
-    fn h_advance(&self, id: GlyphId) -> f32 {
-        self.0.h_advance(id)
+    fn h_advance_unscaled(&self, id: GlyphId) -> f32 {
+        self.0.h_advance_unscaled(id)
     }
 
     #[inline]
-    fn h_side_bearing(&self, id: GlyphId) -> f32 {
-        self.0.h_side_bearing(id)
+    fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
+        self.0.h_side_bearing_unscaled(id)
     }
 
     #[inline]
-    fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
-        self.0.kern(first, second)
+    fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
+        self.0.kern_unscaled(first, second)
     }
 
     #[inline]
