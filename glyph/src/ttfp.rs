@@ -146,17 +146,17 @@ macro_rules! impl_font {
     ($font:ty) => {
         impl Font for $font {
             #[inline]
-            fn ascent(&self) -> f32 {
+            fn ascent_unscaled(&self) -> f32 {
                 f32::from(self.0.as_font().ascender())
             }
 
             #[inline]
-            fn descent(&self) -> f32 {
+            fn descent_unscaled(&self) -> f32 {
                 f32::from(self.0.as_font().descender())
             }
 
             #[inline]
-            fn line_gap(&self) -> f32 {
+            fn line_gap_unscaled(&self) -> f32 {
                 f32::from(self.0.as_font().line_gap())
             }
 
@@ -167,7 +167,7 @@ macro_rules! impl_font {
             }
 
             #[inline]
-            fn h_advance(&self, id: GlyphId) -> f32 {
+            fn h_advance_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
                     .0
                     .as_font()
@@ -177,7 +177,7 @@ macro_rules! impl_font {
             }
 
             #[inline]
-            fn h_side_bearing(&self, id: GlyphId) -> f32 {
+            fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
                     .0
                     .as_font()
@@ -187,7 +187,7 @@ macro_rules! impl_font {
             }
 
             #[inline]
-            fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
+            fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
                 self.0
                     .as_font()
                     .glyphs_kerning(first.into(), second.into())

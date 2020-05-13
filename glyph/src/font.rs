@@ -6,31 +6,47 @@ use crate::{Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont};
 /// [`FontVec`](struct.FontVec.html).
 pub trait Font {
     /// Unscaled glyph ascent.
-    fn ascent(&self) -> f32;
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn ascent_unscaled(&self) -> f32;
 
     /// Unscaled glyph descent.
-    fn descent(&self) -> f32;
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn descent_unscaled(&self) -> f32;
 
     /// Unscaled height `ascent - descent`.
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     #[inline]
-    fn height(&self) -> f32 {
-        self.ascent() - self.descent()
+    fn height_unscaled(&self) -> f32 {
+        self.ascent_unscaled() - self.descent_unscaled()
     }
 
     /// Unscaled line gap.
-    fn line_gap(&self) -> f32;
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn line_gap_unscaled(&self) -> f32;
 
     /// Lookup a `GlyphId` matching a given `char`.
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     fn glyph_id(&self, c: char) -> GlyphId;
 
     /// Unscaled horizontal advance for a given glyph id.
-    fn h_advance(&self, id: GlyphId) -> f32;
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn h_advance_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled horizontal side bearing for a given glyph id.
-    fn h_side_bearing(&self, id: GlyphId) -> f32;
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32;
 
     /// Returns additional unscaled kerning to apply for a particular pair of glyph ids.
-    fn kern(&self, first: GlyphId, second: GlyphId) -> f32;
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32;
 
     /// Compute unscaled glyph outline curves & bounding box.
     fn outline(&self, id: GlyphId) -> Option<Outline>;
@@ -60,8 +76,7 @@ pub trait Font {
     /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
     /// let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
     ///
-    /// // unscaled descent
-    /// assert_eq!(font.descent(), -201.0);
+    /// assert_eq!(font.descent_unscaled(), -201.0);
     ///
     /// assert_eq!(font.as_scaled(24.0).descent(), -4.02);
     /// assert_eq!(font.as_scaled(50.0).descent(), -8.375);
@@ -94,18 +109,18 @@ pub trait Font {
 
 impl<F: Font> Font for &F {
     #[inline]
-    fn ascent(&self) -> f32 {
-        (*self).ascent()
+    fn ascent_unscaled(&self) -> f32 {
+        (*self).ascent_unscaled()
     }
 
     #[inline]
-    fn descent(&self) -> f32 {
-        (*self).descent()
+    fn descent_unscaled(&self) -> f32 {
+        (*self).descent_unscaled()
     }
 
     #[inline]
-    fn line_gap(&self) -> f32 {
-        (*self).line_gap()
+    fn line_gap_unscaled(&self) -> f32 {
+        (*self).line_gap_unscaled()
     }
 
     #[inline]
@@ -114,18 +129,18 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
-    fn h_advance(&self, id: GlyphId) -> f32 {
-        (*self).h_advance(id)
+    fn h_advance_unscaled(&self, id: GlyphId) -> f32 {
+        (*self).h_advance_unscaled(id)
     }
 
     #[inline]
-    fn h_side_bearing(&self, id: GlyphId) -> f32 {
-        (*self).h_side_bearing(id)
+    fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
+        (*self).h_side_bearing_unscaled(id)
     }
 
     #[inline]
-    fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
-        (*self).kern(first, second)
+    fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
+        (*self).kern_unscaled(first, second)
     }
 
     #[inline]

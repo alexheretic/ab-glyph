@@ -4,7 +4,7 @@ use crate::{point, Glyph, Point, PxScaleFactor};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-// A "raw" collection of outline curves for a glyph, unscaled & unpositioned.
+/// A "raw" collection of outline curves for a glyph, unscaled & unpositioned.
 #[derive(Clone, Debug)]
 pub struct Outline {
     /// Unscaled bounding box.
