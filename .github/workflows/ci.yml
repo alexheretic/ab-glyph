@@ -18,7 +18,7 @@ jobs:
     - name: Build no_std ab_glyph_rasterizer
       run: (cd rasterizer && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
     - name: Build no_std ab_glyph
-      run: (cd glyph && cargo build --target thumbv6m-none-eabi --no-default-features --features libm-math)
+      run: (cd glyph && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
 
   rustfmt:
     runs-on: ubuntu-latest

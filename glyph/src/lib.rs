@@ -26,7 +26,7 @@ mod font;
 #[cfg(feature = "std")]
 mod font_arc;
 mod glyph;
-#[cfg(all(feature = "libm-math", not(feature = "std")))]
+#[cfg(all(feature = "libm", not(feature = "std")))]
 mod nostd_float;
 mod outlined;
 mod scale;

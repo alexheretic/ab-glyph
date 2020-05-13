@@ -21,7 +21,7 @@ if let Some(q) = font.outline_glyph(q_glyph) {
 ## no_std
 no_std environments are supported using `alloc` & [`libm`](https://github.com/rust-lang/libm).
 ```toml
-ab_glyph = { default-features = false, features = ["libm-math"] }
+ab_glyph = { default-features = false, features = ["libm"] }
 ```
 
 ## Comparison with [`rusttype`](https://gitlab.redox-os.org/redox-os/rusttype)
