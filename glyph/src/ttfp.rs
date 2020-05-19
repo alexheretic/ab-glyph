@@ -190,7 +190,10 @@ macro_rules! impl_font {
             fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
                 self.0
                     .as_font()
-                    .glyphs_kerning(first.into(), second.into())
+                    .kerning_subtables()
+                    .filter(|st| st.is_horizontal() && !st.is_variable())
+                    .filter_map(|st| st.glyphs_kerning(first.into(), second.into()))
+                    .next()
                     .map(f32::from)
                     .unwrap_or_default()
             }
