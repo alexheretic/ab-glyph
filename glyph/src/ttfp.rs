@@ -192,8 +192,7 @@ macro_rules! impl_font {
                     .as_font()
                     .kerning_subtables()
                     .filter(|st| st.is_horizontal() && !st.is_variable())
-                    .filter_map(|st| st.glyphs_kerning(first.into(), second.into()))
-                    .next()
+                    .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
                     .map(f32::from)
                     .unwrap_or_default()
             }
