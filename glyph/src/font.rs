@@ -1,4 +1,4 @@
-use crate::{Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont};
+use crate::{point, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont};
 
 /// Functionality required from font data.
 ///
@@ -54,6 +54,23 @@ pub trait Font {
     /// The number of glyphs present in this font. Glyph identifiers for this
     /// font will always be in the range `0..self.glyph_count()`
     fn glyph_count(&self) -> usize;
+
+    /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
+    ///
+    /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
+    /// Vertically: Glyph position +/- ascent/descent.
+    #[inline]
+    fn glyph_bounds(&self, glyph: &Glyph) -> Rect
+    where
+        Self: Sized,
+    {
+        let sf = self.as_scaled(glyph.scale);
+        let pos = glyph.position;
+        Rect {
+            min: point(pos.x - sf.h_side_bearing(glyph.id), pos.y - sf.ascent()),
+            max: point(pos.x + sf.h_advance(glyph.id), pos.y - sf.descent()),
+        }
+    }
 
     /// Compute glyph outline ready for drawing.
     #[inline]

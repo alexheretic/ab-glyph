@@ -154,13 +154,12 @@ pub trait ScaleFont<F: Font> {
     ///
     /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
     /// Vertically: Glyph position +/- ascent/descent.
+    ///
+    /// Note this method does not make use of the associated scale, as `Glyph`
+    /// already includes one of it's own.
     #[inline]
     fn glyph_bounds(&self, glyph: &Glyph) -> Rect {
-        let pos = glyph.position;
-        Rect {
-            min: point(pos.x - self.h_side_bearing(glyph.id), pos.y - self.ascent()),
-            max: point(pos.x + self.h_advance(glyph.id), pos.y - self.descent()),
-        }
+        self.font().glyph_bounds(glyph)
     }
 
     /// The number of glyphs present in this font. Glyph identifiers for this

@@ -1,5 +1,5 @@
 # Unreleased
-* Add `ScaleFont::glyph_bounds` method, similar to glyph_brush's `glyph_bounds` but for a single glyph.
+* Add `Font::glyph_bounds` method, similar to glyph_brush's `glyph_bounds` but for a single glyph.
 * Rename `OutlinedGlyph::bounds` to `OutlinedGlyph::px_bounds` for clarity.
 
 # 0.2.1
