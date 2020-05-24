@@ -70,9 +70,15 @@ impl OutlinedGlyph {
         &self.glyph
     }
 
+    #[deprecated = "Renamed to `px_bounds`"]
+    #[doc(hidden)]
+    pub fn bounds(&self) -> Rect {
+        self.px_bounds()
+    }
+
     /// Conservative whole number pixel bounding box for this glyph.
     #[inline]
-    pub fn bounds(&self) -> Rect {
+    pub fn px_bounds(&self) -> Rect {
         self.px_bounds
     }
 
