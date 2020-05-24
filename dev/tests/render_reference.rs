@@ -122,7 +122,7 @@ fn outline_draw<F: Font>(font: F, c: char, scale: f32) -> image::GrayAlphaImage 
     let font = font.into_scaled(scale);
 
     let glyph = font.outline_glyph(font.scaled_glyph(c)).unwrap();
-    let bounds = glyph.bounds();
+    let bounds = glyph.px_bounds();
 
     let mut glyph_image =
         DynamicImage::new_luma_a8(bounds.width() as _, bounds.height() as _).to_luma_alpha();

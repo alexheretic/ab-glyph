@@ -51,7 +51,7 @@ fn draw_ascii<F: Font>(font: F) {
     let mut pixel_data = vec![0.0; px_width * px_height];
     for g in glyphs {
         if let Some(og) = scaled_font.outline_glyph(g) {
-            let bounds = og.bounds();
+            let bounds = og.px_bounds();
             og.draw(|x, y, v| {
                 let x = x as f32 + bounds.min.x;
                 let y = y as f32 + bounds.min.y;

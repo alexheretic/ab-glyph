@@ -1,4 +1,4 @@
-use crate::{Font, Glyph, GlyphId, OutlinedGlyph};
+use crate::{point, Font, Glyph, GlyphId, OutlinedGlyph, Rect};
 
 /// Pixel scale.
 ///
@@ -148,6 +148,19 @@ pub trait ScaleFont<F: Font> {
     #[inline]
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
         self.h_scale_factor() * self.font().kern_unscaled(first, second)
+    }
+
+    /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
+    ///
+    /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
+    /// Vertically: Glyph position +/- ascent/descent.
+    #[inline]
+    fn glyph_bounds(&self, glyph: &Glyph) -> Rect {
+        let pos = glyph.position;
+        Rect {
+            min: point(pos.x - self.h_side_bearing(glyph.id), pos.y - self.ascent()),
+            max: point(pos.x + self.h_advance(glyph.id), pos.y - self.descent()),
+        }
     }
 
     /// The number of glyphs present in this font. Glyph identifiers for this
