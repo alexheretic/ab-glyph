@@ -78,7 +78,6 @@ pub trait Font {
     where
         Self: Sized,
     {
-        use crate::ScaleFont;
         let outline = self.outline(glyph.id)?;
         let scale_factor = self.as_scaled(glyph.scale).scale_factor();
         Some(OutlinedGlyph::new(glyph, outline, scale_factor))

@@ -1,4 +1,4 @@
-use crate::{point, Font, Glyph, GlyphId, OutlinedGlyph, Rect};
+use crate::{Font, Glyph, GlyphId, OutlinedGlyph, Rect};
 
 /// Pixel scale.
 ///
