@@ -192,7 +192,7 @@ macro_rules! impl_font {
                     .0
                     .as_font()
                     .glyph_ver_advance(id.into())
-                    .expect("Invalid glyph_hor_advance");
+                    .expect("Invalid glyph_ver_advance");
                 f32::from(advance)
             }
 
@@ -202,7 +202,7 @@ macro_rules! impl_font {
                     .0
                     .as_font()
                     .glyph_ver_side_bearing(id.into())
-                    .expect("Invalid glyph_hor_side_bearing");
+                    .expect("Invalid glyph_ver_side_bearing");
                 f32::from(advance)
             }
 
