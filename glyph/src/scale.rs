@@ -144,6 +144,18 @@ pub trait ScaleFont<F: Font> {
         self.h_scale_factor() * self.font().h_side_bearing_unscaled(id)
     }
 
+    /// Pixel scaled vertical advance for a given glyph.
+    #[inline]
+    fn v_advance(&self, id: GlyphId) -> f32 {
+        self.v_scale_factor() * self.font().v_advance_unscaled(id)
+    }
+
+    /// Pixel scaled vertical side bearing for a given glyph.
+    #[inline]
+    fn v_side_bearing(&self, id: GlyphId) -> f32 {
+        self.v_scale_factor() * self.font().v_side_bearing_unscaled(id)
+    }
+
     /// Returns additional pixel scaled kerning to apply for a particular pair of glyphs.
     #[inline]
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {

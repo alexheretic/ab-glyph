@@ -187,6 +187,26 @@ macro_rules! impl_font {
             }
 
             #[inline]
+            fn v_advance_unscaled(&self, id: GlyphId) -> f32 {
+                let advance = self
+                    .0
+                    .as_font()
+                    .glyph_ver_advance(id.into())
+                    .expect("Invalid glyph_hor_advance");
+                f32::from(advance)
+            }
+
+            #[inline]
+            fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
+                let advance = self
+                    .0
+                    .as_font()
+                    .glyph_ver_side_bearing(id.into())
+                    .expect("Invalid glyph_hor_side_bearing");
+                f32::from(advance)
+            }
+
+            #[inline]
             fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
                 self.0
                     .as_font()
