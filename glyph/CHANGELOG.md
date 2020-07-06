@@ -1,3 +1,6 @@
+# Unreleased
+* Add `v_advance` & `v_side_bearing` methods to `ScaleFont` + `_unscaled` variants to `Font`.
+
 # 0.2.2
 * Add `Font::glyph_bounds` method, similar to glyph_brush's `glyph_bounds` but for a single glyph.
 * Rename `OutlinedGlyph::bounds` to `OutlinedGlyph::px_bounds` for clarity.
