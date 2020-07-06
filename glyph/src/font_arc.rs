@@ -102,6 +102,16 @@ impl Font for FontArc {
     }
 
     #[inline]
+    fn v_advance_unscaled(&self, id: GlyphId) -> f32 {
+        self.0.v_advance_unscaled(id)
+    }
+
+    #[inline]
+    fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
+        self.0.v_side_bearing_unscaled(id)
+    }
+
+    #[inline]
     fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
         self.0.kern_unscaled(first, second)
     }

@@ -43,6 +43,16 @@ pub trait Font {
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32;
 
+    /// Unscaled vertical advance for a given glyph id.
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn v_advance_unscaled(&self, id: GlyphId) -> f32;
+
+    /// Unscaled vertical side bearing for a given glyph id.
+    ///
+    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32;
+
     /// Returns additional unscaled kerning to apply for a particular pair of glyph ids.
     ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
@@ -152,6 +162,16 @@ impl<F: Font> Font for &F {
     #[inline]
     fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
         (*self).h_side_bearing_unscaled(id)
+    }
+
+    #[inline]
+    fn v_advance_unscaled(&self, id: GlyphId) -> f32 {
+        (*self).v_advance_unscaled(id)
+    }
+
+    #[inline]
+    fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
+        (*self).v_side_bearing_unscaled(id)
     }
 
     #[inline]
