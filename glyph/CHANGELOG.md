@@ -1,4 +1,4 @@
-# Unreleased
+# 0.2.3
 * Add `v_advance` & `v_side_bearing` methods to `ScaleFont` + `_unscaled` variants to `Font`.
 
 # 0.2.2
