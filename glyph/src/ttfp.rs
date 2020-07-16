@@ -5,7 +5,7 @@ use crate::{point, Font, GlyphId, InvalidFont, Outline, Rect};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 use core::fmt;
-use owned_ttf_parser::AsFontRef;
+use owned_ttf_parser::AsFaceRef;
 
 impl From<GlyphId> for owned_ttf_parser::GlyphId {
     #[inline]
@@ -30,7 +30,7 @@ impl From<GlyphId> for owned_ttf_parser::GlyphId {
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
-pub struct FontRef<'font>(owned_ttf_parser::Font<'font>);
+pub struct FontRef<'font>(owned_ttf_parser::Face<'font>);
 
 impl fmt::Debug for FontRef<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -72,7 +72,7 @@ impl<'font> FontRef<'font> {
     #[inline]
     pub fn try_from_slice_and_index(data: &'font [u8], index: u32) -> Result<Self, InvalidFont> {
         Ok(Self(
-            owned_ttf_parser::Font::from_data(data, index).ok_or(InvalidFont)?,
+            owned_ttf_parser::Face::from_slice(data, index).ok_or(InvalidFont)?,
         ))
     }
 }
@@ -93,7 +93,7 @@ impl<'font> FontRef<'font> {
 /// assert_eq!(font.glyph_id('s'), ab_glyph::GlyphId(56));
 /// # Ok(()) }
 /// ```
-pub struct FontVec(owned_ttf_parser::OwnedFont);
+pub struct FontVec(owned_ttf_parser::OwnedFace);
 
 impl fmt::Debug for FontVec {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -136,7 +136,7 @@ impl FontVec {
     #[inline]
     pub fn try_from_vec_and_index(data: Vec<u8>, index: u32) -> Result<Self, InvalidFont> {
         Ok(Self(
-            owned_ttf_parser::OwnedFont::from_vec(data, index).ok_or(InvalidFont)?,
+            owned_ttf_parser::OwnedFace::from_vec(data, index).ok_or(InvalidFont)?,
         ))
     }
 }
@@ -147,22 +147,27 @@ macro_rules! impl_font {
         impl Font for $font {
             #[inline]
             fn ascent_unscaled(&self) -> f32 {
-                f32::from(self.0.as_font().ascender())
+                f32::from(self.0.as_face_ref().ascender())
             }
 
             #[inline]
             fn descent_unscaled(&self) -> f32 {
-                f32::from(self.0.as_font().descender())
+                f32::from(self.0.as_face_ref().descender())
             }
 
             #[inline]
             fn line_gap_unscaled(&self) -> f32 {
-                f32::from(self.0.as_font().line_gap())
+                f32::from(self.0.as_face_ref().line_gap())
             }
 
             #[inline]
             fn glyph_id(&self, c: char) -> GlyphId {
-                let index = self.0.as_font().glyph_index(c).map(|id| id.0).unwrap_or(0);
+                let index = self
+                    .0
+                    .as_face_ref()
+                    .glyph_index(c)
+                    .map(|id| id.0)
+                    .unwrap_or(0);
                 GlyphId(index)
             }
 
@@ -170,7 +175,7 @@ macro_rules! impl_font {
             fn h_advance_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
                     .0
-                    .as_font()
+                    .as_face_ref()
                     .glyph_hor_advance(id.into())
                     .expect("Invalid glyph_hor_advance");
                 f32::from(advance)
@@ -180,7 +185,7 @@ macro_rules! impl_font {
             fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
                     .0
-                    .as_font()
+                    .as_face_ref()
                     .glyph_hor_side_bearing(id.into())
                     .expect("Invalid glyph_hor_side_bearing");
                 f32::from(advance)
@@ -190,7 +195,7 @@ macro_rules! impl_font {
             fn v_advance_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
                     .0
-                    .as_font()
+                    .as_face_ref()
                     .glyph_ver_advance(id.into())
                     .expect("Invalid glyph_ver_advance");
                 f32::from(advance)
@@ -200,7 +205,7 @@ macro_rules! impl_font {
             fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
                     .0
-                    .as_font()
+                    .as_face_ref()
                     .glyph_ver_side_bearing(id.into())
                     .expect("Invalid glyph_ver_side_bearing");
                 f32::from(advance)
@@ -209,7 +214,7 @@ macro_rules! impl_font {
             #[inline]
             fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
                 self.0
-                    .as_font()
+                    .as_face_ref()
                     .kerning_subtables()
                     .filter(|st| st.is_horizontal() && !st.is_variable())
                     .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
@@ -225,7 +230,10 @@ macro_rules! impl_font {
                     y_min,
                     x_max,
                     y_max,
-                } = self.0.as_font().outline_glyph(id.into(), &mut outliner)?;
+                } = self
+                    .0
+                    .as_face_ref()
+                    .outline_glyph(id.into(), &mut outliner)?;
 
                 let bounds = Rect {
                     min: point(x_min as f32, y_max as f32),
@@ -240,7 +248,7 @@ macro_rules! impl_font {
 
             #[inline]
             fn glyph_count(&self) -> usize {
-                self.0.as_font().number_of_glyphs() as _
+                self.0.as_face_ref().number_of_glyphs() as _
             }
         }
     };
