@@ -1,5 +1,5 @@
-# Unreleased
-* Update _ttf-parser_ to `0.7`.
+# 0.2.4
+* Update _ttf-parser_ to `0.7` adding CID font support.
 
 # 0.2.3
 * Add `v_advance` & `v_side_bearing` methods to `ScaleFont` + `_unscaled` variants to `Font`.
