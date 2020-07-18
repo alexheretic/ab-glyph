@@ -2,9 +2,49 @@ use crate::{point, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont,
 
 /// Functionality required from font data.
 ///
-/// See [`FontArc`](struct.FontArc.html), [`FontRef`](struct.FontRef.html) &
-/// [`FontVec`](struct.FontVec.html).
+/// See also [`FontArc`](struct.FontArc.html), [`FontRef`](struct.FontRef.html)
+/// and [`FontVec`](struct.FontVec.html).
+///
+/// ## Units
+///
+/// Units of unscaled accessors are "font units", which is an arbitrary unit
+/// defined by the font. See [`Font::units_per_em`].
+///
+/// Font sizes are typically specified in "points". According to the modern
+/// standard, 1pt = 1/72in. The "point size" of a font is
+/// the number of points per em.
+///
+/// The DPI (dots-per-inch) of a screen depends on the screen in question;
+/// 96 DPI is often considered the "standard". For high-DPI displays the
+/// DPI may be specified directly or one may multiply 96 by a scale-factor.
+///
+/// Thus, for example, a 10pt font on a 96 pixels-per-inch display has
+/// 10 / 72 * 96 = 13.333... pixels-per-em. If we divide this number by
+/// `units_per_em` we then get a scaling factor: pixels-per-font-unit.
+///
+/// Note however that since [`PxScale`] values are relative to the text height,
+/// one further step is needed: multiply by [`Font::height_unscaled`].
+///
+/// ```
+/// use ab_glyph::{Font, PxScale};
+///
+/// fn pt_size_to_px_scale<F: Font>(font: &F, pt_size: f32, screen_scale_factor: f32) -> PxScale {
+///     let px_per_em = pt_size * screen_scale_factor * (96.0 / 72.0);
+///     let units_per_em = font.units_per_em().unwrap();
+///     let height = font.height_unscaled();
+///     PxScale::from(px_per_em * height / units_per_em)
+/// }
+/// ```
 pub trait Font {
+    /// Get the size of the font unit
+    ///
+    /// This returns "font units per em", where 1em is a base unit of font scale
+    /// (typically the width of a capital 'M').
+    ///
+    /// Returns `None` in case the font unit size exceeds the expected range.
+    /// See [`Face::units_per_em`](https://docs.rs/ttf-parser/0.7.0/ttf_parser/struct.Face.html#method.units_per_em).
+    fn units_per_em(&self) -> Option<f32>;
+
     /// Unscaled glyph ascent.
     ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
@@ -134,6 +174,11 @@ pub trait Font {
 }
 
 impl<F: Font> Font for &F {
+    #[inline]
+    fn units_per_em(&self) -> Option<f32> {
+        (*self).units_per_em()
+    }
+
     #[inline]
     fn ascent_unscaled(&self) -> f32 {
         (*self).ascent_unscaled()
