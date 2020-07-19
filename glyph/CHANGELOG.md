@@ -1,3 +1,6 @@
+# Unreleased
+* Add `Font::units_per_em` + documentation on unscaled font units.
+
 # 0.2.4
 * Update _ttf-parser_ to `0.7` adding CID font support.
 
