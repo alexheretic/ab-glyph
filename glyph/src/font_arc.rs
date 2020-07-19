@@ -72,6 +72,11 @@ impl fmt::Debug for FontArc {
 
 impl Font for FontArc {
     #[inline]
+    fn units_per_em(&self) -> Option<f32> {
+        self.0.units_per_em()
+    }
+
+    #[inline]
     fn ascent_unscaled(&self) -> f32 {
         self.0.ascent_unscaled()
     }

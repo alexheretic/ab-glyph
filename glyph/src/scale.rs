@@ -2,6 +2,11 @@ use crate::{Font, Glyph, GlyphId, OutlinedGlyph, Rect};
 
 /// Pixel scale.
 ///
+/// This is the pixel-height of text.
+///
+/// Usually one uses `x == y`, but one may use a different ratio to stretch a
+/// font horizontally or vertically.
+///
 /// # Example
 /// ```
 /// use ab_glyph::PxScale;
@@ -13,6 +18,8 @@ pub struct PxScale {
     /// Horizontal scale in pixels.
     pub x: f32,
     /// Vertical scale in pixels.
+    ///
+    /// By definition, this is the pixel-height of a font.
     pub y: f32,
 }
 
@@ -94,6 +101,8 @@ pub trait ScaleFont<F: Font> {
     }
 
     /// Pixel scaled height `ascent - descent`.
+    ///
+    /// By definition of [`PxScale`], this is `self.scale().y`.
     #[inline]
     fn height(&self) -> f32 {
         self.scale().y

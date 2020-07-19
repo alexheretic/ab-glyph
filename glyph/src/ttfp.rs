@@ -146,6 +146,11 @@ macro_rules! impl_font {
     ($font:ty) => {
         impl Font for $font {
             #[inline]
+            fn units_per_em(&self) -> Option<f32> {
+                self.0.as_face_ref().units_per_em().map(|u| f32::from(u))
+            }
+
+            #[inline]
             fn ascent_unscaled(&self) -> f32 {
                 f32::from(self.0.as_face_ref().ascender())
             }
