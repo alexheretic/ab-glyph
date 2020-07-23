@@ -72,7 +72,7 @@ impl<'font> FontRef<'font> {
     #[inline]
     pub fn try_from_slice_and_index(data: &'font [u8], index: u32) -> Result<Self, InvalidFont> {
         Ok(Self(
-            owned_ttf_parser::Face::from_slice(data, index).ok_or(InvalidFont)?,
+            owned_ttf_parser::Face::from_slice(data, index).map_err(|_| InvalidFont)?,
         ))
     }
 }
@@ -136,7 +136,7 @@ impl FontVec {
     #[inline]
     pub fn try_from_vec_and_index(data: Vec<u8>, index: u32) -> Result<Self, InvalidFont> {
         Ok(Self(
-            owned_ttf_parser::OwnedFace::from_vec(data, index).ok_or(InvalidFont)?,
+            owned_ttf_parser::OwnedFace::from_vec(data, index).map_err(|_| InvalidFont)?,
         ))
     }
 }
@@ -147,7 +147,7 @@ macro_rules! impl_font {
         impl Font for $font {
             #[inline]
             fn units_per_em(&self) -> Option<f32> {
-                self.0.as_face_ref().units_per_em().map(|u| f32::from(u))
+                self.0.as_face_ref().units_per_em().map(f32::from)
             }
 
             #[inline]
