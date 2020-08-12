@@ -38,6 +38,13 @@ impl fmt::Debug for FontRef<'_> {
     }
 }
 
+impl<'font> owned_ttf_parser::AsFaceRef for FontRef<'font> {
+    #[inline]
+    fn as_face_ref(&self) -> &owned_ttf_parser::Face<'_> {
+        self.0.as_face_ref()
+    }
+}
+
 impl<'font> FontRef<'font> {
     /// Creates an `FontRef` from a byte-slice.
     ///
@@ -101,6 +108,13 @@ impl fmt::Debug for FontVec {
     }
 }
 
+impl owned_ttf_parser::AsFaceRef for FontVec {
+    #[inline]
+    fn as_face_ref(&self) -> &owned_ttf_parser::Face<'_> {
+        self.0.as_face_ref()
+    }
+}
+
 impl FontVec {
     /// Creates an `FontVec` from owned data.
     ///
@@ -147,28 +161,27 @@ macro_rules! impl_font {
         impl Font for $font {
             #[inline]
             fn units_per_em(&self) -> Option<f32> {
-                self.0.as_face_ref().units_per_em().map(f32::from)
+                self.as_face_ref().units_per_em().map(f32::from)
             }
 
             #[inline]
             fn ascent_unscaled(&self) -> f32 {
-                f32::from(self.0.as_face_ref().ascender())
+                f32::from(self.as_face_ref().ascender())
             }
 
             #[inline]
             fn descent_unscaled(&self) -> f32 {
-                f32::from(self.0.as_face_ref().descender())
+                f32::from(self.as_face_ref().descender())
             }
 
             #[inline]
             fn line_gap_unscaled(&self) -> f32 {
-                f32::from(self.0.as_face_ref().line_gap())
+                f32::from(self.as_face_ref().line_gap())
             }
 
             #[inline]
             fn glyph_id(&self, c: char) -> GlyphId {
                 let index = self
-                    .0
                     .as_face_ref()
                     .glyph_index(c)
                     .map(|id| id.0)
@@ -179,7 +192,6 @@ macro_rules! impl_font {
             #[inline]
             fn h_advance_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
-                    .0
                     .as_face_ref()
                     .glyph_hor_advance(id.into())
                     .expect("Invalid glyph_hor_advance");
@@ -189,7 +201,6 @@ macro_rules! impl_font {
             #[inline]
             fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
-                    .0
                     .as_face_ref()
                     .glyph_hor_side_bearing(id.into())
                     .expect("Invalid glyph_hor_side_bearing");
@@ -199,7 +210,6 @@ macro_rules! impl_font {
             #[inline]
             fn v_advance_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
-                    .0
                     .as_face_ref()
                     .glyph_ver_advance(id.into())
                     .expect("Invalid glyph_ver_advance");
@@ -209,7 +219,6 @@ macro_rules! impl_font {
             #[inline]
             fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
                 let advance = self
-                    .0
                     .as_face_ref()
                     .glyph_ver_side_bearing(id.into())
                     .expect("Invalid glyph_ver_side_bearing");
@@ -218,8 +227,7 @@ macro_rules! impl_font {
 
             #[inline]
             fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
-                self.0
-                    .as_face_ref()
+                self.as_face_ref()
                     .kerning_subtables()
                     .filter(|st| st.is_horizontal() && !st.is_variable())
                     .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
@@ -235,10 +243,7 @@ macro_rules! impl_font {
                     y_min,
                     x_max,
                     y_max,
-                } = self
-                    .0
-                    .as_face_ref()
-                    .outline_glyph(id.into(), &mut outliner)?;
+                } = self.as_face_ref().outline_glyph(id.into(), &mut outliner)?;
 
                 let bounds = Rect {
                     min: point(x_min as f32, y_max as f32),
@@ -253,7 +258,7 @@ macro_rules! impl_font {
 
             #[inline]
             fn glyph_count(&self) -> usize {
-                self.0.as_face_ref().number_of_glyphs() as _
+                self.as_face_ref().number_of_glyphs() as _
             }
         }
     };
