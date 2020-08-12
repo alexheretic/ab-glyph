@@ -49,6 +49,24 @@ impl FontArc {
         Ok(FontVec::try_from_vec(data)?.into())
     }
 
+    /// Creates an `FontArc` from owned data.
+    ///
+    /// You can set index for font collections. For simple fonts use `0` or
+    /// [`FontArc::try_from_vec`](#method.try_from_vec).
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
+    /// let font = FontArc::try_from_vec_and_index(owned_font_data, 0)?;
+    /// # Ok(()) }
+    /// ```
+    #[inline]
+    pub fn try_from_vec_and_index(data: Vec<u8>, index: u32) -> Result<Self, InvalidFont> {
+        Ok(FontVec::try_from_vec_and_index(data, index)?.into())
+    }
+
     /// Creates an `FontArc` from a byte-slice.
     ///
     /// # Example
@@ -61,6 +79,25 @@ impl FontArc {
     #[inline]
     pub fn try_from_slice(data: &'static [u8]) -> Result<Self, InvalidFont> {
         let font = owned_ttf_parser::Face::from_slice(data, 0).map_err(|_| InvalidFont)?;
+        Ok(font.into())
+    }
+
+    /// Creates an `FontArc` from byte-slice.
+    ///
+    /// You can set index for font collections. For simple fonts use `0` or
+    /// [`FontArc::try_from_slice`](#method.try_from_slice).
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// let font =
+    ///     FontArc::try_from_slice_and_index(include_bytes!("../../dev/fonts/Exo2-Light.otf"), 0)?;
+    /// # Ok(()) }
+    /// ```
+    #[inline]
+    pub fn try_from_slice_and_index(data: &'static [u8], index: u32) -> Result<Self, InvalidFont> {
+        let font = owned_ttf_parser::Face::from_slice(data, index).map_err(|_| InvalidFont)?;
         Ok(font.into())
     }
 }
