@@ -45,6 +45,13 @@ impl<'font> owned_ttf_parser::AsFaceRef for FontRef<'font> {
     }
 }
 
+impl<'font> From<owned_ttf_parser::Face<'font>> for FontRef<'font> {
+    #[inline]
+    fn from(font: owned_ttf_parser::Face<'font>) -> Self {
+        FontRef(font)
+    }
+}
+
 impl<'font> FontRef<'font> {
     /// Creates an `FontRef` from a byte-slice.
     ///
@@ -266,3 +273,4 @@ macro_rules! impl_font {
 
 impl_font!(FontRef<'_>);
 impl_font!(FontVec);
+impl_font!(owned_ttf_parser::Face<'_>);

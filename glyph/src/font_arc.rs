@@ -60,7 +60,8 @@ impl FontArc {
     /// ```
     #[inline]
     pub fn try_from_slice(data: &'static [u8]) -> Result<Self, InvalidFont> {
-        Ok(FontRef::try_from_slice(data)?.into())
+        let font = owned_ttf_parser::Face::from_slice(data, 0).map_err(|_| InvalidFont)?;
+        Ok(font.into())
     }
 }
 
@@ -141,6 +142,12 @@ impl From<FontVec> for FontArc {
 impl From<FontRef<'static>> for FontArc {
     #[inline]
     fn from(font: FontRef<'static>) -> Self {
+        Self::new(font)
+    }
+}
+impl From<owned_ttf_parser::Face<'static>> for FontArc {
+    #[inline]
+    fn from(font: owned_ttf_parser::Face<'static>) -> Self {
         Self::new(font)
     }
 }
