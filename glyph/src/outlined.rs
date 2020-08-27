@@ -84,8 +84,9 @@ impl OutlinedGlyph {
 
     /// Draw this glyph outline using a pixel & coverage handling function.
     ///
-    /// The callback will be called for each `(x, y)` coordinate inside the pixel bounds
-    /// with a coverage value in the range `[0.0, 1.0]`.
+    /// The callback will be called for each `(x, y)` pixel coordinate inside the bounds
+    /// with a coverage value in the range `[0.0, 1.0]` indicating how much the glyph covered
+    /// that pixel.
     pub fn draw<O: FnMut(u32, u32, f32)>(&self, o: O) {
         use ab_glyph_rasterizer::Rasterizer;
         let h_factor = self.scale_factor.horizontal;
