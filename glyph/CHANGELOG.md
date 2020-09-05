@@ -1,3 +1,6 @@
+# Unreleased
+* Clarify documentation.
+
 # 0.2.5
 * Add `Font::units_per_em` + documentation on unscaled font units.
 * Update _ttf-parser_ to `0.8`.
