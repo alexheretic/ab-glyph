@@ -90,20 +90,28 @@ impl Rasterizer {
             let x1i = x1ceil as i32;
             if x1i <= x0i + 1 {
                 let xmf = 0.5 * (x + xnext) - x0floor;
-                self.a[linestart.wrapping_add(x0i as usize)] += d - d * xmf;
-                self.a[linestart + (x0i + 1) as usize] += d * xmf;
+                let linestart_x0i = linestart as isize + x0i as isize;
+                if linestart_x0i < 0 {
+                    continue; // oob index
+                }
+                self.a[linestart_x0i as usize] += d - d * xmf;
+                self.a[linestart_x0i as usize + 1] += d * xmf;
             } else {
                 let s = (x1 - x0).recip();
                 let x0f = x0 - x0floor;
                 let a0 = 0.5 * s * (1.0 - x0f) * (1.0 - x0f);
                 let x1f = x1 - x1ceil + 1.0;
                 let am = 0.5 * s * x1f * x1f;
-                self.a[linestart.wrapping_add(x0i as usize)] += d * a0;
+                let linestart_x0i = linestart as isize + x0i as isize;
+                if linestart_x0i < 0 {
+                    continue; // oob index
+                }
+                self.a[linestart_x0i as usize] += d * a0;
                 if x1i == x0i + 2 {
-                    self.a[linestart + (x0i + 1) as usize] += d * (1.0 - a0 - am);
+                    self.a[linestart_x0i as usize + 1] += d * (1.0 - a0 - am);
                 } else {
                     let a1 = s * (1.5 - x0f);
-                    self.a[linestart + (x0i + 1) as usize] += d * (a1 - a0);
+                    self.a[linestart_x0i as usize + 1] += d * (a1 - a0);
                     for xi in x0i + 2..x1i - 1 {
                         self.a[linestart + xi as usize] += d * s;
                     }
