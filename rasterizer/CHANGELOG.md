@@ -1,4 +1,4 @@
-# Unreleased
+# 0.1.3
 * Fix index oob panic scenario.
 
 # 0.1.2
