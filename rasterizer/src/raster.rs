@@ -45,6 +45,37 @@ impl Rasterizer {
         }
     }
 
+    /// Resets the rasterizer to an empty `width` x `height` alpha grid. This method behaves as if
+    /// the Rasterizer were re-created, with the advantage of not allocating if the total number of
+    /// pixels of the grid does not increase.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::Rasterizer;
+    /// # let mut rasterizer = Rasterizer::new(14, 38);
+    /// rasterizer.reset(12, 24);
+    /// assert_eq!(rasterizer.dimensions(), (12, 24));
+    /// ```
+    pub fn reset(&mut self, width: usize, height: usize) {
+        self.width = width;
+        self.height = height;
+        self.a.truncate(0);
+        self.a.resize(width * height + 4, 0.0);
+    }
+
+    /// Clears the rasterizer. This method behaves as if the Rasterizer were re-created with the same
+    /// dimensions, but does not perform an allocation.
+    ///
+    /// ```
+    /// # use ab_glyph_rasterizer::Rasterizer;
+    /// # let mut rasterizer = Rasterizer::new(14, 38);
+    /// rasterizer.clear();
+    /// ```
+    pub fn clear(&mut self) {
+        for px in &mut self.a {
+            *px = 0.0;
+        }
+    }
+
     /// Returns the dimensions the rasterizer was built to draw to.
     ///
     /// ```
