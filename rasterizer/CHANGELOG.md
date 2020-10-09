@@ -1,5 +1,5 @@
-# Unreleased
-* Add `Rasterizer::reset`, `Rasterizer::clear` methods to allow reusing & reducing allocation.
+# 0.1.4
+* Add `Rasterizer::reset`, `Rasterizer::clear` methods to allow allocation reuse.
 
 # 0.1.3
 * Fix index oob panic scenario.
