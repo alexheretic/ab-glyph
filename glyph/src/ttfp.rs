@@ -2,8 +2,10 @@
 mod outliner;
 
 use crate::{point, Font, GlyphId, InvalidFont, Outline, Rect};
+use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
+use core::convert::TryFrom;
 use core::fmt;
 use owned_ttf_parser::AsFaceRef;
 
@@ -254,6 +256,37 @@ macro_rules! impl_font {
             #[inline]
             fn glyph_count(&self) -> usize {
                 self.0.as_face_ref().number_of_glyphs() as _
+            }
+
+            fn codepoint_ids<'a>(&'a self) -> crate::CodepointIdIter<'a> {
+                let face_ref = self.0.as_face_ref();
+
+                #[cfg(feature = "std")]
+                let mut used_indices =
+                    std::collections::HashSet::with_capacity(face_ref.number_of_glyphs() as _);
+                #[cfg(not(feature = "std"))]
+                let mut used_indices = alloc::collections::BTreeSet::new();
+
+                let inner = Box::new(
+                    face_ref
+                        .character_mapping_subtables()
+                        .filter(|s| s.is_unicode())
+                        .flat_map(move |subtable| {
+                            let mut pairs = Vec::new();
+                            subtable.codepoints(|c| {
+                                if let Ok(ch) = char::try_from(c) {
+                                    if let Some(idx) = subtable.glyph_index(c).filter(|i| i.0 > 0) {
+                                        if used_indices.insert(idx.0) {
+                                            pairs.push((GlyphId(idx.0), ch));
+                                        }
+                                    }
+                                }
+                            });
+                            pairs
+                        }),
+                );
+
+                crate::CodepointIdIter { inner }
             }
         }
     };

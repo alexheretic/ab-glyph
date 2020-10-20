@@ -21,6 +21,7 @@
 
 extern crate alloc;
 
+mod codepoint_ids;
 mod err;
 mod font;
 #[cfg(feature = "std")]
@@ -35,6 +36,7 @@ mod ttfp;
 #[cfg(feature = "std")]
 pub use crate::font_arc::*;
 pub use crate::{
+    codepoint_ids::*,
     err::*,
     font::*,
     glyph::*,

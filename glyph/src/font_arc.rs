@@ -130,6 +130,11 @@ impl Font for FontArc {
     fn glyph_count(&self) -> usize {
         self.0.glyph_count()
     }
+
+    #[inline]
+    fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
+        self.0.codepoint_ids()
+    }
 }
 
 impl From<FontVec> for FontArc {
