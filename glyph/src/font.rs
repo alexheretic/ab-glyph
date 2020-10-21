@@ -105,6 +105,29 @@ pub trait Font {
     /// font will always be in the range `0..self.glyph_count()`
     fn glyph_count(&self) -> usize;
 
+    /// Returns an iterator of all distinct `(GlyphId, char)` pairs. Not ordered.
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::{Font, FontRef, GlyphId};
+    /// # use std::collections::HashMap;
+    /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
+    /// let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
+    ///
+    /// // Iterate over pairs, each id will appear at most once.
+    /// let mut codepoint_ids = font.codepoint_ids();
+    /// assert_eq!(codepoint_ids.next(), Some((GlyphId(408), '\r')));
+    /// assert_eq!(codepoint_ids.next(), Some((GlyphId(1), ' ')));
+    /// assert_eq!(codepoint_ids.next(), Some((GlyphId(75), '!')));
+    ///
+    /// // Build a lookup map for all ids
+    /// let map: HashMap<_, _> = font.codepoint_ids().collect();
+    /// assert_eq!(map.get(&GlyphId(75)), Some(&'!'));
+    /// # assert_eq!(map.len(), 908);
+    /// # Ok(()) }
+    /// ```
+    fn codepoint_ids(&self) -> crate::CodepointIdIter<'_>;
+
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
     /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
@@ -232,5 +255,10 @@ impl<F: Font> Font for &F {
     #[inline]
     fn glyph_count(&self) -> usize {
         (*self).glyph_count()
+    }
+
+    #[inline]
+    fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
+        (*self).codepoint_ids()
     }
 }

@@ -190,6 +190,11 @@ pub trait ScaleFont<F: Font> {
         self.font().glyph_count()
     }
 
+    /// Returns an iterator of all distinct `(GlyphId, char)` pairs. Not ordered.
+    ///
+    /// Same as [`Font::codepoint_ids`](trait.Font.html#tymethod.codepoint_ids).
+    fn codepoint_ids(&self) -> crate::CodepointIdIter<'_>;
+
     /// Compute glyph outline ready for drawing.
     ///
     /// Note this method does not make use of the associated scale, as `Glyph`
@@ -209,6 +214,11 @@ impl<F: Font, SF: ScaleFont<F>> ScaleFont<F> for &SF {
     #[inline]
     fn font(&self) -> &F {
         (*self).font()
+    }
+
+    #[inline]
+    fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
+        (*self).codepoint_ids()
     }
 }
 
@@ -236,5 +246,10 @@ impl<F: Font> ScaleFont<F> for PxScaleFont<F> {
     #[inline]
     fn font(&self) -> &F {
         &self.font
+    }
+
+    #[inline]
+    fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
+        self.font.codepoint_ids()
     }
 }
