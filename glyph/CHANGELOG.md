@@ -1,4 +1,4 @@
-# Unreleased
+# 0.2.6
 * Add `Font::codepoint_ids` method for iterating over `(GlyphId, char)` pairs.
 * Clarify documentation.
 
