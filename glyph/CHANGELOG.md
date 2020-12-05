@@ -1,3 +1,6 @@
+# Unreleased
+* Update _ttf-parser_ to `0.9`.
+
 # 0.2.6
 * Add `Font::codepoint_ids` method for iterating over `(GlyphId, char)` pairs.
 * Clarify documentation.
