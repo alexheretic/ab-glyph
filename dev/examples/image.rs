@@ -43,7 +43,7 @@ fn draw_image<F: Font>(font: F) {
     };
 
     // Create a new rgba image with some padding
-    let mut image = DynamicImage::new_rgba8(glyphs_width + 40, glyphs_height + 40).to_rgba();
+    let mut image = DynamicImage::new_rgba8(glyphs_width + 40, glyphs_height + 40).to_rgba8();
 
     // Loop through the glyphs in the text, positing each one on a line
     for glyph in glyphs {

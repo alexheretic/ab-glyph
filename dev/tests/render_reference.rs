@@ -17,7 +17,7 @@ macro_rules! compare_image {
             image::ImageFormat::Png,
         )
         .expect("!image::load")
-        .to_luma_alpha();
+        .to_luma_alpha8();
 
         assert_eq!(reference.dimensions(), new_image.dimensions());
 
@@ -125,7 +125,7 @@ fn outline_draw<F: Font>(font: F, c: char, scale: f32) -> image::GrayAlphaImage 
     let bounds = glyph.px_bounds();
 
     let mut glyph_image =
-        DynamicImage::new_luma_a8(bounds.width() as _, bounds.height() as _).to_luma_alpha();
+        DynamicImage::new_luma_a8(bounds.width() as _, bounds.height() as _).to_luma_alpha8();
     glyph.draw(|x, y, alpha| {
         glyph_image.put_pixel(x, y, LumaA([128, (alpha * 255.0).round() as u8]))
     });
@@ -134,7 +134,7 @@ fn outline_draw<F: Font>(font: F, c: char, scale: f32) -> image::GrayAlphaImage 
 
 fn draw_grey_image(rasterizer: Rasterizer) -> image::GrayAlphaImage {
     let (w, h) = rasterizer.dimensions();
-    let mut glyph_image = DynamicImage::new_luma_a8(w as _, h as _).to_luma_alpha();
+    let mut glyph_image = DynamicImage::new_luma_a8(w as _, h as _).to_luma_alpha8();
 
     rasterizer.for_each_pixel_2d(|x, y, alpha| {
         glyph_image.put_pixel(x, y, LumaA([128, (alpha * 255.0).round() as u8]))
