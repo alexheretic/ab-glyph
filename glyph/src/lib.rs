@@ -44,3 +44,4 @@ pub use crate::{
     scale::*,
     ttfp::{FontRef, FontVec},
 };
+pub use ab_glyph_rasterizer::{point, Point, Rasterizer};

@@ -50,8 +50,7 @@ pub struct OutlinedGlyph {
 }
 
 impl OutlinedGlyph {
-    /// Constructs an `OutlinedGlyph` from the source `Glyph`, pixel bounds
-    /// & relatively positioned outline curves.
+    /// Constructs from a glyph, relatively positioned outline curves & scale-factor.
     #[inline]
     pub fn new(glyph: Glyph, outline: Outline, scale_factor: PxScaleFactor) -> Self {
         // work this out now as it'll usually be used more than once

@@ -1,8 +1,4 @@
-use crate::PxScale;
-
-/// An (x, y) coordinate. `Point { x: f32, y: f32 }`
-pub type Point = ab_glyph_rasterizer::Point;
-pub use ab_glyph_rasterizer::point;
+use crate::{Point, PxScale};
 
 /// Glyph id.
 ///
