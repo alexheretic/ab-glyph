@@ -1,3 +1,6 @@
+//! Draws text into `image_example.png`.
+//!
+//! Use a custom font file: `cargo run --example image /path/to/font.otf`
 use ab_glyph::{point, Font, FontRef, FontVec, PxScale, ScaleFont};
 use image::{DynamicImage, Rgba};
 
@@ -13,6 +16,9 @@ fn main() {
                 font_path
             ));
         });
+        if let Some(name) = font_path.file_name().and_then(|n| n.to_str()) {
+            eprintln!("Using font: {}", name);
+        }
         draw_image(font);
     } else {
         eprintln!("No font specified ... using OpenSans-Italic.ttf");
