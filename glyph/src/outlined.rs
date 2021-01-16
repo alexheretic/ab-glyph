@@ -1,6 +1,7 @@
 #[cfg(all(feature = "libm", not(feature = "std")))]
 use crate::nostd_float::FloatExt;
 use crate::{point, Glyph, Point, PxScaleFactor};
+use ab_glyph_rasterizer::Rasterizer;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
@@ -87,22 +88,44 @@ impl OutlinedGlyph {
     /// The callback will be called for each `(x, y)` pixel coordinate inside the bounds
     /// with a coverage value in the range `[0.0, 1.0]` indicating how much the glyph covered
     /// that pixel.
-    pub fn draw<O: FnMut(u32, u32, f32)>(&self, o: O) {
-        use ab_glyph_rasterizer::Rasterizer;
+    #[inline]
+    pub fn draw<O>(&self, o: O)
+    where
+        O: FnMut(u32, u32, f32),
+    {
+        self.inner_draw_using(
+            &mut Rasterizer::new(self.px_bounds.width() as _, self.px_bounds.height() as _),
+            o,
+        )
+    }
+
+    /// Draw this glyph outline using a pixel & coverage handling function.
+    ///
+    /// Similar to [`OutlinedGlyph::draw`] but takes a `&mut Rasterizer` which can minimise/eliminate
+    /// allocation by allowing reuse.
+    #[inline]
+    pub fn draw_using<O>(&self, rasterizer: &mut Rasterizer, o: O)
+    where
+        O: FnMut(u32, u32, f32),
+    {
+        rasterizer.reset(self.px_bounds.width() as _, self.px_bounds.height() as _);
+        self.inner_draw_using(rasterizer, o)
+    }
+
+    // Note: Must be called with a correctly sized & empty `rasterizer`.
+    fn inner_draw_using<O>(&self, rasterizer: &mut Rasterizer, o: O)
+    where
+        O: FnMut(u32, u32, f32),
+    {
         let h_factor = self.scale_factor.horizontal;
         let v_factor = -self.scale_factor.vertical;
         let offset = self.glyph.position - self.px_bounds.min;
-        let (w, h) = (
-            self.px_bounds.width() as usize,
-            self.px_bounds.height() as usize,
-        );
-
         let scale_up = |&Point { x, y }| point(x * h_factor, y * v_factor);
 
         self.outline
             .curves
             .iter()
-            .fold(Rasterizer::new(w, h), |mut rasterizer, curve| match curve {
+            .fold(rasterizer, |rasterizer, curve| match curve {
                 OutlineCurve::Line(p0, p1) => {
                     // eprintln!("r.draw_line({:?}, {:?});",
                     //     scale_up(p0) + offset, scale_up(p1) + offset);
