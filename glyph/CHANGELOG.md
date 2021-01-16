@@ -1,3 +1,6 @@
+# Unreleased
+* Update _ttf-parser_ to `0.10`.
+
 # 0.2.7
 * Update _ttf-parser_ to `0.9`.
 
