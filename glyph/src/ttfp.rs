@@ -1,6 +1,9 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
+mod bbox;
 mod outliner;
 
+#[cfg(all(feature = "libm", not(feature = "std")))]
+use crate::nostd_float::FloatExt;
 use crate::{point, Font, GlyphId, InvalidFont, Outline, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
@@ -242,15 +245,22 @@ macro_rules! impl_font {
                     .as_face_ref()
                     .outline_glyph(id.into(), &mut outliner)?;
 
-                let bounds = Rect {
-                    min: point(x_min as f32, y_max as f32),
-                    max: point(x_max as f32, y_min as f32),
+                let curves = outliner.take_outline();
+                let bounds = if x_min < x_max && y_min < y_max {
+                    Rect {
+                        min: point(x_min as f32, y_max as f32),
+                        max: point(x_max as f32, y_min as f32),
+                    }
+                } else {
+                    // Work around malformed font bbox by re-computing from curves.
+                    let bbox = bbox::BoundingBox::try_from(curves.as_slice()).ok()?;
+                    Rect {
+                        min: point(bbox.xmin.floor(), bbox.ymax.ceil()),
+                        max: point(bbox.xmax.ceil(), bbox.ymin.floor()),
+                    }
                 };
 
-                Some(Outline {
-                    bounds,
-                    curves: outliner.take_outline(),
-                })
+                Some(Outline { bounds, curves })
             }
 
             #[inline]
