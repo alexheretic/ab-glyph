@@ -1,4 +1,5 @@
 # Unreleased
+* Add fallback bounding box calculation for malformed font glyphs with zero sized boxes.
 * Update _ttf-parser_ to `0.10`.
 
 # 0.2.7
