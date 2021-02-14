@@ -1,9 +1,6 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
-mod bbox;
 mod outliner;
 
-#[cfg(all(feature = "libm", not(feature = "std")))]
-use crate::nostd_float::FloatExt;
 use crate::{point, Font, GlyphId, InvalidFont, Outline, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
@@ -252,12 +249,8 @@ macro_rules! impl_font {
                         max: point(x_max as f32, y_min as f32),
                     }
                 } else {
-                    // Work around malformed font bbox by re-computing from curves.
-                    let bbox = bbox::BoundingBox::try_from(curves.as_slice()).ok()?;
-                    Rect {
-                        min: point(bbox.xmin.floor(), bbox.ymax.ceil()),
-                        max: point(bbox.xmax.ceil(), bbox.ymin.floor()),
-                    }
+                    // This should be unreachable since ttf-parser 0.12 even for malformed fonts
+                    panic!("Invalid bounding box from Face::outline_glyph");
                 };
 
                 Some(Outline { bounds, curves })
