@@ -128,6 +128,10 @@ pub trait Font {
     /// ```
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_>;
 
+    /// Returns the underlying ttf_parser::Face which can be used to access properties of the font
+    /// not directly exposed by this library (glyph names, raster images for emoji, kerning, etc).
+    fn as_ttf_face(&self) -> &owned_ttf_parser::Face<'_>;
+
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
     /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
@@ -260,5 +264,10 @@ impl<F: Font> Font for &F {
     #[inline]
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
         (*self).codepoint_ids()
+    }
+
+    #[inline]
+    fn as_ttf_face(&self) -> &owned_ttf_parser::Face<'_> {
+        (*self).as_ttf_face()
     }
 }

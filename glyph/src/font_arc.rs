@@ -135,6 +135,10 @@ impl Font for FontArc {
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
         self.0.codepoint_ids()
     }
+
+    fn as_ttf_face(&self) -> &owned_ttf_parser::Face<'_> {
+        self.0.as_ttf_face()
+    }
 }
 
 impl From<FontVec> for FontArc {

@@ -291,6 +291,10 @@ macro_rules! impl_font {
 
                 crate::CodepointIdIter { inner }
             }
+
+            fn as_ttf_face(&self) -> &owned_ttf_parser::Face<'_> {
+                self.0.as_face_ref()
+            }
         }
     };
 }
