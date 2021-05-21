@@ -240,17 +240,14 @@ macro_rules! impl_font {
                 } = self
                     .0
                     .as_face_ref()
-                    .outline_glyph(id.into(), &mut outliner)?;
+                    .outline_glyph(id.into(), &mut outliner)
+                    // invalid bounds are treated as having no outline
+                    .filter(|b| b.x_min < b.x_max && b.y_min < b.y_max)?;
 
                 let curves = outliner.take_outline();
-                let bounds = if x_min < x_max && y_min < y_max {
-                    Rect {
-                        min: point(x_min as f32, y_max as f32),
-                        max: point(x_max as f32, y_min as f32),
-                    }
-                } else {
-                    // This should be unreachable since ttf-parser 0.12 even for malformed fonts
-                    panic!("Invalid bounding box from Face::outline_glyph");
+                let bounds = Rect {
+                    min: point(x_min as f32, y_max as f32),
+                    max: point(x_max as f32, y_min as f32),
                 };
 
                 Some(Outline { bounds, curves })
