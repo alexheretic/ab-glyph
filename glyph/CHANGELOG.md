@@ -1,3 +1,6 @@
+# Unreleased
+* `Font::outline` will return `None` for rare invalid/empty glyph bounds instead of panicking.
+
 # 0.2.10
 * Update _ttf-parser_ to `0.12`.
 
