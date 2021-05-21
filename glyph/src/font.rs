@@ -1,4 +1,7 @@
-use crate::{point, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont};
+use crate::{
+    point, Glyph, GlyphId, GlyphImage, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect,
+    ScaleFont,
+};
 
 /// Functionality required from font data.
 ///
@@ -127,6 +130,14 @@ pub trait Font {
     /// # Ok(()) }
     /// ```
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_>;
+
+    /// Returns a pre-rendered image of the glyph.
+    ///
+    /// This is normally only present when an outline is not sufficient to describe the glyph, such
+    /// as emojis (particularly color ones).  The size parameter is in pixels per em, and will be
+    /// used to select between multiple possible images (if present); the returned image will
+    /// likely not match this value, requiring you to scale it to match the target resolution.
+    fn glyph_raster_image(&self, id: GlyphId, pixel_size: u16) -> Option<GlyphImage>;
 
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
@@ -260,5 +271,10 @@ impl<F: Font> Font for &F {
     #[inline]
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
         (*self).codepoint_ids()
+    }
+
+    #[inline]
+    fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
+        (*self).glyph_raster_image(id, size)
     }
 }

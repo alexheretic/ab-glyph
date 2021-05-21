@@ -1,7 +1,7 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
 mod outliner;
 
-use crate::{point, Font, GlyphId, InvalidFont, Outline, Rect};
+use crate::{point, Font, GlyphId, InvalidFont, Outline, Point, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
@@ -14,6 +14,42 @@ impl From<GlyphId> for owned_ttf_parser::GlyphId {
     fn from(id: GlyphId) -> Self {
         Self(id.0)
     }
+}
+
+/// A pre-rendered image of a glyph, usually used for emojis or other glyphs
+/// that can't be represented only using an outline.
+#[derive(Debug, Clone)]
+pub struct GlyphImage<'a> {
+    /// Offset of the image from the normal origin (top at the baseline plus
+    /// ascent), measured in pixels at the image's current scale.
+    pub origin: Point,
+    /// Current scale of the image in pixels per em.
+    pub scale: f32,
+    /// Raw image data (not a bitmap).
+    pub data: &'a [u8],
+    /// Format of the raw data.
+    pub format: GlyphImageFormat,
+}
+
+impl<'a> From<owned_ttf_parser::RasterGlyphImage<'a>> for GlyphImage<'a> {
+    fn from(img: owned_ttf_parser::RasterGlyphImage<'a>) -> Self {
+        GlyphImage {
+            origin: point(img.x.into(), img.y.into()),
+            scale: img.pixels_per_em.into(),
+            data: img.data,
+            format: match img.format {
+                owned_ttf_parser::RasterImageFormat::PNG => GlyphImageFormat::PNG,
+            },
+        }
+    }
+}
+
+/// Valid formats for a [`GlyphImage`].
+// Possible future formats:  SVG, JPEG, TIFF
+#[non_exhaustive]
+#[derive(Debug, Clone)]
+pub enum GlyphImageFormat {
+    PNG,
 }
 
 /// Font data handle stored as a `&[u8]` + parsed data.
@@ -287,6 +323,13 @@ macro_rules! impl_font {
                 );
 
                 crate::CodepointIdIter { inner }
+            }
+
+            fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
+                self.0
+                    .as_face_ref()
+                    .glyph_raster_image(id.into(), size)
+                    .map(Into::into)
             }
         }
     };
