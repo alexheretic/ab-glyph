@@ -1,5 +1,6 @@
 # Unreleased
 * `Font::outline` will return `None` for rare invalid/empty glyph bounds instead of panicking.
+* Add `Font::glyph_raster_image` for color emoji fonts.
 
 # 0.2.10
 * Update _ttf-parser_ to `0.12`.

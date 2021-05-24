@@ -1,4 +1,4 @@
-use crate::{Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
+use crate::{Font, FontRef, FontVec, GlyphId, GlyphImage, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
 
@@ -134,6 +134,11 @@ impl Font for FontArc {
     #[inline]
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
         self.0.codepoint_ids()
+    }
+
+    #[inline]
+    fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
+        self.0.glyph_raster_image(id, size)
     }
 }
 
