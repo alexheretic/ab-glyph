@@ -38,7 +38,7 @@ impl<'a> From<owned_ttf_parser::RasterGlyphImage<'a>> for GlyphImage<'a> {
             scale: img.pixels_per_em.into(),
             data: img.data,
             format: match img.format {
-                owned_ttf_parser::RasterImageFormat::PNG => GlyphImageFormat::PNG,
+                owned_ttf_parser::RasterImageFormat::PNG => GlyphImageFormat::Png,
             },
         }
     }
@@ -49,7 +49,7 @@ impl<'a> From<owned_ttf_parser::RasterGlyphImage<'a>> for GlyphImage<'a> {
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum GlyphImageFormat {
-    PNG,
+    Png,
 }
 
 /// Font data handle stored as a `&[u8]` + parsed data.
