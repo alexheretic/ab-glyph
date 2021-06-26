@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      RUST_BACKTRACE: 1
     steps:
     - run: rustup update stable
     - run: rustup target add thumbv6m-none-eabi
