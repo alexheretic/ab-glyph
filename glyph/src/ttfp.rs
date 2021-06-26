@@ -1,11 +1,13 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
+mod bbox;
 mod outliner;
 
 use crate::{point, Font, GlyphId, InvalidFont, Outline, Point, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
-use core::convert::TryFrom;
+use bbox::BoundingBox;
+use core::convert::{TryFrom, TryInto};
 use core::fmt;
 use owned_ttf_parser::AsFaceRef;
 
@@ -268,22 +270,22 @@ macro_rules! impl_font {
             fn outline(&self, id: GlyphId) -> Option<Outline> {
                 let mut outliner = outliner::OutlineCurveBuilder::default();
 
-                let owned_ttf_parser::Rect {
-                    x_min,
-                    y_min,
-                    x_max,
-                    y_max,
-                } = self
+                let mut bbox: BoundingBox = self
                     .0
                     .as_face_ref()
-                    .outline_glyph(id.into(), &mut outliner)
-                    // invalid bounds are treated as having no outline
-                    .filter(|b| b.x_min < b.x_max && b.y_min < b.y_max)?;
+                    .outline_glyph(id.into(), &mut outliner)?
+                    .into();
 
                 let curves = outliner.take_outline();
+
+                // If bounds are zero or invalid fallback to computing them from the curves
+                if bbox.is_zero_sized() {
+                    bbox = curves.as_slice().try_into().ok()?;
+                }
+
                 let bounds = Rect {
-                    min: point(x_min as f32, y_max as f32),
-                    max: point(x_max as f32, y_min as f32),
+                    min: point(bbox.xmin, bbox.ymax),
+                    max: point(bbox.xmax, bbox.ymin),
                 };
 
                 Some(Outline { bounds, curves })

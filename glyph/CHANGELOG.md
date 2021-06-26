@@ -1,3 +1,6 @@
+# Unreleased
+* Add fallback bounding box calculation for malformed font glyphs with zero sized boxes not handled upstream.
+
 # 0.2.11
 * `Font::outline` will return `None` for rare invalid/empty glyph bounds instead of panicking.
 * Add `Font::glyph_raster_image` for color emoji fonts.
