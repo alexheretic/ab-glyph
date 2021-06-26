@@ -189,7 +189,7 @@ pub trait Font {
         Self: Sized,
     {
         PxScaleFont {
-            font: &self,
+            font: self,
             scale: scale.into(),
         }
     }
