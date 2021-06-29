@@ -1,5 +1,5 @@
 # Unreleased
-* Add fallback bounding box calculation for malformed font glyphs with zero sized boxes not handled upstream.
+* Update _owned_ttf_parser_ to `0.12.1` to ensure consistent glyph bounding box behaviour.
 
 # 0.2.11
 * `Font::outline` will return `None` for rare invalid/empty glyph bounds instead of panicking.
