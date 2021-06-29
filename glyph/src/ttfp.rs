@@ -190,17 +190,17 @@ macro_rules! impl_font {
 
             #[inline]
             fn ascent_unscaled(&self) -> f32 {
-                f32::from(self.0.as_face_ref().ascender())
+                self.0.as_face_ref().ascender().into()
             }
 
             #[inline]
             fn descent_unscaled(&self) -> f32 {
-                f32::from(self.0.as_face_ref().descender())
+                self.0.as_face_ref().descender().into()
             }
 
             #[inline]
             fn line_gap_unscaled(&self) -> f32 {
-                f32::from(self.0.as_face_ref().line_gap())
+                self.0.as_face_ref().line_gap().into()
             }
 
             #[inline]
@@ -216,42 +216,38 @@ macro_rules! impl_font {
 
             #[inline]
             fn h_advance_unscaled(&self, id: GlyphId) -> f32 {
-                let advance = self
-                    .0
+                self.0
                     .as_face_ref()
                     .glyph_hor_advance(id.into())
-                    .expect("Invalid glyph_hor_advance");
-                f32::from(advance)
+                    .expect("Invalid glyph_hor_advance")
+                    .into()
             }
 
             #[inline]
             fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
-                let advance = self
-                    .0
+                self.0
                     .as_face_ref()
                     .glyph_hor_side_bearing(id.into())
-                    .expect("Invalid glyph_hor_side_bearing");
-                f32::from(advance)
+                    .expect("Invalid glyph_hor_side_bearing")
+                    .into()
             }
 
             #[inline]
             fn v_advance_unscaled(&self, id: GlyphId) -> f32 {
-                let advance = self
-                    .0
+                self.0
                     .as_face_ref()
                     .glyph_ver_advance(id.into())
-                    .expect("Invalid glyph_ver_advance");
-                f32::from(advance)
+                    .expect("Invalid glyph_ver_advance")
+                    .into()
             }
 
             #[inline]
             fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32 {
-                let advance = self
-                    .0
+                self.0
                     .as_face_ref()
                     .glyph_ver_side_bearing(id.into())
-                    .expect("Invalid glyph_ver_side_bearing");
-                f32::from(advance)
+                    .expect("Invalid glyph_ver_side_bearing")
+                    .into()
             }
 
             #[inline]
