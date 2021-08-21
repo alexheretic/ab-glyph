@@ -105,7 +105,7 @@ impl Rasterizer {
         };
         let dxdy = (p1.x - p0.x) / (p1.y - p0.y);
         let mut x = p0.x;
-        let y0 = p0.y as usize; // note: implicit max of 0 because usize (TODO: really true?)
+        let y0 = p0.y as usize; // note: implicit max of 0 because usize
         if p0.y < 0.0 {
             x -= p0.y * dxdy;
         }
@@ -257,8 +257,7 @@ impl Rasterizer {
     ///
     /// ```
     /// # use ab_glyph_rasterizer::*;
-    /// # let (width, height) = (1, 1);
-    /// # let mut rasterizer = Rasterizer::new(width, height);
+    /// # let mut rasterizer = Rasterizer::new(1, 1);
     /// # struct Img;
     /// # impl Img { fn set_pixel(&self, x: u32, y: u32, a: u8) {} }
     /// # let image = Img;
