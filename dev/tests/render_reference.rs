@@ -146,6 +146,7 @@ fn outline_draw<F: Font>(font: F, c: char, scale: f32) -> image::GrayAlphaImage 
     let mut glyph_image =
         DynamicImage::new_luma_a8(bounds.width() as _, bounds.height() as _).to_luma_alpha8();
     glyph.draw(|x, y, alpha| {
+        // note: `.round()` can be omitted to improve performance without visible difference
         glyph_image.put_pixel(x, y, LumaA([128, (alpha * 255.0).round() as u8]))
     });
     glyph_image
@@ -156,6 +157,7 @@ fn draw_grey_image(rasterizer: Rasterizer) -> image::GrayAlphaImage {
     let mut glyph_image = DynamicImage::new_luma_a8(w as _, h as _).to_luma_alpha8();
 
     rasterizer.for_each_pixel_2d(|x, y, alpha| {
+        // note: `.round()` can be omitted to improve performance without visible difference
         glyph_image.put_pixel(x, y, LumaA([128, (alpha * 255.0).round() as u8]))
     });
 

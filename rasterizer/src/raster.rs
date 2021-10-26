@@ -229,7 +229,10 @@ impl Rasterizer {
         }
     }
 
-    /// Run a callback for each pixel index & alpha, with indices in `0..width * height`.
+    /// Run a callback for each pixel `index` & `alpha`, with indices in `0..width * height`.
+    ///
+    /// An `alpha` coverage value of `0.0` means the pixel is not covered at all by the glyph,
+    /// whereas a value of `1.0` (or greater) means the pixel is totally covered.
     ///
     /// ```
     /// # use ab_glyph_rasterizer::*;
@@ -237,7 +240,7 @@ impl Rasterizer {
     /// # let mut rasterizer = Rasterizer::new(width, height);
     /// let mut pixels = vec![0u8; width * height];
     /// rasterizer.for_each_pixel(|index, alpha| {
-    ///     pixels[index] = (alpha * 255.0).round() as u8;
+    ///     pixels[index] = (alpha * 255.0) as u8;
     /// });
     /// ```
     pub fn for_each_pixel<O: FnMut(usize, f32)>(&self, mut px_fn: O) {
@@ -247,13 +250,13 @@ impl Rasterizer {
             .enumerate()
             .for_each(|(idx, c)| {
                 acc += c;
-                px_fn(idx, acc.abs().min(1.0));
+                px_fn(idx, acc.abs());
             });
     }
 
     /// Run a callback for each pixel x position, y position & alpha.
     ///
-    /// Convenience wrapper for `for_each_pixel`.
+    /// Convenience wrapper for [`Rasterizer::for_each_pixel`].
     ///
     /// ```
     /// # use ab_glyph_rasterizer::*;
@@ -262,7 +265,7 @@ impl Rasterizer {
     /// # impl Img { fn set_pixel(&self, x: u32, y: u32, a: u8) {} }
     /// # let image = Img;
     /// rasterizer.for_each_pixel_2d(|x, y, alpha| {
-    ///     image.set_pixel(x, y, (alpha * 255.0).round() as u8);
+    ///     image.set_pixel(x, y, (alpha * 255.0) as u8);
     /// });
     /// ```
     pub fn for_each_pixel_2d<O: FnMut(u32, u32, f32)>(&self, mut px_fn: O) {
