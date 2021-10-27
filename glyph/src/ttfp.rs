@@ -201,14 +201,7 @@ macro_rules! impl_font {
 
             #[inline]
             fn line_gap_unscaled(&self) -> f32 {
-                let face = self.0.as_face_ref();
-
-                match face.tables().os2.map(|os2| os2.use_typographic_metrics()) {
-                    // Prevent line_gap value change introduced in ttf-parser:0.13
-                    // See https://github.com/RazrFalcon/ttf-parser/issues/73
-                    Some(false) => face.tables().hhea.line_gap.into(),
-                    _ => face.line_gap().into(),
-                }
+                self.0.as_face_ref().line_gap().into()
             }
 
             #[inline]
