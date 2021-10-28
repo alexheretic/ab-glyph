@@ -185,8 +185,7 @@ macro_rules! impl_font {
         impl Font for $font {
             #[inline]
             fn units_per_em(&self) -> Option<f32> {
-                // TODO unwrap signature when making next breaking change
-                Some(self.0.as_face_ref().units_per_em().into())
+                self.0.as_face_ref().units_per_em().map(f32::from)
             }
 
             #[inline]
@@ -255,11 +254,8 @@ macro_rules! impl_font {
             fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
                 self.0
                     .as_face_ref()
-                    .tables()
-                    .kern
-                    .iter()
-                    .flat_map(|c| c.subtables)
-                    .filter(|st| st.horizontal && !st.variable)
+                    .kerning_subtables()
+                    .filter(|st| st.is_horizontal() && !st.is_variable())
                     .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
                     .map(f32::from)
                     .unwrap_or_default()
@@ -306,17 +302,13 @@ macro_rules! impl_font {
 
                 let inner = Box::new(
                     face_ref
-                        .tables()
-                        .cmap
-                        .iter()
-                        .flat_map(|c| c.subtables)
+                        .character_mapping_subtables()
                         .filter(|s| s.is_unicode())
                         .flat_map(move |subtable| {
                             let mut pairs = Vec::new();
                             subtable.codepoints(|c| {
                                 if let Ok(ch) = char::try_from(c) {
-                                    if let Some(idx) = subtable.glyph_index(ch).filter(|i| i.0 > 0)
-                                    {
+                                    if let Some(idx) = subtable.glyph_index(c).filter(|i| i.0 > 0) {
                                         if used_indices.insert(idx.0) {
                                             pairs.push((GlyphId(idx.0), ch));
                                         }
