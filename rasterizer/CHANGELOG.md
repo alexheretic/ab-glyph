@@ -1,5 +1,6 @@
-# Unreleased
-* Remove cap of `1.0` for coverage values returned by `for_each_pixel` now `>= 1.0` means fully coverred.
+# 0.1.5
+* Remove cap of `1.0` for coverage values returned by `for_each_pixel` now `>= 1.0` means fully covered.
+  This allows a minor reduction in operations / performance boost.
 
 # 0.1.4
 * Add `Rasterizer::reset`, `Rasterizer::clear` methods to allow allocation reuse.
