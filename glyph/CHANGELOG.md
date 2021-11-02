@@ -1,4 +1,7 @@
 # Unreleased
+* Add `Font::glyph_identifier`, `Font::kerner` as re-usable better performing replacements
+  to `Font::glyph_id`, `Font::kern_unscaled` respectively, which are now deprecated.
+  Similar deprecations have happened, and equivalents are available, in `ScaleFont`.
 * Update _ttf-parser_ to `0.13.1`.
 
 # 0.2.11
