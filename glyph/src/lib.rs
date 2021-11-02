@@ -42,5 +42,5 @@ pub use crate::{
     glyph::*,
     outlined::*,
     scale::*,
-    ttfp::{FontRef, FontVec, GlyphImage, GlyphImageFormat},
+    ttfp::{FontRef, FontVec, GlyphIdentifier, GlyphImage, GlyphImageFormat, Kerner},
 };

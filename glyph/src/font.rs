@@ -1,6 +1,7 @@
 use crate::{
-    point, Glyph, GlyphId, GlyphImage, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect,
-    ScaleFont,
+    point,
+    ttfp::{GlyphIdentifier, Kerner},
+    Glyph, GlyphId, GlyphImage, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont,
 };
 
 /// Functionality required from font data.
@@ -74,6 +75,7 @@ pub trait Font {
     /// Lookup a `GlyphId` matching a given `char`.
     ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    #[deprecated(note = "Use & re-use glyph_identifier() for better performance")]
     fn glyph_id(&self, c: char) -> GlyphId;
 
     /// Unscaled horizontal advance for a given glyph id.
@@ -99,6 +101,7 @@ pub trait Font {
     /// Returns additional unscaled kerning to apply for a particular pair of glyph ids.
     ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    #[deprecated(note = "Use & re-use kerner() for better performance")]
     fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32;
 
     /// Compute unscaled glyph outline curves & bounding box.
@@ -206,6 +209,10 @@ pub trait Font {
             scale: scale.into(),
         }
     }
+
+    fn glyph_identifier(&self) -> GlyphIdentifier<'_>;
+
+    fn kerner(&self) -> Kerner<'_>;
 }
 
 impl<F: Font> Font for &F {
@@ -230,6 +237,7 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
+    #[allow(deprecated)]
     fn glyph_id(&self, c: char) -> GlyphId {
         (*self).glyph_id(c)
     }
@@ -255,6 +263,7 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
+    #[allow(deprecated)]
     fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
         (*self).kern_unscaled(first, second)
     }
@@ -277,5 +286,15 @@ impl<F: Font> Font for &F {
     #[inline]
     fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
         (*self).glyph_raster_image(id, size)
+    }
+
+    #[inline]
+    fn glyph_identifier(&self) -> GlyphIdentifier<'_> {
+        (*self).glyph_identifier()
+    }
+
+    #[inline]
+    fn kerner(&self) -> Kerner<'_> {
+        (*self).kerner()
     }
 }

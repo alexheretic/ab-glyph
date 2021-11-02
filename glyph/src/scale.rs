@@ -1,4 +1,4 @@
-use crate::{Font, Glyph, GlyphId, OutlinedGlyph, Rect};
+use crate::{Font, Glyph, GlyphId, GlyphIdentifier, OutlinedGlyph, Rect};
 
 /// Pixel scale.
 ///
@@ -116,6 +116,8 @@ pub trait ScaleFont<F: Font> {
 
     /// Lookup a `GlyphId` matching a given `char`.
     #[inline]
+    #[allow(deprecated)]
+    #[deprecated(note = "Use & re-use glyph_identifier() for better performance")]
     fn glyph_id(&self, c: char) -> GlyphId {
         self.font().glyph_id(c)
     }
@@ -137,6 +139,8 @@ pub trait ScaleFont<F: Font> {
     /// assert_eq!(a1.position, point(0.0, 0.0));
     /// ```
     #[inline]
+    #[allow(deprecated)]
+    #[deprecated(note = "Use & re-use glyph_identifier() for better performance")]
     fn scaled_glyph(&self, c: char) -> Glyph {
         self.font().glyph_id(c).with_scale(self.scale())
     }
@@ -167,6 +171,8 @@ pub trait ScaleFont<F: Font> {
 
     /// Returns additional pixel scaled kerning to apply for a particular pair of glyphs.
     #[inline]
+    #[allow(deprecated)]
+    #[deprecated(note = "Use & re-use kerner() for better performance")]
     fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
         self.h_scale_factor() * self.font().kern_unscaled(first, second)
     }
@@ -203,6 +209,10 @@ pub trait ScaleFont<F: Font> {
     fn outline_glyph(&self, glyph: Glyph) -> Option<OutlinedGlyph> {
         self.font().outline_glyph(glyph)
     }
+
+    fn glyph_identifier(&self) -> PxScaleGlyphIdentifier<'_>;
+
+    fn kerner(&self) -> PxScaleKerner<'_>;
 }
 
 impl<F: Font, SF: ScaleFont<F>> ScaleFont<F> for &SF {
@@ -219,6 +229,16 @@ impl<F: Font, SF: ScaleFont<F>> ScaleFont<F> for &SF {
     #[inline]
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
         (*self).codepoint_ids()
+    }
+
+    #[inline]
+    fn glyph_identifier(&self) -> PxScaleGlyphIdentifier<'_> {
+        (*self).glyph_identifier()
+    }
+
+    #[inline]
+    fn kerner(&self) -> PxScaleKerner<'_> {
+        (*self).kerner()
     }
 }
 
@@ -251,5 +271,52 @@ impl<F: Font> ScaleFont<F> for PxScaleFont<F> {
     #[inline]
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
         self.font.codepoint_ids()
+    }
+
+    #[inline]
+    fn glyph_identifier(&self) -> PxScaleGlyphIdentifier<'_> {
+        PxScaleGlyphIdentifier {
+            gider: self.font.glyph_identifier(),
+            scale: self.scale,
+        }
+    }
+
+    #[inline]
+    fn kerner(&self) -> PxScaleKerner<'_> {
+        PxScaleKerner {
+            kerner: self.font.kerner(),
+            h_scale_factor: self.h_scale_factor(),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct PxScaleKerner<'a> {
+    kerner: crate::Kerner<'a>,
+    h_scale_factor: f32,
+}
+
+impl PxScaleKerner<'_> {
+    #[inline]
+    pub fn kern(&self, first: GlyphId, second: GlyphId) -> f32 {
+        self.kerner.kern_unscaled(first, second) * self.h_scale_factor
+    }
+}
+
+#[derive(Debug)]
+pub struct PxScaleGlyphIdentifier<'a> {
+    gider: GlyphIdentifier<'a>,
+    scale: PxScale,
+}
+
+impl PxScaleGlyphIdentifier<'_> {
+    #[inline]
+    pub fn glyph_id(&self, c: char) -> GlyphId {
+        self.gider.glyph_id(c)
+    }
+
+    #[inline]
+    pub fn scaled_glyph(&self, c: char) -> Glyph {
+        self.glyph_id(c).with_scale(self.scale)
     }
 }

@@ -336,9 +336,71 @@ macro_rules! impl_font {
                     .glyph_raster_image(id.into(), size)
                     .map(Into::into)
             }
+
+            #[inline]
+            fn glyph_identifier(&self) -> GlyphIdentifier<'_> {
+                GlyphIdentifier {
+                    tables: self
+                        .0
+                        .as_face_ref()
+                        .tables()
+                        .cmap
+                        .iter()
+                        .flat_map(|cmap| cmap.subtables)
+                        .filter(|st| st.is_unicode())
+                        .collect(),
+                }
+            }
+
+            #[inline]
+            fn kerner(&self) -> Kerner<'_> {
+                Kerner {
+                    tables: self
+                        .0
+                        .as_face_ref()
+                        .tables()
+                        .kern
+                        .iter()
+                        .flat_map(|c| c.subtables)
+                        .filter(|st| st.horizontal && !st.variable)
+                        .collect(),
+                }
+            }
         }
     };
 }
 
 impl_font!(FontRef<'_>);
 impl_font!(FontVec);
+
+#[derive(Debug)]
+pub struct GlyphIdentifier<'font> {
+    tables: Vec<owned_ttf_parser::cmap::Subtable<'font>>,
+}
+
+impl GlyphIdentifier<'_> {
+    #[inline]
+    pub fn glyph_id(&self, c: char) -> GlyphId {
+        self.tables
+            .iter()
+            .find_map(|t| t.glyph_index(c))
+            .map(|gid| GlyphId(gid.0))
+            .unwrap_or_default()
+    }
+}
+
+#[derive(Debug)]
+pub struct Kerner<'font> {
+    tables: Vec<owned_ttf_parser::kern::Subtable<'font>>,
+}
+
+impl Kerner<'_> {
+    #[inline]
+    pub fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
+        self.tables
+            .iter()
+            .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
+            .map(f32::from)
+            .unwrap_or_default()
+    }
+}
