@@ -7,9 +7,9 @@ use alloc::boxed::Box;
 use alloc::vec::Vec;
 use core::convert::TryFrom;
 use core::fmt;
-use owned_ttf_parser::AsFaceRef;
+use owned_ttf_parser::{self as ttfp, AsFaceRef};
 
-impl From<GlyphId> for owned_ttf_parser::GlyphId {
+impl From<GlyphId> for ttfp::GlyphId {
     #[inline]
     fn from(id: GlyphId) -> Self {
         Self(id.0)
@@ -31,14 +31,14 @@ pub struct GlyphImage<'a> {
     pub format: GlyphImageFormat,
 }
 
-impl<'a> From<owned_ttf_parser::RasterGlyphImage<'a>> for GlyphImage<'a> {
-    fn from(img: owned_ttf_parser::RasterGlyphImage<'a>) -> Self {
+impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage<'a> {
+    fn from(img: ttfp::RasterGlyphImage<'a>) -> Self {
         GlyphImage {
             origin: point(img.x.into(), img.y.into()),
             scale: img.pixels_per_em.into(),
             data: img.data,
             format: match img.format {
-                owned_ttf_parser::RasterImageFormat::PNG => GlyphImageFormat::Png,
+                ttfp::RasterImageFormat::PNG => GlyphImageFormat::Png,
             },
         }
     }
@@ -68,7 +68,7 @@ pub enum GlyphImageFormat {
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
-pub struct FontRef<'font>(owned_ttf_parser::Face<'font>);
+pub struct FontRef<'font>(ttfp::PreParsedSubtables<'font, ttfp::Face<'font>>);
 
 impl fmt::Debug for FontRef<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -109,9 +109,9 @@ impl<'font> FontRef<'font> {
     /// ```
     #[inline]
     pub fn try_from_slice_and_index(data: &'font [u8], index: u32) -> Result<Self, InvalidFont> {
-        Ok(Self(
-            owned_ttf_parser::Face::from_slice(data, index).map_err(|_| InvalidFont)?,
-        ))
+        Ok(Self(ttfp::PreParsedSubtables::from(
+            ttfp::Face::from_slice(data, index).map_err(|_| InvalidFont)?,
+        )))
     }
 }
 
@@ -131,7 +131,7 @@ impl<'font> FontRef<'font> {
 /// assert_eq!(font.glyph_id('s'), ab_glyph::GlyphId(56));
 /// # Ok(()) }
 /// ```
-pub struct FontVec(owned_ttf_parser::OwnedFace);
+pub struct FontVec(ttfp::PreParsedSubtables<'static, ttfp::OwnedFace>);
 
 impl fmt::Debug for FontVec {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -173,9 +173,9 @@ impl FontVec {
     /// ```
     #[inline]
     pub fn try_from_vec_and_index(data: Vec<u8>, index: u32) -> Result<Self, InvalidFont> {
-        Ok(Self(
-            owned_ttf_parser::OwnedFace::from_vec(data, index).map_err(|_| InvalidFont)?,
-        ))
+        Ok(Self(ttfp::PreParsedSubtables::from(
+            ttfp::OwnedFace::from_vec(data, index).map_err(|_| InvalidFont)?,
+        )))
     }
 }
 
@@ -206,12 +206,8 @@ macro_rules! impl_font {
 
             #[inline]
             fn glyph_id(&self, c: char) -> GlyphId {
-                let index = self
-                    .0
-                    .as_face_ref()
-                    .glyph_index(c)
-                    .map(|id| id.0)
-                    .unwrap_or(0);
+                // Note: Using `PreParsedSubtables` method for better performance.
+                let index = self.0.glyph_index(c).map(|id| id.0).unwrap_or(0);
                 GlyphId(index)
             }
 
@@ -253,14 +249,9 @@ macro_rules! impl_font {
 
             #[inline]
             fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
+                // Note: Using `PreParsedSubtables` method for better performance.
                 self.0
-                    .as_face_ref()
-                    .tables()
-                    .kern
-                    .iter()
-                    .flat_map(|c| c.subtables)
-                    .filter(|st| st.horizontal && !st.variable)
-                    .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
+                    .glyphs_hor_kerning(first.into(), second.into())
                     .map(f32::from)
                     .unwrap_or_default()
             }
@@ -268,7 +259,7 @@ macro_rules! impl_font {
             fn outline(&self, id: GlyphId) -> Option<Outline> {
                 let mut outliner = outliner::OutlineCurveBuilder::default();
 
-                let owned_ttf_parser::Rect {
+                let ttfp::Rect {
                     x_min,
                     x_max,
                     y_min,
@@ -336,71 +327,9 @@ macro_rules! impl_font {
                     .glyph_raster_image(id.into(), size)
                     .map(Into::into)
             }
-
-            #[inline]
-            fn glyph_identifier(&self) -> GlyphIdentifier<'_> {
-                GlyphIdentifier {
-                    tables: self
-                        .0
-                        .as_face_ref()
-                        .tables()
-                        .cmap
-                        .iter()
-                        .flat_map(|cmap| cmap.subtables)
-                        .filter(|st| st.is_unicode())
-                        .collect(),
-                }
-            }
-
-            #[inline]
-            fn kerner(&self) -> Kerner<'_> {
-                Kerner {
-                    tables: self
-                        .0
-                        .as_face_ref()
-                        .tables()
-                        .kern
-                        .iter()
-                        .flat_map(|c| c.subtables)
-                        .filter(|st| st.horizontal && !st.variable)
-                        .collect(),
-                }
-            }
         }
     };
 }
 
 impl_font!(FontRef<'_>);
 impl_font!(FontVec);
-
-#[derive(Debug)]
-pub struct GlyphIdentifier<'font> {
-    tables: Vec<owned_ttf_parser::cmap::Subtable<'font>>,
-}
-
-impl GlyphIdentifier<'_> {
-    #[inline]
-    pub fn glyph_id(&self, c: char) -> GlyphId {
-        self.tables
-            .iter()
-            .find_map(|t| t.glyph_index(c))
-            .map(|gid| GlyphId(gid.0))
-            .unwrap_or_default()
-    }
-}
-
-#[derive(Debug)]
-pub struct Kerner<'font> {
-    tables: Vec<owned_ttf_parser::kern::Subtable<'font>>,
-}
-
-impl Kerner<'_> {
-    #[inline]
-    pub fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
-        self.tables
-            .iter()
-            .find_map(|st| st.glyphs_kerning(first.into(), second.into()))
-            .map(f32::from)
-            .unwrap_or_default()
-    }
-}

@@ -13,8 +13,6 @@ pub fn layout_paragraph<F, SF>(
     F: Font,
     SF: ScaleFont<F>,
 {
-    let c2g = font.glyph_identifier();
-    let kerner = font.kerner();
     let v_advance = font.height() + font.line_gap();
     let mut caret = position + point(0.0, font.ascent());
     let mut last_glyph: Option<Glyph> = None;
@@ -26,9 +24,9 @@ pub fn layout_paragraph<F, SF>(
             }
             continue;
         }
-        let mut glyph = c2g.scaled_glyph(c);
+        let mut glyph = font.scaled_glyph(c);
         if let Some(previous) = last_glyph.take() {
-            caret.x += kerner.kern(previous.id, glyph.id);
+            caret.x += font.kern(previous.id, glyph.id);
         }
         glyph.position = caret;
 

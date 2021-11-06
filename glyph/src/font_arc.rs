@@ -1,7 +1,4 @@
-use crate::{
-    ttfp::{GlyphIdentifier, Kerner},
-    Font, FontRef, FontVec, GlyphId, GlyphImage, InvalidFont, Outline,
-};
+use crate::{Font, FontRef, FontVec, GlyphId, GlyphImage, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
 
@@ -95,7 +92,6 @@ impl Font for FontArc {
     }
 
     #[inline]
-    #[allow(deprecated)]
     fn glyph_id(&self, c: char) -> GlyphId {
         self.0.glyph_id(c)
     }
@@ -121,7 +117,6 @@ impl Font for FontArc {
     }
 
     #[inline]
-    #[allow(deprecated)]
     fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32 {
         self.0.kern_unscaled(first, second)
     }
@@ -144,16 +139,6 @@ impl Font for FontArc {
     #[inline]
     fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
         self.0.glyph_raster_image(id, size)
-    }
-
-    #[inline]
-    fn glyph_identifier(&self) -> GlyphIdentifier<'_> {
-        self.0.glyph_identifier()
-    }
-
-    #[inline]
-    fn kerner(&self) -> Kerner<'_> {
-        self.0.kerner()
     }
 }
 

@@ -1,8 +1,8 @@
 # Unreleased
-* Add `Font::glyph_identifier`, `Font::kerner` as re-usable better performing replacements
-  to `Font::glyph_id`, `Font::kern_unscaled` respectively, which are now deprecated.
-  Similar deprecations have happened, and equivalents are available, in `ScaleFont`.
-* Update _ttf-parser_ to `0.13.1`.
+* Update _owned-ttf-parser_ to `0.13.2`.
+* Pre-parse cmap & kern subtables on all `Font` variants at initialization. This provides
+  much faster `glyph_id` & `kern` method performance, which are used heavily when positioning
+  glyphs into layouts.
 
 # 0.2.11
 * `Font::outline` will return `None` for rare invalid/empty glyph bounds instead of panicking.
