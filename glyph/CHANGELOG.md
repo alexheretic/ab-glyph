@@ -1,5 +1,8 @@
 # Unreleased
-* Update _owned_ttf_parser_ to `0.12.1` to ensure consistent glyph bounding box behaviour.
+* Update _owned-ttf-parser_ to `0.13.2`.
+* Pre-parse cmap & kern subtables on all `Font` variants at initialization. This provides
+  much faster `glyph_id` & `kern` method performance, results in 25-30% faster layout 
+  benchmark performance.
 
 # 0.2.11
 * `Font::outline` will return `None` for rare invalid/empty glyph bounds instead of panicking.
