@@ -24,3 +24,7 @@ harness = false
 [[bench]]
 name = "layout_draw"
 harness = false
+
+[[bench]]
+name = "font_method"
+harness = false
