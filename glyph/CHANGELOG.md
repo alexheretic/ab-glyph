@@ -1,4 +1,4 @@
-# Unreleased
+# 0.2.12
 * Update _owned-ttf-parser_ to `0.13.2`.
 * Pre-parse cmap & kern subtables on all `Font` variants at initialization. This provides
   much faster `glyph_id` & `kern` method performance, results in 25-30% faster layout 
