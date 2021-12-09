@@ -1,5 +1,5 @@
 use ab_glyph::*;
-use blake2::{Blake2s, Digest};
+use blake2::{Blake2s256, Digest};
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::io::Write;
 
@@ -29,7 +29,7 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s::default();
+        let mut hash = Blake2s256::default();
         for g in glyphs {
             write!(
                 hash,
@@ -66,7 +66,7 @@ fn bench_layout_a_sentence_vec(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s::default();
+        let mut hash = Blake2s256::default();
         for g in glyphs {
             write!(
                 hash,
@@ -103,7 +103,7 @@ fn bench_layout_a_sentence_arc_slice(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s::default();
+        let mut hash = Blake2s256::default();
         for g in glyphs {
             write!(
                 hash,
@@ -140,7 +140,7 @@ fn bench_layout_a_sentence_otf(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s::default();
+        let mut hash = Blake2s256::default();
         for g in glyphs {
             write!(
                 hash,
@@ -177,7 +177,7 @@ fn bench_layout_a_sentence_ttf(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s::default();
+        let mut hash = Blake2s256::default();
         for g in glyphs {
             write!(
                 hash,
