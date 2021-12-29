@@ -1,3 +1,6 @@
+# Unreleased (0.2.13)
+* Update _ttf-parser_ to `0.14`.
+
 # 0.2.12
 * Update _owned-ttf-parser_ to `0.13.2`.
 * Pre-parse cmap & kern subtables on all `Font` variants at initialization. This provides

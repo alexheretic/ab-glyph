@@ -306,8 +306,7 @@ macro_rules! impl_font {
                             let mut pairs = Vec::new();
                             subtable.codepoints(|c| {
                                 if let Ok(ch) = char::try_from(c) {
-                                    if let Some(idx) = subtable.glyph_index(ch).filter(|i| i.0 > 0)
-                                    {
+                                    if let Some(idx) = subtable.glyph_index(c).filter(|i| i.0 > 0) {
                                         if used_indices.insert(idx.0) {
                                             pairs.push((GlyphId(idx.0), ch));
                                         }
