@@ -8,7 +8,7 @@ publish = false
 [dependencies]
 ab_glyph_rasterizer = { path = "../rasterizer" }
 ab_glyph = { path = "../glyph" }
-image = { version = "0.23", default-features = false, features = ["png"] }
+image = { version = "0.24", default-features = false, features = ["png"] }
 criterion = "0.3"
 blake2 = "0.10"
 approx = "0.5"

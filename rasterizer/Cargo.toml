@@ -7,7 +7,7 @@ description = "Coverage rasterization for lines, quadratic & cubic beziers"
 repository = "https://github.com/alexheretic/ab-glyph"
 keywords = ["text", "ttf", "otf", "font"]
 license = "Apache-2.0"
-readme="README.md"
+readme = "README.md"
 
 [dependencies]
 # no_std float stuff

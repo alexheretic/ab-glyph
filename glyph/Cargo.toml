@@ -7,7 +7,7 @@ description = "API for loading, scaling, positioning and rasterizing OpenType fo
 repository = "https://github.com/alexheretic/ab-glyph"
 keywords = ["text", "ttf", "truetype", "otf", "opentype"]
 license = "Apache-2.0"
-readme="README.md"
+readme = "README.md"
 
 [dependencies]
 owned_ttf_parser = { version = "0.14", default-features = false }
