@@ -6,6 +6,7 @@ use std::{env, io::Cursor, path::PathBuf};
 const OPENS_SANS_ITALIC: &[u8] = include_bytes!("../fonts/OpenSans-Italic.ttf");
 const DEJA_VU_MONO: &[u8] = include_bytes!("../fonts/DejaVuSansMono.ttf");
 const EXO2_TTF: &[u8] = include_bytes!("../fonts/Exo2-Light.ttf");
+const CANTARELL_VF: &[u8] = include_bytes!("../fonts/Cantarell-VF.otf");
 const EXO2_OTF: &[u8] = include_bytes!("../fonts/Exo2-Light.otf");
 
 macro_rules! compare_image {
@@ -36,18 +37,19 @@ macro_rules! compare_image {
 }
 
 /// Return target directory accounting for env var `CARGO_TARGET_DIR`.
-fn target_dir() -> PathBuf {
-    env::var("CARGO_TARGET_DIR")
+fn temp_path(name: impl AsRef<std::path::Path>) -> PathBuf {
+    let mut path = env::var("CARGO_TARGET_DIR")
         .map(PathBuf::from)
-        .unwrap_or_else(|_| PathBuf::from("../target"))
+        .unwrap_or_else(|_| PathBuf::from("../target"));
+
+    path.push(name);
+    path
 }
 
 #[test]
 fn reference_draw_ttf_w() {
     let new_image = draw_grey_image(dev::rasterize_ttf_w());
-    new_image
-        .save(target_dir().with_file_name("new_ttf_w.png"))
-        .unwrap();
+    new_image.save(temp_path("new_ttf_w.png")).unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_w.png"));
 }
 
@@ -55,18 +57,14 @@ fn reference_draw_ttf_w() {
 fn reference_outline_draw_ttf_w() {
     let font = FontRef::try_from_slice(DEJA_VU_MONO).unwrap();
     let new_image = outline_draw(font, 'w', 16.0);
-    new_image
-        .save(target_dir().with_file_name("new_outlined_ttf_w.png"))
-        .unwrap();
+    new_image.save(temp_path("new_outlined_ttf_w.png")).unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_w.png"));
 }
 
 #[test]
 fn reference_draw_ttf_iota() {
     let new_image = draw_grey_image(dev::rasterize_ttf_iota());
-    new_image
-        .save(target_dir().with_file_name("new_ttf_iota.png"))
-        .unwrap();
+    new_image.save(temp_path("new_ttf_iota.png")).unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_iota.png"));
 }
 
@@ -75,7 +73,7 @@ fn reference_outline_draw_ttf_iota() {
     let font = FontRef::try_from_slice(OPENS_SANS_ITALIC).unwrap();
     let new_image = outline_draw(font, 'ΐ', 60.0);
     new_image
-        .save(target_dir().with_file_name("new_outlined_ttf_iota.png"))
+        .save(temp_path("new_outlined_ttf_iota.png"))
         .unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_iota.png"));
 }
@@ -83,9 +81,7 @@ fn reference_outline_draw_ttf_iota() {
 #[test]
 fn reference_draw_ttf_biohazard() {
     let new_image = draw_grey_image(dev::rasterize_ttf_biohazard());
-    new_image
-        .save(target_dir().with_file_name("new_ttf_biohazard.png"))
-        .unwrap();
+    new_image.save(temp_path("new_ttf_biohazard.png")).unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_biohazard.png"));
 }
 
@@ -94,7 +90,7 @@ fn reference_outline_draw_ttf_biohazard() {
     let font = FontRef::try_from_slice(DEJA_VU_MONO).unwrap();
     let new_image = outline_draw(font, '\u{2623}', 600.0);
     new_image
-        .save(target_dir().with_file_name("new_outlined_ttf_biohazard.png"))
+        .save(temp_path("new_outlined_ttf_biohazard.png"))
         .unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_biohazard.png"));
 }
@@ -102,9 +98,7 @@ fn reference_outline_draw_ttf_biohazard() {
 #[test]
 fn reference_draw_otf_tailed_e() {
     let new_image = draw_grey_image(dev::rasterize_otf_tailed_e());
-    new_image
-        .save(target_dir().with_file_name("new_otf_tailed_e.png"))
-        .unwrap();
+    new_image.save(temp_path("new_otf_tailed_e.png")).unwrap();
     compare_image!(new_image, include_bytes!("reference_otf_tailed_e.png"));
 }
 
@@ -113,7 +107,7 @@ fn reference_outline_draw_otf_tailed_e() {
     let font = FontRef::try_from_slice(EXO2_OTF).unwrap();
     let new_image = outline_draw(font, 'ę', 300.0);
     new_image
-        .save(target_dir().with_file_name("new_outlined_otf_tailed_e.png"))
+        .save(temp_path("new_outlined_otf_tailed_e.png"))
         .unwrap();
     compare_image!(new_image, include_bytes!("reference_otf_tailed_e.png"));
 }
@@ -121,9 +115,7 @@ fn reference_outline_draw_otf_tailed_e() {
 #[test]
 fn reference_draw_ttf_tailed_e() {
     let new_image = draw_grey_image(dev::rasterize_ttf_tailed_e());
-    new_image
-        .save(target_dir().with_file_name("new_ttf_tailed_e.png"))
-        .unwrap();
+    new_image.save(temp_path("new_ttf_tailed_e.png")).unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_tailed_e.png"));
 }
 
@@ -132,9 +124,23 @@ fn reference_outline_draw_ttf_tailed_e() {
     let font = FontRef::try_from_slice(EXO2_TTF).unwrap();
     let new_image = outline_draw(font, 'ę', 300.0);
     new_image
-        .save(target_dir().with_file_name("new_outlined_ttf_tailed_e.png"))
+        .save(temp_path("new_outlined_ttf_tailed_e.png"))
         .unwrap();
     compare_image!(new_image, include_bytes!("reference_ttf_tailed_e.png"));
+}
+
+/// Cantarell f required an implicit outline "close" at the end.
+#[test]
+fn reference_outline_draw_cantarell_f() {
+    let font = FontRef::try_from_slice(CANTARELL_VF).unwrap();
+    let new_image = outline_draw(font, 'f', 300.0);
+    new_image
+        .save(temp_path("new_outlined_cantarell_f.png"))
+        .unwrap();
+    compare_image!(
+        new_image,
+        include_bytes!("reference_outlined_cantarell_f.png")
+    );
 }
 
 fn outline_draw<F: Font>(font: F, c: char, scale: f32) -> image::GrayAlphaImage {
