@@ -1,3 +1,6 @@
+# Unreleased (v0.2.15)
+* Fix some font outlines by always trying to "close" them at the end. Fixes _Cantarell-VF.otf_ outlining.
+
 # 0.2.14
 * Update _ttf-parser_ to `0.15`.
 
