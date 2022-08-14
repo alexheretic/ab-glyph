@@ -1,3 +1,7 @@
+# Unreleased (v0.2.16)
+* Add `Font::pt_to_px_scale` to ease converting point size to `PxScale`.
+* Add `PxScale::round`.
+
 # v0.2.15
 * Fix some font outlines by always trying to "close" them at the end. Fixes _Cantarell-VF.otf_ outlining.
 

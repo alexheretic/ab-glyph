@@ -13,31 +13,8 @@ use crate::{
 /// Units of unscaled accessors are "font units", which is an arbitrary unit
 /// defined by the font. See [`Font::units_per_em`].
 ///
-/// Font sizes are typically specified in "points". According to the modern
-/// standard, 1pt = 1/72in. The "point size" of a font is
-/// the number of points per em.
-///
-/// The DPI (dots-per-inch) of a screen depends on the screen in question;
-/// 96 DPI is often considered the "standard". For high-DPI displays the
-/// DPI may be specified directly or one may multiply 96 by a scale-factor.
-///
-/// Thus, for example, a 10pt font on a 96 pixels-per-inch display has
-/// 10 / 72 * 96 = 13.333... pixels-per-em. If we divide this number by
-/// `units_per_em` we then get a scaling factor: pixels-per-font-unit.
-///
-/// Note however that since [`PxScale`] values are relative to the text height,
-/// one further step is needed: multiply by [`Font::height_unscaled`].
-///
-/// ```
-/// use ab_glyph::{Font, PxScale};
-///
-/// fn pt_size_to_px_scale<F: Font>(font: &F, pt_size: f32, screen_scale_factor: f32) -> PxScale {
-///     let px_per_em = pt_size * screen_scale_factor * (96.0 / 72.0);
-///     let units_per_em = font.units_per_em().unwrap();
-///     let height = font.height_unscaled();
-///     PxScale::from(px_per_em * height / units_per_em)
-/// }
-/// ```
+/// ab_glyph uses a non-standard scale [`PxScale`] which is the pixel height
+/// of the text. See [`Font::pt_to_px_scale`] to convert standard point sizes.
 pub trait Font {
     /// Get the size of the font unit
     ///
@@ -45,8 +22,39 @@ pub trait Font {
     /// (typically the width of a capital 'M').
     ///
     /// Returns `None` in case the font unit size exceeds the expected range.
-    /// See [`Face::units_per_em`](https://docs.rs/ttf-parser/0.7.0/ttf_parser/struct.Face.html#method.units_per_em).
+    /// See [`Face::units_per_em`](https://docs.rs/ttf-parser/latest/ttf_parser/struct.Face.html#method.units_per_em).
+    ///
+    /// May be used to calculate [`PxScale`] from pt size, see [`Font::pt_to_px_scale`].
     fn units_per_em(&self) -> Option<f32>;
+
+    /// Converts pt units into [`PxScale`].
+    ///
+    /// Note: To handle a screen scale factor multiply it to the `pt_size` argument.
+    ///
+    /// Returns `None` in case the [`Font::units_per_em`] unit size exceeds the expected range.
+    ///
+    /// ## Point size (pt)
+    ///
+    /// Font sizes are typically specified in "points". According to the modern
+    /// standard, 1pt = 1/72in. The "point size" of a font is the number of points
+    /// per em.
+    ///
+    /// The DPI (dots-per-inch) of a screen depends on the screen in question;
+    /// 96 DPI is often considered the "standard". For high-DPI displays the
+    /// DPI may be specified directly or one may multiply 96 by a scale-factor.
+    ///
+    /// Thus, for example, a 10pt font on a 96 pixels-per-inch display has
+    /// 10 / 72 * 96 = 13.333... pixels-per-em. If we divide this number by
+    /// `units_per_em` we then get a scaling factor: pixels-per-font-unit.
+    ///
+    /// Note however that since [`PxScale`] values are relative to the text height,
+    /// one further step is needed: multiply by [`Font::height_unscaled`].
+    fn pt_to_px_scale(&self, pt_size: f32) -> Option<PxScale> {
+        let px_per_em = pt_size * (96.0 / 72.0);
+        let units_per_em = self.units_per_em()?;
+        let height = self.height_unscaled();
+        Some(PxScale::from(px_per_em * height / units_per_em))
+    }
 
     /// Unscaled glyph ascent.
     ///
