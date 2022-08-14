@@ -1,3 +1,5 @@
+#[cfg(all(feature = "libm", not(feature = "std")))]
+use crate::nostd_float::FloatExt;
 use crate::{Font, Glyph, GlyphId, OutlinedGlyph, Rect};
 
 /// Pixel scale.
@@ -6,6 +8,8 @@ use crate::{Font, Glyph, GlyphId, OutlinedGlyph, Rect};
 ///
 /// Usually one uses `x == y`, but one may use a different ratio to stretch a
 /// font horizontally or vertically.
+/// 
+/// To convert pt size into pixel-scale see [`Font::pt_to_px_scale`].
 ///
 /// # Example
 /// ```
@@ -21,6 +25,17 @@ pub struct PxScale {
     ///
     /// By definition, this is the pixel-height of a font.
     pub y: f32,
+}
+
+impl PxScale {
+    /// Returns a `PxScale` with both x & y scale values set to the nearest integer.
+    #[inline]
+    pub fn round(self) -> Self {
+        Self {
+            x: self.x.round(),
+            y: self.y.round(),
+        }
+    }
 }
 
 impl From<f32> for PxScale {
