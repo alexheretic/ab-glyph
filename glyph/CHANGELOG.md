@@ -1,4 +1,4 @@
-# Unreleased (v0.2.16)
+# v0.2.16
 * Add `Font::pt_to_px_scale` to ease converting point size to `PxScale`.
 * Add `PxScale::round`.
 

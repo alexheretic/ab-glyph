@@ -8,7 +8,7 @@ use crate::{Font, Glyph, GlyphId, OutlinedGlyph, Rect};
 ///
 /// Usually one uses `x == y`, but one may use a different ratio to stretch a
 /// font horizontally or vertically.
-/// 
+///
 /// To convert pt size into pixel-scale see [`Font::pt_to_px_scale`].
 ///
 /// # Example
