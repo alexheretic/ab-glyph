@@ -32,6 +32,8 @@ mod nostd_float;
 mod outlined;
 mod scale;
 mod ttfp;
+#[cfg(feature = "variable-fonts")]
+mod variable;
 
 #[cfg(feature = "std")]
 pub use crate::font_arc::*;
@@ -44,3 +46,5 @@ pub use crate::{
     scale::*,
     ttfp::{FontRef, FontVec, GlyphImage, GlyphImageFormat},
 };
+#[cfg(feature = "variable-fonts")]
+pub use variable::*;

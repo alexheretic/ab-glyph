@@ -1,2 +1,6 @@
 [workspace]
 members = ["rasterizer", "glyph", "dev"]
+
+# TODO use release
+[patch.crates-io]
+owned_ttf_parser = { git = "https://github.com/alexheretic/owned-ttf-parser" }

@@ -20,8 +20,9 @@ libm2 = { package = "libm", version = "0.2.1", optional = true }
 # don't add any, instead use ./dev
 
 [features]
-default = ["std"]
+default = ["std", "variable-fonts"]
 # Activates usage of std.
 std = ["owned_ttf_parser/default", "ab_glyph_rasterizer/default"]
 # Uses libm when not using std. This needs to be active in that case.
 libm = ["libm2", "ab_glyph_rasterizer/libm"]
+variable-fonts = ["owned_ttf_parser/variable-fonts"]
