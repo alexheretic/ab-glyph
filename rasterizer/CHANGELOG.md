@@ -1,5 +1,5 @@
 # Unreleased (0.1.6)
-* Add runtime detected AVX2 or SSE4.2 line drawing.
+* Add runtime detected AVX2 or SSE4.2 line drawing. Improves performance on compatible x86_64 CPUs.
 
 # 0.1.5
 * Remove cap of `1.0` for coverage values returned by `for_each_pixel` now `>= 1.0` means fully covered.
