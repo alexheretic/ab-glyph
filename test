@@ -9,7 +9,10 @@ echo "==> test"
 cargo test
 cargo test --benches
 echo "==> no_std"
-(cd rasterizer && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
-(cd glyph && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
+cargo build -p ab_glyph_rasterizer --target thumbv6m-none-eabi --no-default-features --features libm
+cargo build -p ab_glyph --target thumbv6m-none-eabi --no-default-features --features libm
+echo "==> check wasm32"
+cargo build -p ab_glyph_rasterizer --target wasm32-unknown-unknown
+cargo build -p ab_glyph --target wasm32-unknown-unknown
 echo "==> rustfmt"
 cargo fmt -- --check

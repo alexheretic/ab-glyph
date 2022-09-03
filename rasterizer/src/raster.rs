@@ -23,11 +23,14 @@ use alloc::vec::Vec;
 
 use crate::geometry::{lerp, Point};
 
+type DrawLineFn = unsafe fn(&mut Rasterizer, Point, Point);
+
 /// Coverage rasterizer for lines, quadratic & cubic beziers.
 pub struct Rasterizer {
     width: usize,
     height: usize,
     a: Vec<f32>,
+    draw_line_fn: DrawLineFn,
 }
 
 impl Rasterizer {
@@ -38,10 +41,23 @@ impl Rasterizer {
     /// let mut rasterizer = Rasterizer::new(14, 38);
     /// ```
     pub fn new(width: usize, height: usize) -> Self {
+        // runtime detect optimal simd impls
+        #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+        let draw_line_fn: DrawLineFn = if is_x86_feature_detected!("avx2") {
+            draw_line_avx2
+        } else if is_x86_feature_detected!("sse4.2") {
+            draw_line_sse4_2
+        } else {
+            Self::draw_line_scalar
+        };
+        #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
+        let draw_line_fn: DrawLineFn = Self::draw_line_scalar;
+
         Self {
             width,
             height,
             a: vec![0.0; width * height + 4],
+            draw_line_fn,
         }
     }
 
@@ -95,6 +111,11 @@ impl Rasterizer {
     /// rasterizer.draw_line(point(0.0, 0.48), point(1.22, 0.48));
     /// ```
     pub fn draw_line(&mut self, p0: Point, p1: Point) {
+        unsafe { (self.draw_line_fn)(self, p0, p1) }
+    }
+
+    #[inline(always)] // must inline for simd versions
+    fn draw_line_scalar(&mut self, p0: Point, p1: Point) {
         if (p0.y - p1.y).abs() <= core::f32::EPSILON {
             return;
         }
@@ -285,4 +306,16 @@ impl core::fmt::Debug for Rasterizer {
             .field("height", &self.height)
             .finish()
     }
+}
+
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[target_feature(enable = "avx2")]
+unsafe fn draw_line_avx2(rast: &mut Rasterizer, p0: Point, p1: Point) {
+    rast.draw_line_scalar(p0, p1)
+}
+
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[target_feature(enable = "sse4.2")]
+unsafe fn draw_line_sse4_2(rast: &mut Rasterizer, p0: Point, p1: Point) {
+    rast.draw_line_scalar(p0, p1)
 }
