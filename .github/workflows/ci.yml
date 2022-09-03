@@ -14,13 +14,18 @@ jobs:
     steps:
     - run: rustup update stable
     - run: rustup target add thumbv6m-none-eabi
+    - run: rustup target add wasm32-unknown-unknown
     - uses: actions/checkout@v2
     - run: cargo test
     - run: cargo test --benches
     - name: Build no_std ab_glyph_rasterizer
-      run: (cd rasterizer && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
+      run: cargo build -p ab_glyph_rasterizer --target thumbv6m-none-eabi --no-default-features --features libm
     - name: Build no_std ab_glyph
-      run: (cd glyph && cargo build --target thumbv6m-none-eabi --no-default-features --features libm)
+      run: cargo build -p ab_glyph --target thumbv6m-none-eabi --no-default-features --features libm
+    - name: Build wasm32 ab_glyph_rasterizer
+      run: cargo build -p ab_glyph_rasterizer --target wasm32-unknown-unknown
+    - name: Build wasm32 ab_glyph
+      run: cargo build -p ab_glyph --target wasm32-unknown-unknown
 
   rustfmt:
     runs-on: ubuntu-latest
