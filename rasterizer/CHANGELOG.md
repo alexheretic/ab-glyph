@@ -1,3 +1,6 @@
+# Unreleased (0.1.6)
+* Add runtime detected AVX2 or SSE4.2 line drawing.
+
 # 0.1.5
 * Remove cap of `1.0` for coverage values returned by `for_each_pixel` now `>= 1.0` means fully covered.
   This allows a minor reduction in operations / performance boost.
