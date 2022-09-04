@@ -1,4 +1,4 @@
-# Unreleased (0.2.17)
+# 0.2.17
 * Add `VariableFont` trait implemented by `FontRef` & `FontVec`.
   Provides `variations` & `set_variation` functions.
 * Add default enabled feature `variable-fonts`.
