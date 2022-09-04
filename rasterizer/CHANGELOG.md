@@ -1,4 +1,4 @@
-# Unreleased (0.1.6)
+# 0.1.6
 * Add runtime detected AVX2 or SSE4.2 line drawing. Improves performance on compatible x86_64 CPUs.
 
 # 0.1.5
