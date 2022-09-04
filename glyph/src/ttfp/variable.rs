@@ -27,7 +27,6 @@ impl VariableFont for FontVec {
     }
 }
 
-#[inline]
 fn variations(face: &ttfp::Face<'_>) -> Vec<VariationAxis> {
     face.variation_axes()
         .into_iter()
