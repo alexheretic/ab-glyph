@@ -1,5 +1,7 @@
 //! ttf-parser crate specific code. ttf-parser types should not be leaked publicly.
 mod outliner;
+#[cfg(feature = "variable-fonts")]
+mod variable;
 
 use crate::{point, Font, GlyphId, InvalidFont, Outline, Point, Rect};
 use alloc::boxed::Box;
