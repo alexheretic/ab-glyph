@@ -42,7 +42,7 @@ impl Rasterizer {
     /// ```
     pub fn new(width: usize, height: usize) -> Self {
         // runtime detect optimal simd impls
-        #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+        #[cfg(all(feature = "std", any(target_arch = "x86", target_arch = "x86_64")))]
         let draw_line_fn: DrawLineFn = if is_x86_feature_detected!("avx2") {
             draw_line_avx2
         } else if is_x86_feature_detected!("sse4.2") {
@@ -50,7 +50,10 @@ impl Rasterizer {
         } else {
             Self::draw_line_scalar
         };
-        #[cfg(not(any(target_arch = "x86", target_arch = "x86_64")))]
+        #[cfg(any(
+            not(feature = "std"),
+            not(any(target_arch = "x86", target_arch = "x86_64"))
+        ))]
         let draw_line_fn: DrawLineFn = Self::draw_line_scalar;
 
         Self {
@@ -308,13 +311,13 @@ impl core::fmt::Debug for Rasterizer {
     }
 }
 
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(all(feature = "std", any(target_arch = "x86", target_arch = "x86_64")))]
 #[target_feature(enable = "avx2")]
 unsafe fn draw_line_avx2(rast: &mut Rasterizer, p0: Point, p1: Point) {
     rast.draw_line_scalar(p0, p1)
 }
 
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(all(feature = "std", any(target_arch = "x86", target_arch = "x86_64")))]
 #[target_feature(enable = "sse4.2")]
 unsafe fn draw_line_sse4_2(rast: &mut Rasterizer, p0: Point, p1: Point) {
     rast.draw_line_scalar(p0, p1)
