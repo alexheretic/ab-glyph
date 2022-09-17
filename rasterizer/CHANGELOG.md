@@ -1,3 +1,6 @@
+# Unreleased (0.1.7)
+* Fix x86, x86_64 no_std builds, require `std` feature for runtime detected SIMD.
+
 # 0.1.6
 * Add runtime detected AVX2 or SSE4.2 line drawing. Improves performance on compatible x86_64 CPUs.
 
