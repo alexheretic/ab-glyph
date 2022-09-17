@@ -1,4 +1,4 @@
-# Unreleased (0.1.7)
+# 0.1.7
 * Fix x86, x86_64 no_std builds, require `std` feature for runtime detected SIMD.
 
 # 0.1.6
