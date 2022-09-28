@@ -111,7 +111,7 @@ impl<'font> FontRef<'font> {
     #[inline]
     pub fn try_from_slice_and_index(data: &'font [u8], index: u32) -> Result<Self, InvalidFont> {
         Ok(Self(ttfp::PreParsedSubtables::from(
-            ttfp::Face::from_slice(data, index).map_err(|_| InvalidFont)?,
+            ttfp::Face::parse(data, index).map_err(|_| InvalidFont)?,
         )))
     }
 }

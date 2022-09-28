@@ -1,3 +1,6 @@
+# Unreleased (0.2.18)
+* Update _ttf-parser_ to `0.17`.
+
 # 0.2.17
 * Add `VariableFont` trait implemented by `FontRef` & `FontVec`.
   Provides `variations` & `set_variation` functions.
