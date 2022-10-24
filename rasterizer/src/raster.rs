@@ -300,7 +300,10 @@ impl Rasterizer {
 
 /// ```
 /// let rasterizer = ab_glyph_rasterizer::Rasterizer::new(3, 4);
-/// assert_eq!(&format!("{:?}", rasterizer), "Rasterizer { width: 3, height: 4 }");
+/// assert_eq!(
+///     &format!("{:?}", rasterizer),
+///     "Rasterizer { width: 3, height: 4 }"
+/// );
 /// ```
 impl core::fmt::Debug for Rasterizer {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {

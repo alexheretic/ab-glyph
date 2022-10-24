@@ -8,7 +8,7 @@ pub use ab_glyph_rasterizer::point;
 ///
 /// # Example
 /// ```
-/// use ab_glyph::{FontRef, Font, GlyphId};
+/// use ab_glyph::{Font, FontRef, GlyphId};
 /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
 /// let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
 ///
