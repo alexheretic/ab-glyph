@@ -71,7 +71,7 @@ fn draw_ascii<F: Font>(font: F) {
     pixel_data
         .into_iter()
         .map(|alpha| ((1.0 - alpha) * mapping_scale + 0.5) as usize)
-        .map(|index| mapping[index.max(0).min(mapping.len() - 1)])
+        .map(|index| mapping[index.clamp(0, mapping.len() - 1)])
         .collect::<Vec<_>>()
         .chunks_exact(px_width)
         .skip_while(|row| row.iter().all(|c| *c == b' '))
