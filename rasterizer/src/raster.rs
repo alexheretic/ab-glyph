@@ -41,26 +41,11 @@ impl Rasterizer {
     /// let mut rasterizer = Rasterizer::new(14, 38);
     /// ```
     pub fn new(width: usize, height: usize) -> Self {
-        // runtime detect optimal simd impls
-        #[cfg(all(feature = "std", any(target_arch = "x86", target_arch = "x86_64")))]
-        let draw_line_fn: DrawLineFn = if is_x86_feature_detected!("avx2") {
-            draw_line_avx2
-        } else if is_x86_feature_detected!("sse4.2") {
-            draw_line_sse4_2
-        } else {
-            Self::draw_line_scalar
-        };
-        #[cfg(any(
-            not(feature = "std"),
-            not(any(target_arch = "x86", target_arch = "x86_64"))
-        ))]
-        let draw_line_fn: DrawLineFn = Self::draw_line_scalar;
-
         Self {
             width,
             height,
             a: vec![0.0; width * height + 4],
-            draw_line_fn,
+            draw_line_fn: optimal_draw_line_fn(),
         }
     }
 
@@ -324,4 +309,30 @@ unsafe fn draw_line_avx2(rast: &mut Rasterizer, p0: Point, p1: Point) {
 #[target_feature(enable = "sse4.2")]
 unsafe fn draw_line_sse4_2(rast: &mut Rasterizer, p0: Point, p1: Point) {
     rast.draw_line_scalar(p0, p1)
+}
+
+/// Return most optimal `DrawLineFn` impl.
+///
+/// With feature `std` on x86/x86_64 will use one-time runtime detection
+/// to pick the best SIMD impl. Otherwise uses a scalar version.
+fn optimal_draw_line_fn() -> DrawLineFn {
+    unsafe {
+        // safe as write synchronised by Once::call_once or no-write
+        static mut DRAW_LINE_FN: DrawLineFn = Rasterizer::draw_line_scalar;
+
+        #[cfg(all(feature = "std", any(target_arch = "x86", target_arch = "x86_64")))]
+        {
+            static INIT: std::sync::Once = std::sync::Once::new();
+            INIT.call_once(|| {
+                // runtime detect optimal simd impls
+                if is_x86_feature_detected!("avx2") {
+                    DRAW_LINE_FN = draw_line_avx2
+                } else if is_x86_feature_detected!("sse4.2") {
+                    DRAW_LINE_FN = draw_line_sse4_2
+                }
+            });
+        }
+
+        DRAW_LINE_FN
+    }
 }
