@@ -1,3 +1,6 @@
+# Unreleased (0.1.8)
+* Do SIMD runtime detection only once on the first `Rasterizer::new` instead of on each.
+
 # 0.1.7
 * Fix x86, x86_64 no_std builds, require `std` feature for runtime detected SIMD.
 
