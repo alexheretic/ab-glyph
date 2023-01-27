@@ -14,7 +14,7 @@ fn main() {
             panic!("error constructing a Font from data at {:?}", font_path);
         });
         if let Some(name) = font_path.file_name().and_then(|n| n.to_str()) {
-            eprintln!("Using font: {}", name);
+            eprintln!("Using font: {name}");
         }
         draw_image(font);
     } else {

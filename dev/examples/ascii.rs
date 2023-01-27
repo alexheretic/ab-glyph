@@ -42,7 +42,7 @@ fn draw_ascii<F: Font>(font: F) {
         .unwrap_or(0.0)
         .ceil() as usize;
 
-    println!("width: {}, height: {}", px_width, px_height);
+    println!("width: {px_width}, height: {px_height}");
 
     // Rasterise to a f32 alpha vec
     let mut pixel_data = vec![0.0; px_width * px_height];
