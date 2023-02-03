@@ -1,4 +1,4 @@
-# Unreleased (0.2.20)
+# 0.2.20
 * Add `FontVec::as_slice`, `FontVec::into_vec`.
 
 # 0.2.19
