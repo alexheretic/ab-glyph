@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RUST_BACKTRACE: 1
+      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
     steps:
     - run: rustup update stable
     - run: rustup target add thumbv6m-none-eabi
