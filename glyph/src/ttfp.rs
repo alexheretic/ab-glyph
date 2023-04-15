@@ -250,7 +250,7 @@ macro_rules! impl_font {
                 self.0
                     .as_face_ref()
                     .glyph_hor_advance(id.into())
-                    .expect("Invalid glyph_hor_advance")
+                    .unwrap_or_default()
                     .into()
             }
 
@@ -259,7 +259,7 @@ macro_rules! impl_font {
                 self.0
                     .as_face_ref()
                     .glyph_hor_side_bearing(id.into())
-                    .expect("Invalid glyph_hor_side_bearing")
+                    .unwrap_or_default()
                     .into()
             }
 
@@ -268,7 +268,7 @@ macro_rules! impl_font {
                 self.0
                     .as_face_ref()
                     .glyph_ver_advance(id.into())
-                    .expect("Invalid glyph_ver_advance")
+                    .unwrap_or_default()
                     .into()
             }
 
@@ -277,7 +277,7 @@ macro_rules! impl_font {
                 self.0
                     .as_face_ref()
                     .glyph_ver_side_bearing(id.into())
-                    .expect("Invalid glyph_ver_side_bearing")
+                    .unwrap_or_default()
                     .into()
             }
 
