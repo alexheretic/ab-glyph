@@ -86,20 +86,28 @@ pub trait Font {
 
     /// Unscaled horizontal advance for a given glyph id.
     ///
+    /// Returns `0.0` if the font does not define this value.
+    ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     fn h_advance_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled horizontal side bearing for a given glyph id.
+    ///
+    /// Returns `0.0` if the font does not define this value.
     ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled vertical advance for a given glyph id.
     ///
+    /// Returns `0.0` if the font does not define this value.
+    ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     fn v_advance_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled vertical side bearing for a given glyph id.
+    ///
+    /// Returns `0.0` if the font does not define this value.
     ///
     /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
     fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32;

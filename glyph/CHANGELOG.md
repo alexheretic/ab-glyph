@@ -1,3 +1,8 @@
+# Unreleased
+* `Font::h_advance_unscaled`, `h_side_bearing_unscaled`, `v_advance_unscaled`, `v_side_bearing_unscaled`
+  and related `ScaleFont` methods now return `0.0` if the font does not define that value. 
+  Previously calls would panic when fonts lacked support.
+
 # 0.2.20
 * Add `FontVec::as_slice`, `FontVec::into_vec`.
 
