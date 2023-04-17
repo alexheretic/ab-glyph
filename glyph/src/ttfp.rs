@@ -40,6 +40,14 @@ impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage<'a> {
             data: img.data,
             format: match img.format {
                 ttfp::RasterImageFormat::PNG => GlyphImageFormat::Png,
+                ttfp::RasterImageFormat::BitmapMono => GlyphImageFormat::BitmapMono,
+                ttfp::RasterImageFormat::BitmapMonoPacked => GlyphImageFormat::BitmapMonoPacked,
+                ttfp::RasterImageFormat::BitmapGray2 => GlyphImageFormat::BitmapGray2,
+                ttfp::RasterImageFormat::BitmapGray2Packed => GlyphImageFormat::BitmapGray2Packed,
+                ttfp::RasterImageFormat::BitmapGray4 => GlyphImageFormat::BitmapGray4,
+                ttfp::RasterImageFormat::BitmapGray4Packed => GlyphImageFormat::BitmapGray4Packed,
+                ttfp::RasterImageFormat::BitmapGray8 => GlyphImageFormat::BitmapGray8,
+                ttfp::RasterImageFormat::BitmapPremulBgra32 => GlyphImageFormat::BitmapPremulBgra32,
             },
         }
     }
@@ -51,6 +59,62 @@ impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage<'a> {
 #[derive(Debug, Clone)]
 pub enum GlyphImageFormat {
     Png,
+
+    /// A monochrome bitmap.
+    ///
+    /// The most significant bit of the first byte corresponds to the top-left pixel, proceeding
+    /// through succeeding bits moving left to right. The data for each row is padded to a byte
+    /// boundary, so the next row begins with the most significant bit of a new byte. 1 corresponds
+    /// to black, and 0 to white.
+    BitmapMono,
+
+    /// A packed monochrome bitmap.
+    ///
+    /// The most significant bit of the first byte corresponds to the top-left pixel, proceeding
+    /// through succeeding bits moving left to right. Data is tightly packed with no padding. 1
+    /// corresponds to black, and 0 to white.
+    BitmapMonoPacked,
+
+    /// A grayscale bitmap with 2 bits per pixel.
+    ///
+    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
+    /// through succeeding bits moving left to right. The data for each row is padded to a byte
+    /// boundary, so the next row begins with the most significant bit of a new byte.
+    BitmapGray2,
+
+    /// A packed grayscale bitmap with 2 bits per pixel.
+    ///
+    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
+    /// through succeeding bits moving left to right. Data is tightly packed with no padding.
+    BitmapGray2Packed,
+
+    /// A grayscale bitmap with 4 bits per pixel.
+    ///
+    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
+    /// through succeeding bits moving left to right. The data for each row is padded to a byte
+    /// boundary, so the next row begins with the most significant bit of a new byte.
+    BitmapGray4,
+
+    /// A packed grayscale bitmap with 4 bits per pixel.
+    ///
+    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
+    /// through succeeding bits moving left to right. Data is tightly packed with no padding.
+    BitmapGray4Packed,
+
+    /// A grayscale bitmap with 8 bits per pixel.
+    ///
+    /// The first byte corresponds to the top-left pixel, proceeding through succeeding bytes
+    /// moving left to right.
+    BitmapGray8,
+
+    /// A color bitmap with 32 bits per pixel.
+    ///
+    /// The first group of four bytes corresponds to the top-left pixel, proceeding through
+    /// succeeding pixels moving left to right. Each byte corresponds to a color channel and the
+    /// channels within a pixel are in blue, green, red, alpha order. Color values are
+    /// pre-multiplied by the alpha. For example, the color "full-green with half translucency"
+    /// is encoded as `\x00\x80\x00\x80`, and not `\x00\xFF\x00\x80`.
+    BitmapPremulBgra32,
 }
 
 /// Font data handle stored as a `&[u8]` + parsed data.
