@@ -7,7 +7,7 @@ use crate::{point, Font, GlyphId, InvalidFont, Outline, Point, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
-use core::{convert::TryFrom, fmt};
+use core::fmt;
 use owned_ttf_parser::{self as ttfp, AsFaceRef};
 
 impl From<GlyphId> for ttfp::GlyphId {

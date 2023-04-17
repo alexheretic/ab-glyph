@@ -1,5 +1,3 @@
-use libm2 as libm;
-
 /// Basic required float operations.
 pub(crate) trait FloatExt {
     fn floor(self) -> Self;

@@ -1,10 +1,11 @@
-# Unreleased
-* `Font::h_advance_unscaled`, `h_side_bearing_unscaled`, `v_advance_unscaled`, `v_side_bearing_unscaled`
-  and related `ScaleFont` methods now return `0.0` if the font does not define that value. 
-  Previously calls would panic when fonts lacked support.
+# Unreleased (0.2.21)
 * Update _ttf-parser_ to `0.19`.
 * Add `GlyphImageFormat` variants `BitmapMono`, `BitmapMonoPacked`, `BitmapGray2`, `BitmapGray2Packed`,
   `BitmapGray4`, `BitmapGray4Packed`, `BitmapGray8`, `BitmapPremulBgra32`.
+* `Font::h_advance_unscaled`, `h_side_bearing_unscaled`, `v_advance_unscaled`, `v_side_bearing_unscaled`
+  and related `ScaleFont` methods now return `0.0` if the font does not define that value. 
+  Previously calls would panic when fonts lacked support.
+* Use edition 2021.
 
 # 0.2.20
 * Add `FontVec::as_slice`, `FontVec::into_vec`.

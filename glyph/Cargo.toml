@@ -2,7 +2,7 @@
 name = "ab_glyph"
 version = "0.2.20"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "API for loading, scaling, positioning and rasterizing OpenType font glyphs."
 repository = "https://github.com/alexheretic/ab-glyph"
 keywords = ["text", "ttf", "truetype", "otf", "opentype"]
@@ -13,8 +13,7 @@ readme = "README.md"
 owned_ttf_parser = { version = "0.19", default-features = false }
 ab_glyph_rasterizer = { version = "0.1.2", path = "../rasterizer", default-features = false }
 # no_std float stuff
-# renamed to enable a "libm" feature
-libm2 = { package = "libm", version = "0.2.1", optional = true }
+libm = { version = "0.2.1", optional = true }
 
 [dev-dependencies]
 # don't add any, instead use ./dev
@@ -24,5 +23,5 @@ default = ["std", "variable-fonts"]
 # Activates usage of std.
 std = ["owned_ttf_parser/default", "ab_glyph_rasterizer/default"]
 # Uses libm when not using std. This needs to be active in that case.
-libm = ["libm2", "ab_glyph_rasterizer/libm"]
+libm = ["dep:libm", "ab_glyph_rasterizer/libm"]
 variable-fonts = ["owned_ttf_parser/variable-fonts"]

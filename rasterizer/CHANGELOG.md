@@ -1,3 +1,6 @@
+# Unreleased (0.1.9)
+* Use edition 2021.
+
 # 0.1.8
 * Do SIMD runtime detection only once on the first `Rasterizer::new` instead of on each.
 
