@@ -10,7 +10,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [dependencies]
-owned_ttf_parser = { version = "0.18.1", default-features = false }
+owned_ttf_parser = { version = "0.19", default-features = false }
 ab_glyph_rasterizer = { version = "0.1.2", path = "../rasterizer", default-features = false }
 # no_std float stuff
 # renamed to enable a "libm" feature
