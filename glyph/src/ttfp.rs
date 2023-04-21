@@ -384,7 +384,7 @@ macro_rules! impl_font {
                 self.0.as_face_ref().number_of_glyphs() as _
             }
 
-            fn codepoint_ids<'a>(&'a self) -> crate::CodepointIdIter<'a> {
+            fn codepoint_ids(&self) -> crate::CodepointIdIter<'_> {
                 let face_ref = self.0.as_face_ref();
 
                 #[cfg(feature = "std")]

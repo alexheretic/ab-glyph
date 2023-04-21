@@ -55,7 +55,7 @@ fn draw_ascii<F: Font>(font: F) {
                 // There's still a possibility that the glyph clips the boundaries of the bitmap
                 if x >= 0.0 && (x as usize) < px_width && y >= 0.0 && (y as usize) < px_height {
                     // save the coverage alpha
-                    pixel_data[(x as usize + y as usize * px_width)] += v;
+                    pixel_data[x as usize + y as usize * px_width] += v;
                 }
             });
         }
