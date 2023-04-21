@@ -1,4 +1,4 @@
-# Unreleased (0.2.21)
+# 0.2.21
 * Update _ttf-parser_ to `0.19`.
 * Add `GlyphImageFormat` variants `BitmapMono`, `BitmapMonoPacked`, `BitmapGray2`, `BitmapGray2Packed`,
   `BitmapGray4`, `BitmapGray4Packed`, `BitmapGray8`, `BitmapPremulBgra32`.
