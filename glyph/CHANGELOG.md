@@ -1,3 +1,6 @@
+# Unreleased (0.2.22)
+* Improve `OutlinedGlyph::draw` documentation.
+
 # 0.2.21
 * Update _ttf-parser_ to `0.19`.
 * Add `GlyphImageFormat` variants `BitmapMono`, `BitmapMonoPacked`, `BitmapGray2`, `BitmapGray2Packed`,
