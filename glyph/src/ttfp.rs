@@ -20,13 +20,24 @@ impl From<GlyphId> for ttfp::GlyphId {
 /// A pre-rendered image of a glyph, usually used for emojis or other glyphs
 /// that can't be represented only using an outline.
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct GlyphImage<'a> {
     /// Offset of the image from the normal origin (top at the baseline plus
     /// ascent), measured in pixels at the image's current scale.
     pub origin: Point,
+    /// Image width.
+    ///
+    /// It doesn't guarantee that this value is the same as set in the `data` in the case of
+    /// [`GlyphImageFormat::Png`] format.
+    pub width: usize,
+    /// Image height.
+    ///
+    /// It doesn't guarantee that this value is the same as set in the `data` in the case of
+    /// [`GlyphImageFormat::Png`] format.
+    pub height: usize,
     /// Current scale of the image in pixels per em.
     pub scale: f32,
-    /// Raw image data (not a bitmap).
+    /// Raw image data, not a bitmap in the case of [`GlyphImageFormat::Png`] format.
     pub data: &'a [u8],
     /// Format of the raw data.
     pub format: GlyphImageFormat,
@@ -36,6 +47,8 @@ impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage<'a> {
     fn from(img: ttfp::RasterGlyphImage<'a>) -> Self {
         GlyphImage {
             origin: point(img.x.into(), img.y.into()),
+            width: img.width.into(),
+            height: img.height.into(),
             scale: img.pixels_per_em.into(),
             data: img.data,
             format: match img.format {
