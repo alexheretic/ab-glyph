@@ -1,6 +1,7 @@
+#[allow(deprecated)]
 use crate::{
-    point, Glyph, GlyphId, GlyphImage, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect,
-    ScaleFont,
+    point, Glyph, GlyphId, GlyphImage, GlyphImage2, Outline, OutlinedGlyph, PxScale, PxScaleFont,
+    Rect, ScaleFont,
 };
 
 /// Functionality required from font data.
@@ -154,7 +155,21 @@ pub trait Font {
     /// used to select between multiple possible images (if present); the returned image will
     /// likely not match this value, requiring you to scale it to match the target resolution.
     /// To get the largest image use `u16::MAX`.
+    #[allow(deprecated)]
+    #[deprecated(
+        since = "0.2.22",
+        note = "Deprecated in favor of `glyph_raster_image2`"
+    )]
     fn glyph_raster_image(&self, id: GlyphId, pixel_size: u16) -> Option<GlyphImage>;
+
+    /// Returns a pre-rendered image of the glyph.
+    ///
+    /// This is normally only present when an outline is not sufficient to describe the glyph, such
+    /// as emojis (particularly color ones).  The `pixel_size` parameter is in pixels per em, and will be
+    /// used to select between multiple possible images (if present); the returned image will
+    /// likely not match this value, requiring you to scale it to match the target resolution.
+    /// To get the largest image use `u16::MAX`.
+    fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<GlyphImage2>;
 
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
@@ -291,7 +306,13 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
+    #[allow(deprecated)]
     fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
         (*self).glyph_raster_image(id, size)
+    }
+
+    #[inline]
+    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<GlyphImage2> {
+        (*self).glyph_raster_image2(id, size)
     }
 }

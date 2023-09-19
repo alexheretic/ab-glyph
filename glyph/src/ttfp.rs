@@ -19,6 +19,7 @@ impl From<GlyphId> for ttfp::GlyphId {
 
 /// A pre-rendered image of a glyph, usually used for emojis or other glyphs
 /// that can't be represented only using an outline.
+#[deprecated(since = "0.2.22", note = "Deprecated in favor of `GlyphImage2`")]
 #[derive(Debug, Clone)]
 pub struct GlyphImage<'a> {
     /// Offset of the image from the normal origin (top at the baseline plus
@@ -26,16 +27,56 @@ pub struct GlyphImage<'a> {
     pub origin: Point,
     /// Current scale of the image in pixels per em.
     pub scale: f32,
-    /// Raw image data (not a bitmap).
+    /// Raw image data, not a bitmap in the case of [`GlyphImageFormat::Png`] format.
     pub data: &'a [u8],
     /// Format of the raw data.
     pub format: GlyphImageFormat,
 }
 
+#[allow(deprecated)]
 impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage<'a> {
     fn from(img: ttfp::RasterGlyphImage<'a>) -> Self {
+        let img: GlyphImage2 = img.into();
         GlyphImage {
+            origin: img.origin,
+            scale: img.scale,
+            data: img.data,
+            format: img.format,
+        }
+    }
+}
+/// A pre-rendered image of a glyph, usually used for emojis or other glyphs
+/// that can't be represented only using an outline.
+#[non_exhaustive]
+#[derive(Debug, Clone)]
+pub struct GlyphImage2<'a> {
+    /// Offset of the image from the normal origin (top at the baseline plus
+    /// ascent), measured in pixels at the image's current scale.
+    pub origin: Point,
+    /// Image width.
+    ///
+    /// It doesn't guarantee that this value is the same as set in the `data` in the case of
+    /// [`GlyphImageFormat::Png`] format.
+    pub width: u16,
+    /// Image height.
+    ///
+    /// It doesn't guarantee that this value is the same as set in the `data` in the case of
+    /// [`GlyphImageFormat::Png`] format.
+    pub height: u16,
+    /// Current scale of the image in pixels per em.
+    pub scale: f32,
+    /// Raw image data, not a bitmap in the case of [`GlyphImageFormat::Png`] format.
+    pub data: &'a [u8],
+    /// Format of the raw data.
+    pub format: GlyphImageFormat,
+}
+
+impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage2<'a> {
+    fn from(img: ttfp::RasterGlyphImage<'a>) -> Self {
+        Self {
             origin: point(img.x.into(), img.y.into()),
+            width: img.width,
+            height: img.height,
             scale: img.pixels_per_em.into(),
             data: img.data,
             format: match img.format {
@@ -418,7 +459,15 @@ macro_rules! impl_font {
                 crate::CodepointIdIter { inner }
             }
 
+            #[allow(deprecated)]
             fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
+                self.0
+                    .as_face_ref()
+                    .glyph_raster_image(id.into(), size)
+                    .map(Into::into)
+            }
+
+            fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<GlyphImage2> {
                 self.0
                     .as_face_ref()
                     .glyph_raster_image(id.into(), size)
