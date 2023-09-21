@@ -11,12 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RUST_BACKTRACE: 1
-      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
     steps:
     - run: rustup update stable
     - run: rustup target add thumbv6m-none-eabi
     - run: rustup target add wasm32-unknown-unknown
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - run: cargo test
     - run: cargo test --benches
     - name: Build no_std ab_glyph_rasterizer
@@ -32,5 +31,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: rustup update stable
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - run: cargo fmt -- --check
