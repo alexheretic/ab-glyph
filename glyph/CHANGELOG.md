@@ -1,12 +1,14 @@
 # Unreleased (0.2.22)
 * Improve `OutlinedGlyph::draw` documentation.
+* Add `GlyphImage2` and `Font::glyph_raster_image2` to expose width and height info. Also deprecate
+  `GlyphImage2` and `GlyphImage`.
 
 # 0.2.21
 * Update _ttf-parser_ to `0.19`.
 * Add `GlyphImageFormat` variants `BitmapMono`, `BitmapMonoPacked`, `BitmapGray2`, `BitmapGray2Packed`,
   `BitmapGray4`, `BitmapGray4Packed`, `BitmapGray8`, `BitmapPremulBgra32`.
 * `Font::h_advance_unscaled`, `h_side_bearing_unscaled`, `v_advance_unscaled`, `v_side_bearing_unscaled`
-  and related `ScaleFont` methods now return `0.0` if the font does not define that value. 
+  and related `ScaleFont` methods now return `0.0` if the font does not define that value.
   Previously calls would panic when fonts lacked support.
 * Use edition 2021.
 
@@ -40,7 +42,7 @@
 # 0.2.12
 * Update _owned-ttf-parser_ to `0.13.2`.
 * Pre-parse cmap & kern subtables on all `Font` variants at initialization. This provides
-  much faster `glyph_id` & `kern` method performance, results in 25-30% faster layout 
+  much faster `glyph_id` & `kern` method performance, results in 25-30% faster layout
   benchmark performance.
 
 # 0.2.11
@@ -84,7 +86,7 @@
 # 0.2
 * Add `_unscaled` suffix to  `Font` trait methods that deal with unscaled metrics.
   This helps distinguish `ScaleFont`'s scaled metrics and can avoid unintended behaviour.
-* Rename "libm-math" -> "libm" for consistency with _ab_glyph_rasterizer_. 
+* Rename "libm-math" -> "libm" for consistency with _ab_glyph_rasterizer_.
 
 # 0.1
 * Implement fast glyph layout, outline & drawing primitives.

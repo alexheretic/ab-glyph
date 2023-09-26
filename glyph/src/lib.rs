@@ -39,6 +39,7 @@ mod variable;
 
 #[cfg(feature = "std")]
 pub use crate::font_arc::*;
+#[allow(deprecated)]
 pub use crate::{
     codepoint_ids::*,
     err::*,
@@ -46,7 +47,7 @@ pub use crate::{
     glyph::*,
     outlined::*,
     scale::*,
-    ttfp::{FontRef, FontVec, GlyphImage, GlyphImageFormat},
+    ttfp::{FontRef, FontVec, GlyphImage, GlyphImage2, GlyphImageFormat},
 };
 #[cfg(feature = "variable-fonts")]
 pub use variable::*;
