@@ -3,7 +3,7 @@ mod outliner;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
-use crate::{point, Font, GlyphId, InvalidFont, Outline, Point, Rect};
+use crate::{point, v2, Font, GlyphId, GlyphImageFormat, InvalidFont, Outline, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
@@ -15,147 +15,6 @@ impl From<GlyphId> for ttfp::GlyphId {
     fn from(id: GlyphId) -> Self {
         Self(id.0)
     }
-}
-
-/// A pre-rendered image of a glyph, usually used for emojis or other glyphs
-/// that can't be represented only using an outline.
-#[deprecated(since = "0.2.22", note = "Deprecated in favor of `GlyphImage2`")]
-#[derive(Debug, Clone)]
-pub struct GlyphImage<'a> {
-    /// Offset of the image from the normal origin (top at the baseline plus
-    /// ascent), measured in pixels at the image's current scale.
-    pub origin: Point,
-    /// Current scale of the image in pixels per em.
-    pub scale: f32,
-    /// Raw image data, not a bitmap in the case of [`GlyphImageFormat::Png`] format.
-    pub data: &'a [u8],
-    /// Format of the raw data.
-    pub format: GlyphImageFormat,
-}
-
-#[allow(deprecated)]
-impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage<'a> {
-    fn from(img: ttfp::RasterGlyphImage<'a>) -> Self {
-        let img: GlyphImage2 = img.into();
-        GlyphImage {
-            origin: img.origin,
-            scale: img.scale,
-            data: img.data,
-            format: img.format,
-        }
-    }
-}
-/// A pre-rendered image of a glyph, usually used for emojis or other glyphs
-/// that can't be represented only using an outline.
-#[non_exhaustive]
-#[derive(Debug, Clone)]
-pub struct GlyphImage2<'a> {
-    /// Offset of the image from the normal origin (top at the baseline plus
-    /// ascent), measured in pixels at the image's current scale.
-    pub origin: Point,
-    /// Image width.
-    ///
-    /// It doesn't guarantee that this value is the same as set in the `data` in the case of
-    /// [`GlyphImageFormat::Png`] format.
-    pub width: u16,
-    /// Image height.
-    ///
-    /// It doesn't guarantee that this value is the same as set in the `data` in the case of
-    /// [`GlyphImageFormat::Png`] format.
-    pub height: u16,
-    /// Current scale of the image in pixels per em.
-    pub scale: f32,
-    /// Raw image data, not a bitmap in the case of [`GlyphImageFormat::Png`] format.
-    pub data: &'a [u8],
-    /// Format of the raw data.
-    pub format: GlyphImageFormat,
-}
-
-impl<'a> From<ttfp::RasterGlyphImage<'a>> for GlyphImage2<'a> {
-    fn from(img: ttfp::RasterGlyphImage<'a>) -> Self {
-        Self {
-            origin: point(img.x.into(), img.y.into()),
-            width: img.width,
-            height: img.height,
-            scale: img.pixels_per_em.into(),
-            data: img.data,
-            format: match img.format {
-                ttfp::RasterImageFormat::PNG => GlyphImageFormat::Png,
-                ttfp::RasterImageFormat::BitmapMono => GlyphImageFormat::BitmapMono,
-                ttfp::RasterImageFormat::BitmapMonoPacked => GlyphImageFormat::BitmapMonoPacked,
-                ttfp::RasterImageFormat::BitmapGray2 => GlyphImageFormat::BitmapGray2,
-                ttfp::RasterImageFormat::BitmapGray2Packed => GlyphImageFormat::BitmapGray2Packed,
-                ttfp::RasterImageFormat::BitmapGray4 => GlyphImageFormat::BitmapGray4,
-                ttfp::RasterImageFormat::BitmapGray4Packed => GlyphImageFormat::BitmapGray4Packed,
-                ttfp::RasterImageFormat::BitmapGray8 => GlyphImageFormat::BitmapGray8,
-                ttfp::RasterImageFormat::BitmapPremulBgra32 => GlyphImageFormat::BitmapPremulBgra32,
-            },
-        }
-    }
-}
-
-/// Valid formats for a [`GlyphImage`].
-// Possible future formats:  SVG, JPEG, TIFF
-#[non_exhaustive]
-#[derive(Debug, Clone)]
-pub enum GlyphImageFormat {
-    Png,
-
-    /// A monochrome bitmap.
-    ///
-    /// The most significant bit of the first byte corresponds to the top-left pixel, proceeding
-    /// through succeeding bits moving left to right. The data for each row is padded to a byte
-    /// boundary, so the next row begins with the most significant bit of a new byte. 1 corresponds
-    /// to black, and 0 to white.
-    BitmapMono,
-
-    /// A packed monochrome bitmap.
-    ///
-    /// The most significant bit of the first byte corresponds to the top-left pixel, proceeding
-    /// through succeeding bits moving left to right. Data is tightly packed with no padding. 1
-    /// corresponds to black, and 0 to white.
-    BitmapMonoPacked,
-
-    /// A grayscale bitmap with 2 bits per pixel.
-    ///
-    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
-    /// through succeeding bits moving left to right. The data for each row is padded to a byte
-    /// boundary, so the next row begins with the most significant bit of a new byte.
-    BitmapGray2,
-
-    /// A packed grayscale bitmap with 2 bits per pixel.
-    ///
-    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
-    /// through succeeding bits moving left to right. Data is tightly packed with no padding.
-    BitmapGray2Packed,
-
-    /// A grayscale bitmap with 4 bits per pixel.
-    ///
-    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
-    /// through succeeding bits moving left to right. The data for each row is padded to a byte
-    /// boundary, so the next row begins with the most significant bit of a new byte.
-    BitmapGray4,
-
-    /// A packed grayscale bitmap with 4 bits per pixel.
-    ///
-    /// The most significant bits of the first byte corresponds to the top-left pixel, proceeding
-    /// through succeeding bits moving left to right. Data is tightly packed with no padding.
-    BitmapGray4Packed,
-
-    /// A grayscale bitmap with 8 bits per pixel.
-    ///
-    /// The first byte corresponds to the top-left pixel, proceeding through succeeding bytes
-    /// moving left to right.
-    BitmapGray8,
-
-    /// A color bitmap with 32 bits per pixel.
-    ///
-    /// The first group of four bytes corresponds to the top-left pixel, proceeding through
-    /// succeeding pixels moving left to right. Each byte corresponds to a color channel and the
-    /// channels within a pixel are in blue, green, red, alpha order. Color values are
-    /// pre-multiplied by the alpha. For example, the color "full-green with half translucency"
-    /// is encoded as `\x00\x80\x00\x80`, and not `\x00\xFF\x00\x80`.
-    BitmapPremulBgra32,
 }
 
 /// Font data handle stored as a `&[u8]` + parsed data.
@@ -459,19 +318,28 @@ macro_rules! impl_font {
                 crate::CodepointIdIter { inner }
             }
 
-            #[allow(deprecated)]
-            fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
-                self.0
-                    .as_face_ref()
-                    .glyph_raster_image(id.into(), size)
-                    .map(Into::into)
-            }
+            fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
+                use GlyphImageFormat::*;
 
-            fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<GlyphImage2> {
-                self.0
-                    .as_face_ref()
-                    .glyph_raster_image(id.into(), size)
-                    .map(Into::into)
+                let img = self.0.as_face_ref().glyph_raster_image(id.into(), size)?;
+                Some(v2::GlyphImage {
+                    origin: point(img.x.into(), img.y.into()),
+                    width: img.width,
+                    height: img.height,
+                    pixels_per_em: img.pixels_per_em,
+                    data: img.data,
+                    format: match img.format {
+                        ttfp::RasterImageFormat::PNG => Png,
+                        ttfp::RasterImageFormat::BitmapMono => BitmapMono,
+                        ttfp::RasterImageFormat::BitmapMonoPacked => BitmapMonoPacked,
+                        ttfp::RasterImageFormat::BitmapGray2 => BitmapGray2,
+                        ttfp::RasterImageFormat::BitmapGray2Packed => BitmapGray2Packed,
+                        ttfp::RasterImageFormat::BitmapGray4 => BitmapGray4,
+                        ttfp::RasterImageFormat::BitmapGray4Packed => BitmapGray4Packed,
+                        ttfp::RasterImageFormat::BitmapGray8 => BitmapGray8,
+                        ttfp::RasterImageFormat::BitmapPremulBgra32 => BitmapPremulBgra32,
+                    },
+                })
             }
         }
     };

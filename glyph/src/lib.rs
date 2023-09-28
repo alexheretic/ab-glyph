@@ -47,7 +47,8 @@ pub use crate::{
     glyph::*,
     outlined::*,
     scale::*,
-    ttfp::{FontRef, FontVec, GlyphImage, GlyphImage2, GlyphImageFormat},
+    ttfp::{FontRef, FontVec},
 };
+pub use ab_glyph_rasterizer::{point, Point};
 #[cfg(feature = "variable-fonts")]
 pub use variable::*;

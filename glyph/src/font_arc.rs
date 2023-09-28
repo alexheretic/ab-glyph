@@ -1,5 +1,4 @@
-#[allow(deprecated)]
-use crate::{Font, FontRef, FontVec, GlyphId, GlyphImage, GlyphImage2, InvalidFont, Outline};
+use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
 
@@ -138,12 +137,7 @@ impl Font for FontArc {
     }
 
     #[inline]
-    #[allow(deprecated)]
-    fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
-        self.0.glyph_raster_image(id, size)
-    }
-
-    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<GlyphImage2> {
+    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         self.0.glyph_raster_image2(id, size)
     }
 }

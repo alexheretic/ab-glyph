@@ -1,7 +1,5 @@
-#[allow(deprecated)]
 use crate::{
-    point, Glyph, GlyphId, GlyphImage, GlyphImage2, Outline, OutlinedGlyph, PxScale, PxScaleFont,
-    Rect, ScaleFont,
+    point, v2, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont,
 };
 
 /// Functionality required from font data.
@@ -160,7 +158,15 @@ pub trait Font {
         since = "0.2.22",
         note = "Deprecated in favor of `glyph_raster_image2`"
     )]
-    fn glyph_raster_image(&self, id: GlyphId, pixel_size: u16) -> Option<GlyphImage>;
+    fn glyph_raster_image(&self, id: GlyphId, pixel_size: u16) -> Option<crate::GlyphImage> {
+        self.glyph_raster_image2(id, pixel_size)
+            .map(|i| crate::GlyphImage {
+                origin: i.origin,
+                scale: i.pixels_per_em.into(),
+                data: i.data,
+                format: i.format,
+            })
+    }
 
     /// Returns a pre-rendered image of the glyph.
     ///
@@ -169,7 +175,7 @@ pub trait Font {
     /// used to select between multiple possible images (if present); the returned image will
     /// likely not match this value, requiring you to scale it to match the target resolution.
     /// To get the largest image use `u16::MAX`.
-    fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<GlyphImage2>;
+    fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<v2::GlyphImage>;
 
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
@@ -306,13 +312,7 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
-    #[allow(deprecated)]
-    fn glyph_raster_image(&self, id: GlyphId, size: u16) -> Option<GlyphImage> {
-        (*self).glyph_raster_image(id, size)
-    }
-
-    #[inline]
-    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<GlyphImage2> {
+    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         (*self).glyph_raster_image2(id, size)
     }
 }
