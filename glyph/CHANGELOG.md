@@ -1,4 +1,4 @@
-# Unreleased (0.2.22)
+# 0.2.22
 * Add `v2::GlyphImage` and `Font::glyph_raster_image2` to expose width and height info.
 * Deprecate `Font::glyph_raster_image` & `GlyphImage`.
 * Improve `OutlinedGlyph::draw` documentation.
