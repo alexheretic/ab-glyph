@@ -1,3 +1,6 @@
+# Unreleased (v0.2.23)
+* Update _ttf-parser_ to `0.20`.
+
 # 0.2.22
 * Add `v2::GlyphImage` and `Font::glyph_raster_image2` to expose width and height info.
 * Deprecate `Font::glyph_raster_image` & `GlyphImage`.
