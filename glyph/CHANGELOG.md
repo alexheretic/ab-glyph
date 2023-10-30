@@ -1,4 +1,4 @@
-# Unreleased (v0.2.23)
+# v0.2.23
 * Update _ttf-parser_ to `0.20`.
 
 # 0.2.22
