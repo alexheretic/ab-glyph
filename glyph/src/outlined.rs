@@ -88,7 +88,7 @@ impl OutlinedGlyph {
     /// with a coverage value indicating how much the glyph covered that pixel.
     ///
     /// A coverage value of `0.0` means the pixel is totally uncoverred by the glyph.
-    /// A value of `1.0` or greater means fully coverred.
+    /// A value of `1.0` or greater means fully covered.
     pub fn draw<O: FnMut(u32, u32, f32)>(&self, o: O) {
         use ab_glyph_rasterizer::Rasterizer;
         let h_factor = self.scale_factor.horizontal;
