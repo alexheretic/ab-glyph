@@ -207,11 +207,11 @@ impl Rasterizer {
     /// );
     /// ```
     pub fn draw_cubic(&mut self, p0: Point, p1: Point, p2: Point, p3: Point) {
-        self.tesselate_cubic(p0, p1, p2, p3, 0);
+        self.tessellate_cubic(p0, p1, p2, p3, 0);
     }
 
     // stb_truetype style cubic approximation by lines.
-    fn tesselate_cubic(&mut self, p0: Point, p1: Point, p2: Point, p3: Point, n: u8) {
+    fn tessellate_cubic(&mut self, p0: Point, p1: Point, p2: Point, p3: Point, n: u8) {
         // ...I'm not sure either ¯\_(ツ)_/¯
         const OBJSPACE_FLATNESS: f32 = 0.35;
         const OBJSPACE_FLATNESS_SQUARED: f32 = OBJSPACE_FLATNESS * OBJSPACE_FLATNESS;
@@ -231,8 +231,8 @@ impl Rasterizer {
 
             let mp = lerp(0.5, pa, pb);
 
-            self.tesselate_cubic(p0, p01, pa, mp, n + 1);
-            self.tesselate_cubic(mp, pb, p23, p3, n + 1);
+            self.tessellate_cubic(p0, p01, pa, mp, n + 1);
+            self.tessellate_cubic(mp, pb, p23, p3, n + 1);
         } else {
             self.draw_line(p0, p3);
         }
