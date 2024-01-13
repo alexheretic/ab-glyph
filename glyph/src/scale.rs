@@ -36,6 +36,15 @@ impl PxScale {
             y: self.y.round(),
         }
     }
+
+    /// Returns a `PxScale` with `x = 1.0 = y` so that it does nothing (= is neutral) when trying to scale pixels.
+    #[inline]
+    pub fn neutral() -> Self {
+        Self {
+            x: 1.0,
+            y: 1.0,
+        }
+    }
 }
 
 impl From<f32> for PxScale {
