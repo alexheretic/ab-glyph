@@ -140,6 +140,16 @@ impl Font for FontArc {
     fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         self.0.glyph_raster_image2(id, size)
     }
+
+    #[inline]
+    fn as_slice(&self) -> &[u8] {
+        self.0.as_slice()
+    }
+
+    #[inline]
+    fn into_vec(&self) -> Vec<u8> {
+        self.0.into_vec()
+    }
 }
 
 impl From<FontVec> for FontArc {
