@@ -1,4 +1,6 @@
-use crate::{point, v2, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont};
+use crate::{
+    point, v2, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont
+};
 
 /// Functionality required from font data.
 ///
