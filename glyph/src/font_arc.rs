@@ -5,6 +5,7 @@ use core::fmt;
 /// Functionality required from font data wrapped in an arc.
 /// See also [`Font`](struct.Font.html) and [`FontData`](struct.FontData.html),
 pub trait ArcFont: Font + FontData {}
+impl<T: Font + FontData> ArcFont for T {}
 
 /// `Font` implementor that wraps another concrete `ArcFont + 'static` type storing in an `Arc`.
 ///
@@ -34,7 +35,7 @@ impl FontArc {
     /// # Ok(()) }
     /// ```
     #[inline]
-    pub fn new<F: Font + Send + Sync + 'static>(font: F) -> Self {
+    pub fn new<F: ArcFont + Send + Sync + 'static>(font: F) -> Self {
         Self(Arc::new(font))
     }
 
@@ -174,9 +175,9 @@ impl From<FontRef<'static>> for FontArc {
         Self::new(font)
     }
 }
-impl From<Arc<dyn Font + Send + Sync + 'static>> for FontArc {
+impl From<Arc<dyn ArcFont + Send + Sync + 'static>> for FontArc {
     #[inline]
-    fn from(font: Arc<dyn Font + Send + Sync + 'static>) -> Self {
+    fn from(font: Arc<dyn ArcFont + Send + Sync + 'static>) -> Self {
         Self(font)
     }
 }
