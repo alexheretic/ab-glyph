@@ -1,8 +1,12 @@
-use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
+use crate::{v2, Font, FontData, FontRef, FontVec, GlyphId, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
 
-/// `Font` implementor that wraps another concrete `Font + 'static` type storing in an `Arc`.
+/// Functionality required from font data wrapped in an arc.
+/// See also [`Font`](struct.Font.html) and [`FontData`](struct.FontData.html),
+pub trait ArcFont: Font + FontData {}
+
+/// `Font` implementor that wraps another concrete `ArcFont + 'static` type storing in an `Arc`.
 ///
 /// Provides convenient type erasure & cheap clones (particularly for `FontVec`).
 ///
@@ -17,7 +21,7 @@ use core::fmt;
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
-pub struct FontArc(Arc<dyn Font + Send + Sync + 'static>);
+pub struct FontArc(Arc<dyn ArcFont + Send + Sync + 'static>);
 
 impl FontArc {
     /// # Example
@@ -61,6 +65,22 @@ impl FontArc {
     #[inline]
     pub fn try_from_slice(data: &'static [u8]) -> Result<Self, InvalidFont> {
         Ok(FontRef::try_from_slice(data)?.into())
+    }
+
+    /// Extracts a slice containing the data passed into e.g. [`FontArc::try_from_slice`].
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
+    /// let font = FontArc::try_from_slice(owned_font_data)?;
+    /// assert_eq!(font.as_slice(), owned_font_data);
+    /// # Ok(()) }
+    /// ```
+    #[inline]
+    pub fn as_slice(&self) -> &[u8] {
+        self.0.as_slice()
     }
 }
 
@@ -139,16 +159,6 @@ impl Font for FontArc {
     #[inline]
     fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         self.0.glyph_raster_image2(id, size)
-    }
-
-    #[inline]
-    fn as_slice(&self) -> &[u8] {
-        self.0.as_slice()
-    }
-
-    #[inline]
-    fn into_vec(&self) -> Vec<u8> {
-        self.0.into_vec()
     }
 }
 

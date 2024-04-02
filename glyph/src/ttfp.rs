@@ -3,7 +3,7 @@ mod outliner;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
-use crate::{point, v2, Font, GlyphId, GlyphImageFormat, InvalidFont, Outline, Rect};
+use crate::{point, v2, Font, FontData, GlyphId, GlyphImageFormat, InvalidFont, Outline, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
@@ -77,6 +77,28 @@ impl<'font> FontRef<'font> {
         Ok(Self(ttfp::PreParsedSubtables::from(
             ttfp::Face::parse(data, index).map_err(|_| InvalidFont)?,
         )))
+    }
+
+    /// Extracts a slice containing the data passed into e.g. [`FontRef::try_from_slice`].
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// # let font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
+    /// let font = FontRef::try_from_slice(font_data)?;
+    /// assert_eq!(font.as_slice(), font_data);
+    /// # Ok(()) }
+    /// ```
+    #[inline]
+    pub fn as_slice(&self) -> &[u8] {
+        self.0.face.raw_face().data
+    }
+}
+
+impl FontData for FontRef<'_> {
+    fn as_slice(&self) -> &[u8] {
+        self.as_slice()
     }
 }
 
@@ -177,20 +199,16 @@ impl FontVec {
     }
 }
 
+impl FontData for FontVec {
+    fn as_slice(&self) -> &[u8] {
+        self.as_slice()
+    }
+}
+
 /// Implement `Font` for `Self(AsFontRef)` types.
 macro_rules! impl_font {
     ($font:ty) => {
         impl Font for $font {
-
-            #[inline]
-            fn as_slice(&self) -> &[u8] {
-                self.0.as_face_ref().raw_face().data
-            }
-
-            #[inline]
-            fn into_vec(&self) -> Vec<u8> {
-                Vec::from(self.0.as_face_ref().raw_face().data)
-            }
 
             #[inline]
             fn units_per_em(&self) -> Option<f32> {

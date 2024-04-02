@@ -177,10 +177,6 @@ pub trait Font {
     /// To get the largest image use `u16::MAX`.
     fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<v2::GlyphImage>;
 
-    fn as_slice(&self) -> &[u8];
-
-    fn into_vec(&self) -> Vec<u8>;
-
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
     /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
@@ -319,14 +315,8 @@ impl<F: Font> Font for &F {
     fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         (*self).glyph_raster_image2(id, size)
     }
+}
 
-    #[inline]
-    fn as_slice(&self) -> &[u8] {
-        (*self).as_slice()
-    }
-
-    #[inline]
-    fn into_vec(&self) -> Vec<u8> {
-        (*self).into_vec()
-    }
+pub trait FontData {
+    fn as_slice(&self) -> &[u8];
 }
