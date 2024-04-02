@@ -142,6 +142,39 @@ impl FontVec {
             ttfp::OwnedFace::from_vec(data, index).map_err(|_| InvalidFont)?,
         )))
     }
+
+    /// Extracts a slice containing the data passed into e.g. [`FontVec::try_from_vec`].
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
+    /// let font_data_clone = owned_font_data.clone();
+    /// let font = FontVec::try_from_vec(owned_font_data)?;
+    /// assert_eq!(font.as_slice(), font_data_clone);
+    /// # Ok(()) }
+    /// ```
+    #[inline]
+    pub fn as_slice(&self) -> &[u8] {
+        self.0.face.as_slice()
+    }
+
+    /// Unwraps the data passed into e.g. [`FontVec::try_from_vec`].
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf").to_vec();
+    /// let font_data_clone = owned_font_data.clone();
+    /// let font = FontVec::try_from_vec(owned_font_data)?;
+    /// assert_eq!(font.into_vec(), font_data_clone);
+    /// # Ok(()) }
+    /// ```
+    pub fn into_vec(self) -> Vec<u8> {
+        self.0.face.into_vec()
+    }
 }
 
 /// Implement `Font` for `Self(AsFontRef)` types.
