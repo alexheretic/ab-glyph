@@ -2,7 +2,7 @@ use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
 
-/// `Font` implementor that wraps another concrete `ArcFont + 'static` type storing in an `Arc`.
+/// `Font` implementor that wraps another concrete `Font + 'static` type storing in an `Arc`.
 ///
 /// Provides convenient type erasure & cheap clones (particularly for `FontVec`).
 ///
