@@ -3,7 +3,7 @@ mod outliner;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
-use crate::{point, v2, Font, FontData, GlyphId, GlyphImageFormat, InvalidFont, Outline, Rect};
+use crate::{point, v2, Font, GlyphId, GlyphImageFormat, InvalidFont, Outline, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
@@ -87,18 +87,12 @@ impl<'font> FontRef<'font> {
     /// # fn main() -> Result<(), InvalidFont> {
     /// # let font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
     /// let font = FontRef::try_from_slice(font_data)?;
-    /// assert_eq!(font.as_slice(), font_data);
+    /// assert_eq!(font.font_data(), font_data);
     /// # Ok(()) }
     /// ```
     #[inline]
-    pub fn as_slice(&self) -> &[u8] {
+    pub fn font_data(&self) -> &[u8] {
         self.0.face.raw_face().data
-    }
-}
-
-impl FontData for FontRef<'_> {
-    fn as_slice(&self) -> &[u8] {
-        self.as_slice()
     }
 }
 
@@ -194,20 +188,14 @@ impl FontVec {
     /// assert_eq!(font.into_vec(), font_data_clone);
     /// # Ok(()) }
     /// ```
+    #[inline]
     pub fn into_vec(self) -> Vec<u8> {
         self.0.face.into_vec()
     }
 }
-
-impl FontData for FontVec {
-    fn as_slice(&self) -> &[u8] {
-        self.as_slice()
-    }
-}
-
 /// Implement `Font` for `Self(AsFontRef)` types.
 macro_rules! impl_font {
-    ($font:ty) => {
+    ($font:ty, $font_data:tt) => {
         impl Font for $font {
 
             #[inline]
@@ -370,9 +358,13 @@ macro_rules! impl_font {
                     },
                 })
             }
+
+            fn font_data(&self) -> &[u8] {
+                self.$font_data()
+            }
         }
     };
 }
 
-impl_font!(FontRef<'_>);
-impl_font!(FontVec);
+impl_font!(FontRef<'_>, font_data);
+impl_font!(FontVec, as_slice);

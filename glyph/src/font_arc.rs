@@ -1,11 +1,6 @@
-use crate::{v2, Font, FontData, FontRef, FontVec, GlyphId, InvalidFont, Outline};
+use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
 use alloc::sync::Arc;
 use core::fmt;
-
-/// Functionality required from font data wrapped in an arc.
-/// See also [`Font`](struct.Font.html) and [`FontData`](struct.FontData.html),
-pub trait ArcFont: Font + FontData {}
-impl<T: Font + FontData> ArcFont for T {}
 
 /// `Font` implementor that wraps another concrete `ArcFont + 'static` type storing in an `Arc`.
 ///
@@ -22,7 +17,7 @@ impl<T: Font + FontData> ArcFont for T {}
 /// # Ok(()) }
 /// ```
 #[derive(Clone)]
-pub struct FontArc(Arc<dyn ArcFont + Send + Sync + 'static>);
+pub struct FontArc(Arc<dyn Font + Send + Sync + 'static>);
 
 impl FontArc {
     /// # Example
@@ -35,7 +30,7 @@ impl FontArc {
     /// # Ok(()) }
     /// ```
     #[inline]
-    pub fn new<F: ArcFont + Send + Sync + 'static>(font: F) -> Self {
+    pub fn new<F: Font + Send + Sync + 'static>(font: F) -> Self {
         Self(Arc::new(font))
     }
 
@@ -66,22 +61,6 @@ impl FontArc {
     #[inline]
     pub fn try_from_slice(data: &'static [u8]) -> Result<Self, InvalidFont> {
         Ok(FontRef::try_from_slice(data)?.into())
-    }
-
-    /// Extracts a slice containing the data passed into e.g. [`FontArc::try_from_slice`].
-    ///
-    /// # Example
-    /// ```
-    /// # use ab_glyph::*;
-    /// # fn main() -> Result<(), InvalidFont> {
-    /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
-    /// let font = FontArc::try_from_slice(owned_font_data)?;
-    /// assert_eq!(font.as_slice(), owned_font_data);
-    /// # Ok(()) }
-    /// ```
-    #[inline]
-    pub fn as_slice(&self) -> &[u8] {
-        self.0.as_slice()
     }
 }
 
@@ -161,6 +140,11 @@ impl Font for FontArc {
     fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         self.0.glyph_raster_image2(id, size)
     }
+
+    #[inline]
+    fn font_data(&self) -> &[u8] {
+        self.0.font_data()
+    }
 }
 
 impl From<FontVec> for FontArc {
@@ -175,9 +159,9 @@ impl From<FontRef<'static>> for FontArc {
         Self::new(font)
     }
 }
-impl From<Arc<dyn ArcFont + Send + Sync + 'static>> for FontArc {
+impl From<Arc<dyn Font + Send + Sync + 'static>> for FontArc {
     #[inline]
-    fn from(font: Arc<dyn ArcFont + Send + Sync + 'static>) -> Self {
+    fn from(font: Arc<dyn Font + Send + Sync + 'static>) -> Self {
         Self(font)
     }
 }
