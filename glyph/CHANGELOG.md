@@ -1,3 +1,6 @@
+# Unreleased (0.2.24)
+* Add `Font::font_data` for accessing underlying raw font data.
+
 # v0.2.23
 * Update _ttf-parser_ to `0.20`.
 

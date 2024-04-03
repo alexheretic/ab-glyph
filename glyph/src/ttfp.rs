@@ -345,7 +345,7 @@ macro_rules! impl_font {
 
             #[inline]
             fn font_data(&self) -> &[u8] {
-                self.0.face.as_face_ref().raw_face().data
+                self.0.as_face_ref().raw_face().data
             }
         }
     };
