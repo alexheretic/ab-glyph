@@ -182,7 +182,6 @@ impl FontVec {
 macro_rules! impl_font {
     ($font:ty) => {
         impl Font for $font {
-
             #[inline]
             fn units_per_em(&self) -> Option<f32> {
                 // TODO unwrap signature when making next breaking change

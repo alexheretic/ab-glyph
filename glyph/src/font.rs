@@ -256,8 +256,7 @@ pub trait Font {
     /// # Ok(()) }
     /// ```
     #[inline]
-    fn font_data(&self) -> &[u8]
-    {
+    fn font_data(&self) -> &[u8] {
         // panic impl prevents this method from breaking external Font impls
         unimplemented!()
     }
