@@ -252,7 +252,7 @@ pub trait Font {
     /// # fn main() -> Result<(), InvalidFont> {
     /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
     /// let font = FontArc::try_from_slice(owned_font_data)?;
-    /// assert_eq!(font.as_slice(), owned_font_data);
+    /// assert_eq!(font.font_data(), owned_font_data);
     /// # Ok(()) }
     /// ```
     #[inline]

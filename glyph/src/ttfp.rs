@@ -78,22 +78,6 @@ impl<'font> FontRef<'font> {
             ttfp::Face::parse(data, index).map_err(|_| InvalidFont)?,
         )))
     }
-
-    /// Extracts a slice containing the data passed into e.g. [`FontRef::try_from_slice`].
-    ///
-    /// # Example
-    /// ```
-    /// # use ab_glyph::*;
-    /// # fn main() -> Result<(), InvalidFont> {
-    /// # let font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
-    /// let font = FontRef::try_from_slice(font_data)?;
-    /// assert_eq!(font.font_data(), font_data);
-    /// # Ok(()) }
-    /// ```
-    #[inline]
-    pub fn font_data(&self) -> &[u8] {
-        self.0.face.raw_face().data
-    }
 }
 
 /// Font data handle stored in a `Vec<u8>`  + parsed data.
@@ -196,7 +180,7 @@ impl FontVec {
 
 /// Implement `Font` for `Self(AsFontRef)` types.
 macro_rules! impl_font {
-    ($font:ty, $font_data:tt) => {
+    ($font:ty) => {
         impl Font for $font {
 
             #[inline]
@@ -360,12 +344,13 @@ macro_rules! impl_font {
                 })
             }
 
+            #[inline]
             fn font_data(&self) -> &[u8] {
-                self.$font_data()
+                self.0.face.as_face_ref().raw_face().data
             }
         }
     };
 }
 
-impl_font!(FontRef<'_>, font_data);
-impl_font!(FontVec, as_slice);
+impl_font!(FontRef<'_>);
+impl_font!(FontVec);
