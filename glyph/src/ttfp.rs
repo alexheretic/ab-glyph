@@ -172,6 +172,7 @@ impl FontVec {
     /// assert_eq!(font.into_vec(), font_data_clone);
     /// # Ok(()) }
     /// ```
+    #[inline]
     pub fn into_vec(self) -> Vec<u8> {
         self.0.face.into_vec()
     }
@@ -340,6 +341,11 @@ macro_rules! impl_font {
                         ttfp::RasterImageFormat::BitmapPremulBgra32 => BitmapPremulBgra32,
                     },
                 })
+            }
+
+            #[inline]
+            fn font_data(&self) -> &[u8] {
+                self.0.face.as_face_ref().raw_face().data
             }
         }
     };

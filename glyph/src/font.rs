@@ -243,6 +243,23 @@ pub trait Font {
             scale: scale.into(),
         }
     }
+
+    /// Extracts a slice containing the data passed into e.g. [`FontArc::try_from_slice`].
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::*;
+    /// # fn main() -> Result<(), InvalidFont> {
+    /// # let owned_font_data = include_bytes!("../../dev/fonts/Exo2-Light.otf");
+    /// let font = FontArc::try_from_slice(owned_font_data)?;
+    /// assert_eq!(font.font_data(), owned_font_data);
+    /// # Ok(()) }
+    /// ```
+    #[inline]
+    fn font_data(&self) -> &[u8] {
+        // panic impl prevents this method from breaking external Font impls
+        unimplemented!()
+    }
 }
 
 impl<F: Font> Font for &F {
@@ -314,5 +331,10 @@ impl<F: Font> Font for &F {
     #[inline]
     fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         (*self).glyph_raster_image2(id, size)
+    }
+
+    #[inline]
+    fn font_data(&self) -> &[u8] {
+        (*self).font_data()
     }
 }
