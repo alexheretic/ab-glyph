@@ -193,6 +193,7 @@ impl FontVec {
         self.0.face.into_vec()
     }
 }
+
 /// Implement `Font` for `Self(AsFontRef)` types.
 macro_rules! impl_font {
     ($font:ty, $font_data:tt) => {
