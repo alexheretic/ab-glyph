@@ -1,6 +1,6 @@
 [package]
 name = "ab_glyph"
-version = "0.2.23"
+version = "0.2.24"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2021"
 description = "API for loading, scaling, positioning and rasterizing OpenType font glyphs."
