@@ -183,7 +183,10 @@ pub trait Font {
     /// Some fonts define their images as SVG rather than a raster format. SVG data here is raw and
     /// should be rendered and/or decompressed by the caller, and scaled appropraitely. The SVG file
     /// might include a series of glyphs as nodes.
-    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg>;
+    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
+        _ = id;
+        None // Avoid breaking external Font impls.
+    }
 
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
