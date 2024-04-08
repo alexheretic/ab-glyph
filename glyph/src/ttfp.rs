@@ -3,7 +3,7 @@ mod outliner;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
-use crate::{point, v2, Font, GlyphId, GlyphImageFormat, InvalidFont, Outline, Rect};
+use crate::{point, v2, Font, GlyphId, GlyphImageFormat, GlyphSvg, InvalidFont, Outline, Rect};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
@@ -340,6 +340,16 @@ macro_rules! impl_font {
                         ttfp::RasterImageFormat::BitmapGray8 => BitmapGray8,
                         ttfp::RasterImageFormat::BitmapPremulBgra32 => BitmapPremulBgra32,
                     },
+                })
+            }
+
+            fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
+                let img = self.0.as_face_ref().glyph_svg_image(id.into())?;
+
+                Some(GlyphSvg {
+                    data: img.data,
+                    start_glyph_id: GlyphId(img.start_glyph_id.0),
+                    end_glyph_id: GlyphId(img.end_glyph_id.0),
                 })
             }
 

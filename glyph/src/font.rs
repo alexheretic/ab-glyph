@@ -1,5 +1,6 @@
 use crate::{
-    point, v2, Glyph, GlyphId, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect, ScaleFont,
+    point, v2, Glyph, GlyphId, GlyphSvg, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect,
+    ScaleFont,
 };
 
 /// Functionality required from font data.
@@ -177,6 +178,13 @@ pub trait Font {
     /// To get the largest image use `u16::MAX`.
     fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<v2::GlyphImage>;
 
+    /// Returns raw SVG data of a range of glyphs which insludes this one.
+    ///
+    /// Some fonts define their images as SVG rather than a raster format. SVG data here is raw and
+    /// should be rendered and/or decompressed by the caller, and scaled appropraitely. The SVG file
+    /// might include a series of glyphs as nodes.
+    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg>;
+
     /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
     ///
     /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
@@ -331,6 +339,11 @@ impl<F: Font> Font for &F {
     #[inline]
     fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
         (*self).glyph_raster_image2(id, size)
+    }
+
+    #[inline]
+    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
+        (*self).glyph_svg_image(id)
     }
 
     #[inline]

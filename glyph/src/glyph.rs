@@ -76,6 +76,17 @@ pub struct GlyphImage<'a> {
     pub format: GlyphImageFormat,
 }
 
+#[derive(Debug, Clone)]
+pub struct GlyphSvg<'a> {
+    /// Raw image data, it should be rendered or decompressed (in case of SVGZ)
+    /// by the caller.. Now that the data includes records for multiple Glyphs.
+    pub data: &'a [u8],
+    /// The first glyph ID for the range covered by this record.
+    pub start_glyph_id: GlyphId,
+    /// The last glyph ID, *inclusive*, for the range covered by this record.
+    pub end_glyph_id: GlyphId,
+}
+
 pub mod v2 {
     use crate::{GlyphImageFormat, Point};
 
