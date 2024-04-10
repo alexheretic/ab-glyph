@@ -77,6 +77,7 @@ pub struct GlyphImage<'a> {
 }
 
 #[derive(Debug, Clone)]
+#[non_exhaustive]
 pub struct GlyphSvg<'a> {
     /// Raw image data, it should be rendered or decompressed (in case of SVGZ)
     /// by the caller.. Now that the data includes records for multiple Glyphs.
