@@ -80,7 +80,7 @@ pub struct GlyphImage<'a> {
 #[non_exhaustive]
 pub struct GlyphSvg<'a> {
     /// Raw image data, it should be rendered or decompressed (in case of SVGZ)
-    /// by the caller.. Now that the data includes records for multiple Glyphs.
+    /// by the caller.. Note that the data includes records for multiple Glyphs.
     pub data: &'a [u8],
     /// The first glyph ID for the range covered by this record.
     pub start_glyph_id: GlyphId,
