@@ -178,10 +178,10 @@ pub trait Font {
     /// To get the largest image use `u16::MAX`.
     fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<v2::GlyphImage>;
 
-    /// Returns raw SVG data of a range of glyphs which insludes this one.
+    /// Returns raw SVG data of a range of glyphs which includes this one.
     ///
     /// Some fonts define their images as SVG rather than a raster format. SVG data here is raw and
-    /// should be rendered and/or decompressed by the caller, and scaled appropraitely. The SVG file
+    /// should be rendered and/or decompressed by the caller, and scaled appropriately. The SVG file
     /// might include a series of glyphs as nodes.
     fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
         _ = id;

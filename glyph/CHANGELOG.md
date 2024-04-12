@@ -1,3 +1,6 @@
+# Unreleased (0.2.25)
+* Add `Font::glyph_svg_image` for accessing glyph svg data.
+
 # 0.2.24
 * Add `Font::font_data` for accessing underlying raw font data.
 
