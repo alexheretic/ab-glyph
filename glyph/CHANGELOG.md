@@ -1,3 +1,6 @@
+# Unreleased (0.2.26)
+* Update _ttf-parser_ to `0.21`.
+
 # 0.2.25
 * Add `Font::glyph_svg_image` for accessing glyph svg data.
 
