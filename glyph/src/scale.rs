@@ -53,7 +53,7 @@ pub struct PxScaleFactor {
     pub vertical: f32,
 }
 
-/// A [`Font`](trait.Font.html) with an associated pixel scale. This can be used to provide
+/// A [`Font`] with an associated pixel scale. This can be used to provide
 /// pixel scale values for glyph advances, heights etc.
 ///
 /// # Example
@@ -135,7 +135,7 @@ pub trait ScaleFont<F: Font> {
         self.font().glyph_id(c)
     }
 
-    /// Construct a [`Glyph`](struct.Glyph.html) with the font's pixel scale at
+    /// Construct a [`Glyph`] with the font's pixel scale at
     /// position `point(0.0, 0.0)`.
     ///
     /// # Example
@@ -207,7 +207,7 @@ pub trait ScaleFont<F: Font> {
 
     /// Returns an iterator of all distinct `(GlyphId, char)` pairs. Not ordered.
     ///
-    /// Same as [`Font::codepoint_ids`](trait.Font.html#tymethod.codepoint_ids).
+    /// Same as [`Font::codepoint_ids`].
     fn codepoint_ids(&self) -> crate::CodepointIdIter<'_>;
 
     /// Compute glyph outline ready for drawing.
@@ -237,7 +237,7 @@ impl<F: Font, SF: ScaleFont<F>> ScaleFont<F> for &SF {
     }
 }
 
-/// A [`Font`](trait.Font.html) and an associated pixel scale.
+/// A [`Font`] and an associated pixel scale.
 #[derive(Clone, Copy, Debug)]
 pub struct PxScaleFont<F> {
     pub font: F,

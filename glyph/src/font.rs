@@ -5,8 +5,8 @@ use crate::{
 
 /// Functionality required from font data.
 ///
-/// See also [`FontArc`](struct.FontArc.html), [`FontRef`](struct.FontRef.html)
-/// and [`FontVec`](struct.FontVec.html).
+/// See also [`FontArc`](crate::FontArc), [`FontRef`](crate::FontRef)
+/// and [`FontVec`](crate::FontVec).
 ///
 /// ## Units
 ///
@@ -58,17 +58,17 @@ pub trait Font {
 
     /// Unscaled glyph ascent.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn ascent_unscaled(&self) -> f32;
 
     /// Unscaled glyph descent.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn descent_unscaled(&self) -> f32;
 
     /// Unscaled height `ascent - descent`.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     #[inline]
     fn height_unscaled(&self) -> f32 {
         self.ascent_unscaled() - self.descent_unscaled()
@@ -76,45 +76,45 @@ pub trait Font {
 
     /// Unscaled line gap.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn line_gap_unscaled(&self) -> f32;
 
     /// Lookup a `GlyphId` matching a given `char`.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn glyph_id(&self, c: char) -> GlyphId;
 
     /// Unscaled horizontal advance for a given glyph id.
     ///
     /// Returns `0.0` if the font does not define this value.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn h_advance_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled horizontal side bearing for a given glyph id.
     ///
     /// Returns `0.0` if the font does not define this value.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn h_side_bearing_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled vertical advance for a given glyph id.
     ///
     /// Returns `0.0` if the font does not define this value.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn v_advance_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled vertical side bearing for a given glyph id.
     ///
     /// Returns `0.0` if the font does not define this value.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn v_side_bearing_unscaled(&self, id: GlyphId) -> f32;
 
     /// Returns additional unscaled kerning to apply for a particular pair of glyph ids.
     ///
-    /// Scaling can be done with [as_scaled](trait.Font.html#method.as_scaled).
+    /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn kern_unscaled(&self, first: GlyphId, second: GlyphId) -> f32;
 
     /// Compute unscaled glyph outline curves & bounding box.
@@ -216,8 +216,7 @@ pub trait Font {
         Some(OutlinedGlyph::new(glyph, outline, scale_factor))
     }
 
-    /// Construct a [`PxScaleFontRef`](struct.PxScaleFontRef.html) by associating with the
-    /// given pixel `scale`.
+    /// Construct a [`PxScaleFont`] by associating with the given pixel `scale`.
     ///
     /// # Example
     /// ```
@@ -242,8 +241,7 @@ pub trait Font {
         }
     }
 
-    /// Move into a [`PxScaleFont`](struct.PxScaleFont.html) associated with the
-    /// given pixel `scale`.
+    /// Move into a [`PxScaleFont`] associated with the given pixel `scale`.
     #[inline]
     fn into_scaled<S: Into<PxScale>>(self, scale: S) -> PxScaleFont<Self>
     where
@@ -266,6 +264,8 @@ pub trait Font {
     /// assert_eq!(font.font_data(), owned_font_data);
     /// # Ok(()) }
     /// ```
+    ///
+    /// [`FontArc::try_from_slice`]: crate::FontArc::try_from_slice
     #[inline]
     fn font_data(&self) -> &[u8] {
         // panic impl prevents this method from breaking external Font impls
