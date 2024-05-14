@@ -18,9 +18,9 @@ impl From<GlyphId> for ttfp::GlyphId {
 }
 
 /// Font data handle stored as a `&[u8]` + parsed data.
-/// See [`Font`](trait.Font.html) for more methods.
+/// See [`Font`] for more methods.
 ///
-/// Also see the owned version [`FontVec`](struct.FontVec.html).
+/// Also see the owned version [`FontVec`].
 ///
 /// # Example
 /// ```
@@ -45,7 +45,7 @@ impl<'font> FontRef<'font> {
     /// Creates an `FontRef` from a byte-slice.
     ///
     /// For font collections see
-    /// [`FontRef::try_from_slice_and_index`](#method.try_from_slice_and_index).
+    /// [`FontRef::try_from_slice_and_index`].
     ///
     /// # Example
     /// ```
@@ -62,7 +62,7 @@ impl<'font> FontRef<'font> {
     /// Creates an `FontRef` from byte-slice.
     ///
     /// You can set index for font collections. For simple fonts use `0` or
-    /// [`FontRef::try_from_slice`](#method.try_from_slice).
+    /// [`FontRef::try_from_slice`].
     ///
     /// # Example
     /// ```
@@ -81,9 +81,9 @@ impl<'font> FontRef<'font> {
 }
 
 /// Font data handle stored in a `Vec<u8>`  + parsed data.
-/// See [`Font`](trait.Font.html) for more methods.
+/// See [`Font`] for more methods.
 ///
-/// Also see [`FontRef`](struct.FontRef.html).
+/// Also see [`FontRef`].
 ///
 /// # Example
 /// ```
@@ -108,7 +108,7 @@ impl FontVec {
     /// Creates an `FontVec` from owned data.
     ///
     /// For font collections see
-    /// [`FontVec::try_from_vec_and_index`](#method.try_from_vec_and_index).
+    /// [`FontVec::try_from_vec_and_index`].
     ///
     /// # Example
     /// ```
@@ -126,7 +126,7 @@ impl FontVec {
     /// Creates an `FontVec` from owned data.
     ///
     /// You can set index for font collections. For simple fonts use `0` or
-    /// [`FontVec::try_from_vec`](#method.try_from_vec).
+    /// [`FontVec::try_from_vec`].
     ///
     /// # Example
     /// ```

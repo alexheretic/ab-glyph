@@ -28,7 +28,7 @@ impl Point {
     }
 }
 
-/// [`Point`](struct.Point.html) constructor.
+/// [`Point`] constructor.
 ///
 /// # Example
 /// ```
