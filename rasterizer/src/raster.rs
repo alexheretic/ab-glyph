@@ -104,7 +104,7 @@ impl Rasterizer {
 
     #[inline(always)] // must inline for simd versions
     fn draw_line_scalar(&mut self, p0: Point, p1: Point) {
-        if (p0.y - p1.y).abs() <= core::f32::EPSILON {
+        if (p0.y - p1.y).abs() <= f32::EPSILON {
             return;
         }
         let (dir, p0, p1) = if p0.y < p1.y {

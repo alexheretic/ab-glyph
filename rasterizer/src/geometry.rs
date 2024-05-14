@@ -54,8 +54,8 @@ impl core::ops::Sub for Point {
     /// # use ab_glyph_rasterizer::*;
     /// let p1 = point(1.0, 2.0) - point(2.0, 1.5);
     ///
-    /// assert!((p1.x - -1.0).abs() <= core::f32::EPSILON);
-    /// assert!((p1.y - 0.5).abs() <= core::f32::EPSILON);
+    /// assert!((p1.x - -1.0).abs() <= f32::EPSILON);
+    /// assert!((p1.y - 0.5).abs() <= f32::EPSILON);
     /// ```
     #[inline]
     fn sub(self, rhs: Point) -> Point {
@@ -71,8 +71,8 @@ impl core::ops::Add for Point {
     /// # use ab_glyph_rasterizer::*;
     /// let p1 = point(1.0, 2.0) + point(2.0, 1.5);
     ///
-    /// assert!((p1.x - 3.0).abs() <= core::f32::EPSILON);
-    /// assert!((p1.y - 3.5).abs() <= core::f32::EPSILON);
+    /// assert!((p1.x - 3.0).abs() <= f32::EPSILON);
+    /// assert!((p1.y - 3.5).abs() <= f32::EPSILON);
     /// ```
     #[inline]
     fn add(self, rhs: Point) -> Point {
@@ -86,8 +86,8 @@ impl core::ops::AddAssign for Point {
     /// let mut p1 = point(1.0, 2.0);
     /// p1 += point(2.0, 1.5);
     ///
-    /// assert!((p1.x - 3.0).abs() <= core::f32::EPSILON);
-    /// assert!((p1.y - 3.5).abs() <= core::f32::EPSILON);
+    /// assert!((p1.x - 3.0).abs() <= f32::EPSILON);
+    /// assert!((p1.y - 3.5).abs() <= f32::EPSILON);
     /// ```
     #[inline]
     fn add_assign(&mut self, other: Self) {
@@ -102,8 +102,8 @@ impl core::ops::SubAssign for Point {
     /// let mut p1 = point(1.0, 2.0);
     /// p1 -= point(2.0, 1.5);
     ///
-    /// assert!((p1.x - -1.0).abs() <= core::f32::EPSILON);
-    /// assert!((p1.y - 0.5).abs() <= core::f32::EPSILON);
+    /// assert!((p1.x - -1.0).abs() <= f32::EPSILON);
+    /// assert!((p1.y - 0.5).abs() <= f32::EPSILON);
     /// ```
     #[inline]
     fn sub_assign(&mut self, other: Self) {
@@ -143,6 +143,6 @@ mod test {
     #[test]
     fn distance_to() {
         let distance = point(0.0, 0.0).distance_to(point(3.0, 4.0));
-        assert!((distance - 5.0).abs() <= core::f32::EPSILON);
+        assert!((distance - 5.0).abs() <= f32::EPSILON);
     }
 }
