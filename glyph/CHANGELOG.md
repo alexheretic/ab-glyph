@@ -1,3 +1,7 @@
+# Unreleased
+* Add `Font` glyph layout concept documentation demonstrating "ascent", "descent", "h_side_bearing", 
+  "h_advance", "height", "line_gap", "baseline".
+
 # 0.2.26
 * Update _ttf-parser_ to `0.21`.
 

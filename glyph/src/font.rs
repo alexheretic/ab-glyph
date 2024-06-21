@@ -15,6 +15,27 @@ use crate::{
 ///
 /// ab_glyph uses a non-standard scale [`PxScale`] which is the pixel height
 /// of the text. See [`Font::pt_to_px_scale`] to convert standard point sizes.
+///
+/// ## Glyph layout concepts
+/// Fonts provide several properties to inform layout of glyphs.
+/// ```text
+///          ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+///                   |  .:x++++==              |
+///                   | .#+                     |
+///                   | :@            =++=++x=: |
+///            ascent | +#       x:  +x     x+  |
+///                   | =#       #:  :#:---:#:  | height
+///                   | -@-      #:  .#--:--    |
+///                   |  =#:-.-==#:   #x+===:.  |
+/// baseline ____________ .-::-. ..  #:    .:@. |
+///                   |              #+--..-=#. |
+///           descent |               -::=::-   |
+///          ____________________________________
+///                 | |             |           | line_gap
+///                 | |  h_advance  |           ‾
+///                  ^                      
+///            h_side_bearing
+/// ```
 pub trait Font {
     /// Get the size of the font unit
     ///
@@ -56,17 +77,17 @@ pub trait Font {
         Some(PxScale::from(px_per_em * height / units_per_em))
     }
 
-    /// Unscaled glyph ascent.
+    /// Unscaled glyph ascent. See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn ascent_unscaled(&self) -> f32;
 
-    /// Unscaled glyph descent.
+    /// Unscaled glyph descent. See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn descent_unscaled(&self) -> f32;
 
-    /// Unscaled height `ascent - descent`.
+    /// Unscaled height `ascent - descent`. See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     #[inline]
@@ -74,7 +95,7 @@ pub trait Font {
         self.ascent_unscaled() - self.descent_unscaled()
     }
 
-    /// Unscaled line gap.
+    /// Unscaled line gap. See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn line_gap_unscaled(&self) -> f32;
@@ -85,6 +106,7 @@ pub trait Font {
     fn glyph_id(&self, c: char) -> GlyphId;
 
     /// Unscaled horizontal advance for a given glyph id.
+    /// See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// Returns `0.0` if the font does not define this value.
     ///
@@ -92,6 +114,7 @@ pub trait Font {
     fn h_advance_unscaled(&self, id: GlyphId) -> f32;
 
     /// Unscaled horizontal side bearing for a given glyph id.
+    /// See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// Returns `0.0` if the font does not define this value.
     ///

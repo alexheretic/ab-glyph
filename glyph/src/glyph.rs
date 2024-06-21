@@ -58,6 +58,10 @@ pub struct Glyph {
     /// Pixel scale of this glyph.
     pub scale: PxScale,
     /// Position of this glyph.
+    ///
+    /// Horizontally this is to the left of the glyph before applying
+    /// `h_advance` or `h_side_bearing`. Vertically this is at the "baseline".
+    /// See [glyph layout concepts](trait.Font.html#glyph-layout-concepts).
     pub position: Point,
 }
 

@@ -103,19 +103,19 @@ pub trait ScaleFont<F: Font> {
         }
     }
 
-    /// Pixel scaled glyph ascent.
+    /// Pixel scaled glyph ascent. See [glyph layout concepts](Font#glyph-layout-concepts).
     #[inline]
     fn ascent(&self) -> f32 {
         self.v_scale_factor() * self.font().ascent_unscaled()
     }
 
-    /// Pixel scaled glyph descent.
+    /// Pixel scaled glyph descent. See [glyph layout concepts](Font#glyph-layout-concepts).
     #[inline]
     fn descent(&self) -> f32 {
         self.v_scale_factor() * self.font().descent_unscaled()
     }
 
-    /// Pixel scaled height `ascent - descent`.
+    /// Pixel scaled height `ascent - descent`. See [glyph layout concepts](Font#glyph-layout-concepts).
     ///
     /// By definition of [`PxScale`], this is `self.scale().y`.
     #[inline]
@@ -123,7 +123,7 @@ pub trait ScaleFont<F: Font> {
         self.scale().y
     }
 
-    /// Pixel scaled line gap.
+    /// Pixel scaled line gap. See [glyph layout concepts](Font#glyph-layout-concepts).
     #[inline]
     fn line_gap(&self) -> f32 {
         self.v_scale_factor() * self.font().line_gap_unscaled()
@@ -157,12 +157,14 @@ pub trait ScaleFont<F: Font> {
     }
 
     /// Pixel scaled horizontal advance for a given glyph.
+    /// See [glyph layout concepts](Font#glyph-layout-concepts).
     #[inline]
     fn h_advance(&self, id: GlyphId) -> f32 {
         self.h_scale_factor() * self.font().h_advance_unscaled(id)
     }
 
     /// Pixel scaled horizontal side bearing for a given glyph.
+    /// See [glyph layout concepts](Font#glyph-layout-concepts).
     #[inline]
     fn h_side_bearing(&self, id: GlyphId) -> f32 {
         self.h_scale_factor() * self.font().h_side_bearing_unscaled(id)
