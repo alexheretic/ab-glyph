@@ -1,4 +1,4 @@
-# Unreleased
+# 0.2.27
 * Add `Font` glyph layout concept documentation demonstrating "ascent", "descent", "h_side_bearing", 
   "h_advance", "height", "line_gap", "baseline".
 
