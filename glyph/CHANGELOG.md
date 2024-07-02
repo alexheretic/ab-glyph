@@ -1,5 +1,5 @@
 # Unreleased
-* Update _ttf-parser_ to `0.22`.
+* Update _ttf-parser_ to `0.23`.
 
 # 0.2.27
 * Add `Font` glyph layout concept documentation demonstrating "ascent", "descent", "h_side_bearing", 
