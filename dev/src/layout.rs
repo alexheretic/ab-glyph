@@ -1,6 +1,7 @@
 use ab_glyph::{point, Font, Glyph, Point, ScaleFont};
 
 /// Simple paragraph layout for glyphs into `target`.
+/// Starts at position `(0, ascent)`.
 ///
 /// This is for testing and examples.
 pub fn layout_paragraph<F, SF>(

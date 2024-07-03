@@ -1,7 +1,7 @@
 //! Draws text into `image_example.png`.
 //!
 //! Use a custom font file: `cargo run --example image /path/to/font.otf`
-use ab_glyph::{point, Font, FontRef, FontVec, PxScale, ScaleFont};
+use ab_glyph::{point, Font, FontRef, FontVec, PxScale};
 use image::{DynamicImage, Rgba};
 
 const TEXT: &str = "This is ab_glyph rendered into a png!";
@@ -25,6 +25,9 @@ fn main() {
 }
 
 fn draw_image<F: Font>(font: F) {
+    /// Dark red colour
+    const COLOUR: (u8, u8, u8) = (150, 0, 0);
+
     // The font size to use
     let scale = PxScale::from(45.0);
 
@@ -33,41 +36,62 @@ fn draw_image<F: Font>(font: F) {
     let mut glyphs = Vec::new();
     dev::layout_paragraph(scaled_font, point(20.0, 20.0), 9999.0, TEXT, &mut glyphs);
 
-    // Use a dark red colour
-    let colour = (150, 0, 0);
+    // to work out the exact size needed for the drawn glyphs we need to outline
+    // them and use their `px_bounds` which hold the coords of their render bounds.
+    let outlined: Vec<_> = glyphs
+        .into_iter()
+        // Note: not all layout glyphs have outlines (e.g. " ")
+        .filter_map(|g| font.outline_glyph(g))
+        .collect();
 
-    // work out the layout size
-    let glyphs_height = scaled_font.height().ceil() as u32;
-    let glyphs_width = {
-        let min_x = glyphs.first().unwrap().position.x;
-        let last_glyph = glyphs.last().unwrap();
-        let max_x = last_glyph.position.x + scaled_font.h_advance(last_glyph.id);
-        (max_x - min_x).ceil() as u32
+    // combine px_bounds to get min bounding coords for the entire layout
+    let Some(all_px_bounds) = outlined
+        .iter()
+        .map(|g| g.px_bounds())
+        .reduce(|mut b, next| {
+            b.min.x = b.min.x.min(next.min.x);
+            b.max.x = b.max.x.max(next.max.x);
+            b.min.y = b.min.y.min(next.min.y);
+            b.max.y = b.max.y.max(next.max.y);
+            b
+        })
+    else {
+        println!("No outlined glyphs?");
+        return;
     };
 
-    // Create a new rgba image with some padding
-    let mut image = DynamicImage::new_rgba8(glyphs_width + 40, glyphs_height + 40).to_rgba8();
+    // create a new rgba image using the combined px bound width and height
+    let mut image =
+        DynamicImage::new_rgba8(all_px_bounds.width() as _, all_px_bounds.height() as _).to_rgba8();
 
     // Loop through the glyphs in the text, positing each one on a line
-    for glyph in glyphs {
-        if let Some(outlined) = scaled_font.outline_glyph(glyph) {
-            let bounds = outlined.px_bounds();
-            // Draw the glyph into the image per-pixel by using the draw closure
-            outlined.draw(|x, y, v| {
-                // Offset the position by the glyph bounding box
-                let px = image.get_pixel_mut(x + bounds.min.x as u32, y + bounds.min.y as u32);
-                // Turn the coverage into an alpha value (blended with any previous)
-                *px = Rgba([
-                    colour.0,
-                    colour.1,
-                    colour.2,
-                    px.0[3].saturating_add((v * 255.0) as u8),
-                ]);
-            });
-        }
+    for glyph in outlined {
+        let bounds = glyph.px_bounds();
+        // calc top/left ords in "image space"
+        // image-x=0 means the *left most pixel*, equivalent to
+        // px_bounds.min.x which *may be non-zero* (and similarly with y)
+        // so `- px_bounds.min` converts the left-most/top-most to 0
+        let img_left = bounds.min.x as u32 - all_px_bounds.min.x as u32;
+        let img_top = bounds.min.y as u32 - all_px_bounds.min.y as u32;
+        // Draw the glyph into the image per-pixel by using the draw closure
+        glyph.draw(|x, y, v| {
+            // Offset the position by the glyph bounding box
+            let px = image.get_pixel_mut(img_left + x, img_top + y);
+            // Turn the coverage into an alpha value (blended with any previous)
+            *px = Rgba([
+                COLOUR.0,
+                COLOUR.1,
+                COLOUR.2,
+                px.0[3].saturating_add((v * 255.0) as u8),
+            ]);
+        });
     }
 
     // Save the image to a png file
     image.save("image_example.png").unwrap();
-    println!("Generated: image_example.png");
+    println!(
+        "Generated: image_example.png ({}x{})",
+        image.width(),
+        image.height()
+    );
 }
