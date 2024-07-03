@@ -211,10 +211,14 @@ pub trait Font {
         None // Avoid breaking external Font impls.
     }
 
-    /// Returns the layout bounds of this glyph. These are different to the outline `px_bounds()`.
+    /// Returns the layout bounds of this glyph.
     ///
     /// Horizontally: Glyph position +/- h_advance/h_side_bearing.
     /// Vertically: Glyph position +/- ascent/descent.
+    ///
+    /// These are *not* the same as [`OutlinedGlyph::px_bounds`]. If you are drawing pixels
+    /// you should use `px_bounds` and not this method as outlines are not bound by layout
+    /// values.
     #[inline]
     fn glyph_bounds(&self, glyph: &Glyph) -> Rect
     where

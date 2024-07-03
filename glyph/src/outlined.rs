@@ -15,6 +15,8 @@ pub struct Outline {
 
 impl Outline {
     /// Convert unscaled bounds into pixel bounds at a given scale & position.
+    ///
+    /// See [`OutlinedGlyph::px_bounds`].
     pub fn px_bounds(&self, scale_factor: PxScaleFactor, position: Point) -> Rect {
         let Rect { min, max } = self.bounds;
 
@@ -76,7 +78,20 @@ impl OutlinedGlyph {
         self.px_bounds()
     }
 
-    /// Conservative whole number pixel bounding box for this glyph.
+    /// Conservative whole number pixel bounding box for this glyph outline.
+    /// The returned rect is exactly large enough to [`Self::draw`] into.
+    ///
+    /// The rect holds bounding coordinates in the same coordinate space as the [`Glyph::position`].
+    ///
+    /// Note: These bounds depend on the glyph outline. That outline is *not* necessarily bound
+    ///       by the layout/`glyph_bounds()` bounds.
+    /// * The min.x bound may be greater or smaller than the [`Glyph::position`] x.
+    ///   E.g. if a glyph at position x=0 has an outline going off to the left a bit, min.x will be negative.
+    /// * The max.x bound may be greater/smaller than the `position.x + h_advance`.
+    /// * The min.y bound may be greater/smaller than the `position.y - ascent`.
+    /// * The max.y bound may be greater/smaller than the `position.y - descent`.
+    ///
+    /// Pixel bounds coordinates should not be used for layout logic.
     #[inline]
     pub fn px_bounds(&self) -> Rect {
         self.px_bounds
