@@ -1,4 +1,4 @@
-# Unreleased
+# 0.2.28
 * Update _ttf-parser_ to `0.24`.
 * Clarify `OutlinedGlyph::px_bounds`, `Font::glyph_bounds` documentation, 
   describe how they relates to drawing and each other.
