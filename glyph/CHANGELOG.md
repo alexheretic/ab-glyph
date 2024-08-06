@@ -1,7 +1,7 @@
 # 0.2.28
 * Update _ttf-parser_ to `0.24`.
 * Clarify `OutlinedGlyph::px_bounds`, `Font::glyph_bounds` documentation, 
-  describe how they relates to drawing and each other.
+  describe how they relate to drawing and each other.
 
 # 0.2.27
 * Add `Font` glyph layout concept documentation demonstrating "ascent", "descent", "h_side_bearing", 
