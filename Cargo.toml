@@ -1,3 +1,6 @@
 [workspace]
 members = ["rasterizer", "glyph", "dev"]
 resolver = "2"
+
+[profile.bench]
+lto = "thin"
