@@ -1,4 +1,4 @@
-use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
+use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline, OutlineBuilder, Rect};
 use alloc::sync::Arc;
 use core::fmt;
 
@@ -149,6 +149,11 @@ impl Font for FontArc {
     #[inline]
     fn font_data(&self) -> &[u8] {
         self.0.font_data()
+    }
+
+    #[inline]
+    fn build_outline(&self, glyph_id: GlyphId, builder: &mut dyn OutlineBuilder) -> Option<Rect> {
+        self.0.build_outline(glyph_id, builder)
     }
 }
 

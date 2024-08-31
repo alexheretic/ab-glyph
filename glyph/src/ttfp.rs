@@ -357,6 +357,33 @@ macro_rules! impl_font {
             fn font_data(&self) -> &[u8] {
                 self.0.as_face_ref().raw_face().data
             }
+
+            #[inline]
+            fn build_outline(
+                &self,
+                glyph_id: GlyphId,
+                builder: &mut dyn crate::OutlineBuilder,
+            ) -> Option<Rect> {
+                let ttfp::Rect {
+                    x_min,
+                    x_max,
+                    y_min,
+                    y_max,
+                } = self
+                    .0
+                    .as_face_ref()
+                    .outline_glyph(
+                        glyph_id.into(),
+                        &mut outliner::CompatOutlineBuilder(builder),
+                    )
+                    // invalid bounds are treated as having no outline
+                    .filter(|b| b.x_min < b.x_max && b.y_min < b.y_max)?;
+
+                Some(Rect {
+                    min: point(x_min.into(), y_max.into()),
+                    max: point(x_max.into(), y_min.into()),
+                })
+            }
         }
     };
 }

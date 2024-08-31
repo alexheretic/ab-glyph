@@ -1,6 +1,6 @@
 use crate::{
-    point, v2, Glyph, GlyphId, GlyphSvg, Outline, OutlinedGlyph, PxScale, PxScaleFont, Rect,
-    ScaleFont,
+    point, v2, Glyph, GlyphId, GlyphSvg, Outline, OutlineBuilder, OutlinedGlyph, PxScale,
+    PxScaleFont, Rect, ScaleFont,
 };
 
 /// Functionality required from font data.
@@ -293,8 +293,19 @@ pub trait Font {
     /// ```
     ///
     /// [`FontArc::try_from_slice`]: crate::FontArc::try_from_slice
-    #[inline]
     fn font_data(&self) -> &[u8] {
+        // panic impl prevents this method from breaking external Font impls
+        unimplemented!()
+    }
+
+    /// Outlines a glyph via a [`OutlineBuilder`] and returns its tight bounding box.
+    ///
+    /// This fn facilitates more custom usage. For general use also see
+    /// [`Font::outline_glyph`], [`Font::outline`].
+    ///
+    /// Returns `None` when glyph has no outline or on error.
+    fn build_outline(&self, glyph_id: GlyphId, builder: &mut dyn OutlineBuilder) -> Option<Rect> {
+        _ = (glyph_id, builder);
         // panic impl prevents this method from breaking external Font impls
         unimplemented!()
     }
@@ -379,5 +390,10 @@ impl<F: Font> Font for &F {
     #[inline]
     fn font_data(&self) -> &[u8] {
         (*self).font_data()
+    }
+
+    #[inline]
+    fn build_outline(&self, glyph_id: GlyphId, builder: &mut dyn OutlineBuilder) -> Option<Rect> {
+        (*self).build_outline(glyph_id, builder)
     }
 }

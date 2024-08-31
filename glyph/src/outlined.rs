@@ -189,3 +189,25 @@ impl Rect {
         self.max.y - self.min.y
     }
 }
+
+/// A trait for custom glyph outline construction.
+pub trait OutlineBuilder {
+    /// Appends a MoveTo segment.
+    ///
+    /// Start of a contour.
+    fn move_to(&mut self, p: Point);
+
+    /// Appends a LineTo segment.
+    fn line_to(&mut self, p: Point);
+
+    /// Appends a QuadTo segment.
+    fn quad_to(&mut self, a: Point, b: Point);
+
+    /// Appends a CurveTo segment.
+    fn curve_to(&mut self, a: Point, b: Point, c: Point);
+
+    /// Appends a ClosePath segment.
+    ///
+    /// End of a contour.
+    fn close(&mut self);
+}

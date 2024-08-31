@@ -1,3 +1,7 @@
+# Unreleased (0.2.29)
+* Add `Font::build_outline` & trait `OutlineBuilder` to provide ttf-parser like custom outline 
+  building logic.
+
 # 0.2.28
 * Update _ttf-parser_ to `0.24`.
 * Clarify `OutlinedGlyph::px_bounds`, `Font::glyph_bounds` documentation, 
