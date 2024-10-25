@@ -42,6 +42,12 @@ impl fmt::Debug for FontRef<'_> {
 }
 
 impl<'font> FontRef<'font> {
+    /// Creates a `FontRef` directly from an [`owned_ttf_parser::Face`].
+    #[inline]
+    pub fn from_face(face: ttfp::Face<'font>) -> Self {
+        Self(ttfp::PreParsedSubtables::from(face))
+    }
+
     /// Creates an `FontRef` from a byte-slice.
     ///
     /// For font collections see
@@ -74,9 +80,7 @@ impl<'font> FontRef<'font> {
     /// ```
     #[inline]
     pub fn try_from_slice_and_index(data: &'font [u8], index: u32) -> Result<Self, InvalidFont> {
-        Ok(Self(ttfp::PreParsedSubtables::from(
-            ttfp::Face::parse(data, index).map_err(|_| InvalidFont)?,
-        )))
+        Ok(Self::from_face(ttfp::Face::parse(data, index).map_err(|_| InvalidFont)?))
     }
 }
 
