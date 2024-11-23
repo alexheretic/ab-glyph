@@ -104,6 +104,12 @@ impl fmt::Debug for FontVec {
     }
 }
 
+impl Clone for FontVec {
+    fn clone(&self) -> Self {
+        Self::try_from_vec(self.as_slice().to_vec()).unwrap()
+    }
+}
+
 impl FontVec {
     /// Creates an `FontVec` from owned data.
     ///
