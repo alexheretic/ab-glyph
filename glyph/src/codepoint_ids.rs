@@ -6,7 +6,7 @@ pub struct CodepointIdIter<'a> {
     pub(crate) inner: Box<dyn Iterator<Item = (GlyphId, char)> + 'a>,
 }
 
-impl<'a> Iterator for CodepointIdIter<'a> {
+impl Iterator for CodepointIdIter<'_> {
     type Item = (GlyphId, char);
 
     #[inline]
