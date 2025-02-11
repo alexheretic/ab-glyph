@@ -20,7 +20,7 @@ impl Outline {
     pub fn px_bounds(&self, scale_factor: PxScaleFactor, position: Point) -> Rect {
         let Rect { min, max } = self.bounds;
 
-        // Use subpixel fraction in floor/ceil rounding to elimate rounding error
+        // Use subpixel fraction in floor/ceil rounding to eliminate rounding error
         // from identical subpixel positions
         let (x_trunc, x_fract) = (position.x.trunc(), position.x.fract());
         let (y_trunc, y_fract) = (position.y.trunc(), position.y.fract());
@@ -102,7 +102,7 @@ impl OutlinedGlyph {
     /// The callback will be called for each `(x, y)` pixel coordinate inside the bounds
     /// with a coverage value indicating how much the glyph covered that pixel.
     ///
-    /// A coverage value of `0.0` means the pixel is totally uncoverred by the glyph.
+    /// A coverage value of `0.0` means the pixel is totally uncovered by the glyph.
     /// A value of `1.0` or greater means fully covered.
     pub fn draw<O: FnMut(u32, u32, f32)>(&self, o: O) {
         use ab_glyph_rasterizer::Rasterizer;
