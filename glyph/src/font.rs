@@ -100,6 +100,9 @@ pub trait Font {
     /// Scaling can be done with [`as_scaled`](Self::as_scaled).
     fn line_gap_unscaled(&self) -> f32;
 
+    /// The slant angle of the font.
+    fn italic_angle(&self) -> f32;
+
     /// Lookup a `GlyphId` matching a given `char`.
     ///
     /// Scaling can be done with [`as_scaled`](Self::as_scaled).
@@ -319,6 +322,11 @@ impl<F: Font> Font for &F {
     #[inline]
     fn line_gap_unscaled(&self) -> f32 {
         (*self).line_gap_unscaled()
+    }
+
+    #[inline]
+    fn italic_angle(&self) -> f32 {
+        (*self).italic_angle()
     }
 
     #[inline]
