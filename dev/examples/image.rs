@@ -11,7 +11,7 @@ fn main() {
         let font_path = std::env::current_dir().unwrap().join(font_path);
         let data = std::fs::read(&font_path).unwrap();
         let font = FontVec::try_from_vec(data).unwrap_or_else(|_| {
-            panic!("error constructing a Font from data at {:?}", font_path);
+            panic!("error constructing a Font from data at {font_path:?}");
         });
         if let Some(name) = font_path.file_name().and_then(|n| n.to_str()) {
             eprintln!("Using font: {name}");

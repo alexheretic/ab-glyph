@@ -3,6 +3,7 @@ pub(crate) trait FloatExt {
     fn floor(self) -> Self;
     fn ceil(self) -> Self;
     fn sqrt(self) -> Self;
+    #[allow(dead_code)] // available in core since rust 1.84
     fn abs(self) -> Self;
 }
 
