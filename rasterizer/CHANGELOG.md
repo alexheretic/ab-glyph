@@ -1,5 +1,5 @@
 # Unreleased (0.1.9)
-* Use edition 2021.
+* Fix `draw_line_scalar` index oob panic scenario (2).
 
 # 0.1.8
 * Do SIMD runtime detection only once on the first `Rasterizer::new` instead of on each.
@@ -18,7 +18,7 @@
 * Add `Rasterizer::reset`, `Rasterizer::clear` methods to allow allocation reuse.
 
 # 0.1.3
-* Fix index oob panic scenario.
+* Fix `draw_line_scalar` index oob panic scenario.
 
 # 0.1.2
 * For `Point` implement `Sub`, `Add`, `SubAssign`, `AddAssign`, `PartialEq`, `PartialOrd`, `From<(x, y)>`,
