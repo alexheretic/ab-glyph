@@ -131,7 +131,7 @@ impl Rasterizer {
             if x1i <= x0i + 1 {
                 let xmf = 0.5 * (x + xnext) - x0floor;
                 let linestart_x0i = linestart as isize + x0i as isize;
-                if linestart_x0i < 0 {
+                if linestart_x0i < 0 || linestart_x0i as usize + 1 >= self.a.len() {
                     continue; // oob index
                 }
                 self.a[linestart_x0i as usize] += d - d * xmf;
@@ -143,7 +143,7 @@ impl Rasterizer {
                 let x1f = x1 - x1ceil + 1.0;
                 let am = 0.5 * s * x1f * x1f;
                 let linestart_x0i = linestart as isize + x0i as isize;
-                if linestart_x0i < 0 {
+                if linestart_x0i < 0 || linestart_x0i as usize + 1 >= self.a.len() {
                     continue; // oob index
                 }
                 self.a[linestart_x0i as usize] += d * a0;
