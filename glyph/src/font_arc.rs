@@ -92,6 +92,11 @@ impl Font for FontArc {
     }
 
     #[inline]
+    fn italic_angle(&self) -> f32 {
+        self.0.italic_angle()
+    }
+
+    #[inline]
     fn glyph_id(&self, c: char) -> GlyphId {
         self.0.glyph_id(c)
     }

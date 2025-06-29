@@ -204,6 +204,11 @@ macro_rules! impl_font {
             }
 
             #[inline]
+            fn italic_angle(&self) -> f32 {
+                self.0.as_face_ref().italic_angle()
+            }
+
+            #[inline]
             fn glyph_id(&self, c: char) -> GlyphId {
                 // Note: Using `PreParsedSubtables` method for better performance.
                 let index = self.0.glyph_index(c).map(|id| id.0).unwrap_or(0);
