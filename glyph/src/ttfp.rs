@@ -205,7 +205,7 @@ macro_rules! impl_font {
 
             #[inline]
             fn italic_angle(&self) -> f32 {
-                self.0.as_face_ref().italic_angle().into()
+                self.0.as_face_ref().italic_angle()
             }
 
             #[inline]

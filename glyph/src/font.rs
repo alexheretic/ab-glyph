@@ -101,7 +101,26 @@ pub trait Font {
     fn line_gap_unscaled(&self) -> f32;
 
     /// The slant angle of the font.
-    fn italic_angle(&self) -> f32;
+    ///
+    /// Returns `0.0` if no angle or this info is not provided.
+    ///
+    /// # Example
+    /// ```
+    /// # use ab_glyph::{Font, FontRef};
+    /// # fn main() -> Result<(), ab_glyph::InvalidFont> {
+    /// let italic_font =
+    ///     FontRef::try_from_slice(include_bytes!("../../dev/fonts/OpenSans-Italic.ttf"))?;
+    /// assert_eq!(italic_font.italic_angle(), -12.0);
+    ///
+    /// let other_font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
+    /// assert_eq!(other_font.italic_angle(), 0.0);
+    /// # Ok(()) }
+    /// ```
+    fn italic_angle(&self) -> f32 {
+        // Note: default impl prevents this method from breaking external
+        //       Font impls written before introduction
+        0.0
+    }
 
     /// Lookup a `GlyphId` matching a given `char`.
     ///
