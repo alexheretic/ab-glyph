@@ -1,3 +1,6 @@
+# 0.2.30
+* Add `Font::italic_angle` for accessing the slant angle.
+
 # 0.2.29
 * Update _ttf-parser_ to `0.25`.
 

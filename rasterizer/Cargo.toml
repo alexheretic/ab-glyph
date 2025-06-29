@@ -1,6 +1,6 @@
 [package]
 name = "ab_glyph_rasterizer"
-version = "0.1.8"
+version = "0.1.9"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2021"
 description = "Coverage rasterization for lines, quadratic & cubic beziers"
