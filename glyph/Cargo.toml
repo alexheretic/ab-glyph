@@ -19,9 +19,12 @@ libm = { version = "0.2.1", optional = true }
 # don't add any, instead use ./dev
 
 [features]
-default = ["std", "variable-fonts"]
+default = ["std", "variable-fonts", "gvar-alloc"]
 # Activates usage of std.
 std = ["owned_ttf_parser/default", "ab_glyph_rasterizer/default"]
 # Uses libm when not using std. This needs to be active in that case.
 libm = ["dep:libm", "ab_glyph_rasterizer/libm", "owned_ttf_parser/no-std-float"]
+# Enables `VariableFont` functionality.
 variable-fonts = ["owned_ttf_parser/variable-fonts"]
+# Enables full gvar table support.
+gvar-alloc = ["owned_ttf_parser/gvar-alloc"]

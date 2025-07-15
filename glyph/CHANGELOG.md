@@ -1,3 +1,7 @@
+# Unreleased (0.2.31)
+* Add "gvar-alloc" feature enabled by default (activates _ttf-parser_ "gvar-alloc" feature).
+  Provides full gvar table support.
+
 # 0.2.30
 * Add `Font::italic_angle` for accessing the slant angle.
 
