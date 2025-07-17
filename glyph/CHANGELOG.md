@@ -1,4 +1,4 @@
-# Unreleased (0.2.31)
+# 0.2.31
 * Add "gvar-alloc" feature enabled by default (activates _ttf-parser_ "gvar-alloc" feature).
   Provides full gvar table support.
 
