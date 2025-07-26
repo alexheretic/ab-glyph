@@ -9,7 +9,7 @@ publish = false
 ab_glyph_rasterizer = { path = "../rasterizer" }
 ab_glyph = { path = "../glyph" }
 image = { version = "0.25", default-features = false, features = ["png"] }
-criterion = "0.6"
+criterion = "0.7"
 blake2 = "0.10"
 approx = "0.5"
 
