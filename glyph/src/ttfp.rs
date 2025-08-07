@@ -324,7 +324,7 @@ macro_rules! impl_font {
                 crate::CodepointIdIter { inner }
             }
 
-            fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
+            fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage<'_>> {
                 use GlyphImageFormat::*;
 
                 let img = self.0.as_face_ref().glyph_raster_image(id.into(), size)?;
@@ -348,7 +348,7 @@ macro_rules! impl_font {
                 })
             }
 
-            fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
+            fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg<'_>> {
                 let img = self.0.as_face_ref().glyph_svg_image(id.into())?;
 
                 Some(GlyphSvg {

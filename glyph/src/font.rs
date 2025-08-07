@@ -204,7 +204,7 @@ pub trait Font {
         since = "0.2.22",
         note = "Deprecated in favor of `glyph_raster_image2`"
     )]
-    fn glyph_raster_image(&self, id: GlyphId, pixel_size: u16) -> Option<crate::GlyphImage> {
+    fn glyph_raster_image(&self, id: GlyphId, pixel_size: u16) -> Option<crate::GlyphImage<'_>> {
         self.glyph_raster_image2(id, pixel_size)
             .map(|i| crate::GlyphImage {
                 origin: i.origin,
@@ -221,14 +221,14 @@ pub trait Font {
     /// used to select between multiple possible images (if present); the returned image will
     /// likely not match this value, requiring you to scale it to match the target resolution.
     /// To get the largest image use `u16::MAX`.
-    fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<v2::GlyphImage>;
+    fn glyph_raster_image2(&self, id: GlyphId, pixel_size: u16) -> Option<v2::GlyphImage<'_>>;
 
     /// Returns raw SVG data of a range of glyphs which includes this one.
     ///
     /// Some fonts define their images as SVG rather than a raster format. SVG data here is raw and
     /// should be rendered and/or decompressed by the caller, and scaled appropriately. The SVG file
     /// might include a series of glyphs as nodes.
-    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
+    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg<'_>> {
         _ = id;
         None // Avoid breaking external Font impls.
     }
@@ -394,12 +394,12 @@ impl<F: Font> Font for &F {
     }
 
     #[inline]
-    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage> {
+    fn glyph_raster_image2(&self, id: GlyphId, size: u16) -> Option<v2::GlyphImage<'_>> {
         (*self).glyph_raster_image2(id, size)
     }
 
     #[inline]
-    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg> {
+    fn glyph_svg_image(&self, id: GlyphId) -> Option<GlyphSvg<'_>> {
         (*self).glyph_svg_image(id)
     }
 
