@@ -104,6 +104,16 @@ impl Rasterizer {
 
     #[inline(always)] // must inline for simd versions
     fn draw_line_scalar(&mut self, p0: Point, p1: Point) {
+        /// Does `self.a[$lhs] += $rhs` except if $lhs is oob `continue` instead of panic.
+        macro_rules! add_assign_a_idx {
+            ($lhs:expr, $rhs:expr) => {
+                match self.a.get_mut($lhs) {
+                    Some(v) => *v += $rhs,
+                    None => continue,
+                };
+            };
+        }
+
         if (p0.y - p1.y).abs() <= f32::EPSILON {
             return;
         }
@@ -128,37 +138,33 @@ impl Rasterizer {
             let x0i = x0floor as i32;
             let x1ceil = x1.ceil();
             let x1i = x1ceil as i32;
+            let linestart_x0i = linestart as isize + x0i as isize;
+            if linestart_x0i < 0 {
+                continue;
+            }
             if x1i <= x0i + 1 {
                 let xmf = 0.5 * (x + xnext) - x0floor;
-                let linestart_x0i = linestart as isize + x0i as isize;
-                if linestart_x0i < 0 || linestart_x0i as usize + 1 >= self.a.len() {
-                    continue; // oob index
-                }
-                self.a[linestart_x0i as usize] += d - d * xmf;
-                self.a[linestart_x0i as usize + 1] += d * xmf;
+                add_assign_a_idx!(linestart_x0i as usize, d - d * xmf);
+                add_assign_a_idx!(linestart_x0i as usize + 1, d * xmf);
             } else {
                 let s = (x1 - x0).recip();
                 let x0f = x0 - x0floor;
                 let a0 = 0.5 * s * (1.0 - x0f) * (1.0 - x0f);
                 let x1f = x1 - x1ceil + 1.0;
                 let am = 0.5 * s * x1f * x1f;
-                let linestart_x0i = linestart as isize + x0i as isize;
-                if linestart_x0i < 0 || linestart_x0i as usize + 1 >= self.a.len() {
-                    continue; // oob index
-                }
-                self.a[linestart_x0i as usize] += d * a0;
+                add_assign_a_idx!(linestart_x0i as usize, d * a0);
                 if x1i == x0i + 2 {
-                    self.a[linestart_x0i as usize + 1] += d * (1.0 - a0 - am);
+                    add_assign_a_idx!(linestart_x0i as usize + 1, d * (1.0 - a0 - am));
                 } else {
                     let a1 = s * (1.5 - x0f);
-                    self.a[linestart_x0i as usize + 1] += d * (a1 - a0);
+                    add_assign_a_idx!(linestart_x0i as usize + 1, d * (a1 - a0));
                     for xi in x0i + 2..x1i - 1 {
-                        self.a[linestart + xi as usize] += d * s;
+                        add_assign_a_idx!(linestart + xi as usize, d * s);
                     }
                     let a2 = a1 + (x1i - x0i - 3) as f32 * s;
-                    self.a[linestart + (x1i - 1) as usize] += d * (1.0 - a2 - am);
+                    add_assign_a_idx!(linestart + (x1i - 1) as usize, d * (1.0 - a2 - am));
                 }
-                self.a[linestart + x1i as usize] += d * am;
+                add_assign_a_idx!(linestart + x1i as usize, d * am);
             }
             x = xnext;
         }
