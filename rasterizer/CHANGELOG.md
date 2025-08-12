@@ -1,4 +1,4 @@
-# Unreleased (0.1.10)
+# 0.1.10
 * Fix remaining `draw_line_scalar` index oob panic scenarios (3).
 
 # 0.1.9
