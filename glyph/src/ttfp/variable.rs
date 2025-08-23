@@ -1,4 +1,4 @@
-use crate::{FontRef, FontVec, VariableFont, VariationAxis};
+use crate::{ttfp::{FontRef, FontVec}, VariableFont, VariationAxis};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 use owned_ttf_parser::{self as ttfp, AsFaceRef, FaceMut};
