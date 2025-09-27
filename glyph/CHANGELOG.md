@@ -1,3 +1,6 @@
+# Unreleased (0.2.32)
+* Add `FontArc` support for no_std targets with cfg(target_has_atomic = "ptr").
+
 # 0.2.31
 * Add "gvar-alloc" feature enabled by default (activates _ttf-parser_ "gvar-alloc" feature).
   Provides full gvar table support.

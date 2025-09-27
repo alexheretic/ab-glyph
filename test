@@ -11,6 +11,8 @@ cargo test --benches
 echo "==> no_std"
 cargo build -p ab_glyph_rasterizer --target thumbv6m-none-eabi --no-default-features --features libm
 cargo build -p ab_glyph --target thumbv6m-none-eabi --no-default-features --features libm
+cargo build -p ab_glyph_rasterizer --no-default-features --features libm
+cargo build -p ab_glyph --no-default-features --features libm
 echo "==> no_std (variable-fonts)"
 cargo build -p ab_glyph --target thumbv6m-none-eabi --no-default-features --features "libm variable-fonts"
 echo "==> check wasm32"

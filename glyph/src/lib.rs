@@ -26,7 +26,7 @@ extern crate alloc;
 mod codepoint_ids;
 mod err;
 mod font;
-#[cfg(feature = "std")]
+#[cfg(target_has_atomic = "ptr")]
 mod font_arc;
 mod glyph;
 #[cfg(all(feature = "libm", not(feature = "std")))]
@@ -37,7 +37,7 @@ mod ttfp;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
-#[cfg(feature = "std")]
+#[cfg(target_has_atomic = "ptr")]
 pub use crate::font_arc::*;
 #[allow(deprecated)]
 pub use crate::{
