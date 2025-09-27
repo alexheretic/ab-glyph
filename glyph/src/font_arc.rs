@@ -1,5 +1,7 @@
 use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
 use alloc::sync::Arc;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 use core::fmt;
 
 /// `Font` implementor that wraps another concrete `Font + 'static` type storing in an `Arc`.
