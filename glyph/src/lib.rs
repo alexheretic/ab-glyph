@@ -32,8 +32,10 @@ mod glyph;
 #[cfg(all(feature = "libm", not(feature = "std")))]
 mod nostd_float;
 mod outlined;
+mod outliner;
 mod scale;
 mod ttfp;
+mod skrifa;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
@@ -47,7 +49,7 @@ pub use crate::{
     glyph::*,
     outlined::*,
     scale::*,
-    ttfp::{FontRef, FontVec},
+    skrifa::{FontRef, FontVec},
 };
 pub use ab_glyph_rasterizer::{point, Point};
 #[cfg(feature = "variable-fonts")]
