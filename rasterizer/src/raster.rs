@@ -62,7 +62,7 @@ impl Rasterizer {
     pub fn reset(&mut self, width: usize, height: usize) {
         self.width = width;
         self.height = height;
-        self.a.truncate(0);
+        self.a.clear();
         self.a.resize(width * height + 4, 0.0);
     }
 
