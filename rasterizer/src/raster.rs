@@ -75,9 +75,7 @@ impl Rasterizer {
     /// rasterizer.clear();
     /// ```
     pub fn clear(&mut self) {
-        for px in &mut self.a {
-            *px = 0.0;
-        }
+        self.a.fill(0.0);
     }
 
     /// Returns the dimensions the rasterizer was built to draw to.
