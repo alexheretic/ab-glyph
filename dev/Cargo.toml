@@ -6,12 +6,12 @@ edition = "2021"
 publish = false
 
 [dependencies]
-ab_glyph_rasterizer = { path = "../rasterizer" }
 ab_glyph = { path = "../glyph" }
-image = { version = "0.25", default-features = false, features = ["png"] }
-criterion = "0.8"
-blake2 = "0.10"
+ab_glyph_rasterizer = { path = "../rasterizer" }
 approx = "0.5"
+blake3 = "1.8.7"
+criterion = "0.8"
+image = { version = "0.25", default-features = false, features = ["png"] }
 
 [[bench]]
 name = "rasterize"

@@ -1,5 +1,4 @@
 use ab_glyph::*;
-use blake2::{Blake2s256, Digest};
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::io::Write;
 
@@ -29,7 +28,7 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s256::default();
+        let mut hash = blake3::Hasher::default();
         for g in glyphs {
             write!(
                 hash,
@@ -43,8 +42,8 @@ fn bench_layout_a_sentence(c: &mut Criterion) {
             .unwrap();
         }
         assert_eq!(
-            format!("{:x}", hash.finalize()),
-            "e3ae01bfc47bcbfe9a2a060ef651cf466798410c60652540d467d5332a8fe028"
+            &hash.finalize().to_hex(),
+            "5cb606ab8ca8e4fba94e7341097f4096242246d704177bdd50965727f8942e7e"
         );
     });
 }
@@ -66,7 +65,7 @@ fn bench_layout_a_sentence_vec(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s256::default();
+        let mut hash = blake3::Hasher::default();
         for g in glyphs {
             write!(
                 hash,
@@ -80,8 +79,8 @@ fn bench_layout_a_sentence_vec(c: &mut Criterion) {
             .unwrap();
         }
         assert_eq!(
-            format!("{:x}", hash.finalize()),
-            "e3ae01bfc47bcbfe9a2a060ef651cf466798410c60652540d467d5332a8fe028"
+            &hash.finalize().to_hex(),
+            "5cb606ab8ca8e4fba94e7341097f4096242246d704177bdd50965727f8942e7e"
         );
     });
 }
@@ -103,7 +102,7 @@ fn bench_layout_a_sentence_arc_slice(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s256::default();
+        let mut hash = blake3::Hasher::default();
         for g in glyphs {
             write!(
                 hash,
@@ -117,8 +116,8 @@ fn bench_layout_a_sentence_arc_slice(c: &mut Criterion) {
             .unwrap();
         }
         assert_eq!(
-            format!("{:x}", hash.finalize()),
-            "e3ae01bfc47bcbfe9a2a060ef651cf466798410c60652540d467d5332a8fe028"
+            &hash.finalize().to_hex(),
+            "5cb606ab8ca8e4fba94e7341097f4096242246d704177bdd50965727f8942e7e"
         );
     });
 }
@@ -140,7 +139,7 @@ fn bench_layout_a_sentence_otf(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s256::default();
+        let mut hash = blake3::Hasher::default();
         for g in glyphs {
             write!(
                 hash,
@@ -154,8 +153,8 @@ fn bench_layout_a_sentence_otf(c: &mut Criterion) {
             .unwrap();
         }
         assert_eq!(
-            format!("{:x}", hash.finalize()),
-            "5c19fee8e6440b3e6fb1c7d0b2a5b3d2354f2f7ccbc2ff4b53ba96cd4e6e37ba"
+            &hash.finalize().to_hex(),
+            "82576327518d3d92c76cc7038eed47dbe8e2edf6bc024ae8b3fa22c191505379"
         );
     });
 }
@@ -177,7 +176,7 @@ fn bench_layout_a_sentence_ttf(c: &mut Criterion) {
         });
 
         // verify the layout result against static reference hash
-        let mut hash = Blake2s256::default();
+        let mut hash = blake3::Hasher::default();
         for g in glyphs {
             write!(
                 hash,
@@ -191,8 +190,8 @@ fn bench_layout_a_sentence_ttf(c: &mut Criterion) {
             .unwrap();
         }
         assert_eq!(
-            format!("{:x}", hash.finalize()),
-            "5c19fee8e6440b3e6fb1c7d0b2a5b3d2354f2f7ccbc2ff4b53ba96cd4e6e37ba"
+            &hash.finalize().to_hex(),
+            "82576327518d3d92c76cc7038eed47dbe8e2edf6bc024ae8b3fa22c191505379"
         );
     });
 }
