@@ -261,7 +261,7 @@ macro_rules! impl_font {
             }
 
             fn outline(&self, id: GlyphId) -> Option<Outline> {
-                let mut outliner = outliner::OutlineCurveBuilder::default();
+                let mut outliner = outliner::TtfpCurveBuilder::default();
 
                 let ttfp::Rect {
                     x_min,
@@ -275,7 +275,7 @@ macro_rules! impl_font {
                     // invalid bounds are treated as having no outline
                     .filter(|b| b.x_min < b.x_max && b.y_min < b.y_max)?;
 
-                let curves = outliner.take_outline();
+                let curves = outliner.0.take_outline();
 
                 let bounds = Rect {
                     min: point(x_min.into(), y_max.into()),
