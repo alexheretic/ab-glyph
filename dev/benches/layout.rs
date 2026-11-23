@@ -1,13 +1,12 @@
 use ab_glyph::*;
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use std::io::Write;
 
 const OPENS_SANS_ITALIC: &[u8] = include_bytes!("../fonts/OpenSans-Italic.ttf");
 const EXO2_TTF: &[u8] = include_bytes!("../fonts/Exo2-Light.ttf");
 const EXO2_OTF: &[u8] = include_bytes!("../fonts/Exo2-Light.otf");
 
-const SENTENCE: &str =
-    "a set of words that is complete in itself, typically containing a subject and predicate, \
+const SENTENCE: &str = "a set of words that is complete in itself, typically containing a subject and predicate, \
      conveying a statement, question, exclamation, or command, and consisting of a main \
      clause and sometimes one or more subordinate clauses.";
 

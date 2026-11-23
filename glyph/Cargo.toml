@@ -2,7 +2,7 @@
 name = "ab_glyph"
 version = "0.2.32"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
-edition = "2021"
+edition = "2024"
 description = "API for loading, scaling, positioning and rasterizing OpenType font glyphs."
 repository = "https://github.com/alexheretic/ab-glyph"
 keywords = ["text", "ttf", "truetype", "otf", "opentype"]

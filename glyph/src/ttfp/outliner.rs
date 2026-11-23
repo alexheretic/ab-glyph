@@ -1,4 +1,4 @@
-use crate::{point, OutlineCurve, Point};
+use crate::{OutlineCurve, Point, point};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 

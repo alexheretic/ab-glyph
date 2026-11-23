@@ -1,4 +1,4 @@
-use crate::{v2, Font, FontRef, FontVec, GlyphId, InvalidFont, Outline};
+use crate::{Font, FontRef, FontVec, GlyphId, InvalidFont, Outline, v2};
 use alloc::sync::Arc;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;

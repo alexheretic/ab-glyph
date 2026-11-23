@@ -2,12 +2,14 @@
 name = "dev"
 version = "0.1.0"
 description = "Tests, examples & benchmarks avoiding dependency feature bleed"
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
 ab_glyph = { path = "../glyph" }
 ab_glyph_rasterizer = { path = "../rasterizer" }
+
+[dev-dependencies]
 approx = "0.5"
 blake3 = "1.8.7"
 criterion = "0.8"

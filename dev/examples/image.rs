@@ -1,7 +1,7 @@
 //! Draws text into `image_example.png`.
 //!
 //! Use a custom font file: `cargo run --example image /path/to/font.otf`
-use ab_glyph::{point, Font, FontRef, FontVec, PxScale};
+use ab_glyph::{Font, FontRef, FontVec, PxScale, point};
 use image::{DynamicImage, Rgba};
 
 const TEXT: &str = "This is ab_glyph rendered into a png!";

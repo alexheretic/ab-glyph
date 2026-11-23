@@ -21,7 +21,7 @@ use crate::nostd_float::FloatExt;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 
-use crate::geometry::{lerp, Point};
+use crate::geometry::{Point, lerp};
 
 type DrawLineFn = unsafe fn(&mut Rasterizer, Point, Point);
 

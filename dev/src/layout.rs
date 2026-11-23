@@ -1,4 +1,4 @@
-use ab_glyph::{point, Font, Glyph, Point, ScaleFont};
+use ab_glyph::{Font, Glyph, Point, ScaleFont, point};
 
 /// Simple paragraph layout for glyphs into `target`.
 /// Starts at position `(0, ascent)`.

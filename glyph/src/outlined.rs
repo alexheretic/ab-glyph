@@ -1,6 +1,6 @@
 #[cfg(all(feature = "libm", not(feature = "std")))]
 use crate::nostd_float::FloatExt;
-use crate::{point, Glyph, Point, PxScaleFactor};
+use crate::{Glyph, Point, PxScaleFactor, point};
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;
 

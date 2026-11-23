@@ -1,8 +1,7 @@
-use std::time::Duration;
-
 use ab_glyph::*;
 use approx::assert_relative_eq;
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
+use std::time::Duration;
 
 const OPENS_SANS_ITALIC: &[u8] = include_bytes!("../fonts/OpenSans-Italic.ttf");
 

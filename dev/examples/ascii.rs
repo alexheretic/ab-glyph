@@ -1,5 +1,5 @@
 //! Render example where each glyph pixel is output as an ascii character.
-use ab_glyph::{point, Font, FontRef, FontVec, PxScale, ScaleFont};
+use ab_glyph::{Font, FontRef, FontVec, PxScale, ScaleFont, point};
 use std::io::Write;
 
 const TEXT: &str = "ab_glyph";
