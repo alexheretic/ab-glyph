@@ -2,9 +2,9 @@ name: Rust
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -12,24 +12,24 @@ jobs:
     env:
       RUST_BACKTRACE: 1
     steps:
-    - run: rustup update stable
-    - run: rustup target add thumbv6m-none-eabi
-    - run: rustup target add wasm32-unknown-unknown
-    - uses: actions/checkout@v6
-    - run: cargo test
-    - run: cargo test --benches
-    - name: Build no_std ab_glyph_rasterizer
-      run: cargo build -p ab_glyph_rasterizer --target thumbv6m-none-eabi --no-default-features --features libm
-    - name: Build no_std ab_glyph
-      run: cargo build -p ab_glyph --target thumbv6m-none-eabi --no-default-features --features libm
-    - name: Build wasm32 ab_glyph_rasterizer
-      run: cargo build -p ab_glyph_rasterizer --target wasm32-unknown-unknown
-    - name: Build wasm32 ab_glyph
-      run: cargo build -p ab_glyph --target wasm32-unknown-unknown
+      - run: rustup update stable
+      - run: rustup target add thumbv6m-none-eabi
+      - run: rustup target add wasm32-unknown-unknown
+      - uses: actions/checkout@v7
+      - run: cargo test
+      - run: cargo test --benches
+      - name: Build no_std ab_glyph_rasterizer
+        run: cargo build -p ab_glyph_rasterizer --target thumbv6m-none-eabi --no-default-features --features libm
+      - name: Build no_std ab_glyph
+        run: cargo build -p ab_glyph --target thumbv6m-none-eabi --no-default-features --features libm
+      - name: Build wasm32 ab_glyph_rasterizer
+        run: cargo build -p ab_glyph_rasterizer --target wasm32-unknown-unknown
+      - name: Build wasm32 ab_glyph
+        run: cargo build -p ab_glyph --target wasm32-unknown-unknown
 
   rustfmt:
     runs-on: ubuntu-latest
     steps:
-    - run: rustup update stable
-    - uses: actions/checkout@v6
-    - run: cargo fmt -- --check
+      - run: rustup update stable
+      - uses: actions/checkout@v7
+      - run: cargo fmt -- --check

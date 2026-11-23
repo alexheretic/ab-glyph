@@ -5,7 +5,7 @@ use crate::nostd_float::FloatExt;
 ///
 /// # Example
 /// ```
-/// use ab_glyph_rasterizer::{point, Point};
+/// use ab_glyph_rasterizer::{Point, point};
 /// let p: Point = point(0.1, 23.2);
 /// ```
 #[derive(Clone, Copy, Default, PartialEq, PartialOrd)]

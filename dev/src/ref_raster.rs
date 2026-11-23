@@ -1,5 +1,5 @@
 #![allow(clippy::unreadable_literal)]
-use ab_glyph_rasterizer::{point, Rasterizer};
+use ab_glyph_rasterizer::{Rasterizer, point};
 
 /// Draw a 16px 'w' character from DejaVuSansMono.ttf.
 pub fn rasterize_ttf_w() -> Rasterizer {

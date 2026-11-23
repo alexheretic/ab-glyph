@@ -3,7 +3,7 @@ mod outliner;
 #[cfg(feature = "variable-fonts")]
 mod variable;
 
-use crate::{point, v2, Font, GlyphId, GlyphImageFormat, GlyphSvg, InvalidFont, Outline, Rect};
+use crate::{Font, GlyphId, GlyphImageFormat, GlyphSvg, InvalidFont, Outline, Rect, point, v2};
 use alloc::boxed::Box;
 #[cfg(not(feature = "std"))]
 use alloc::vec::Vec;

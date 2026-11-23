@@ -1,12 +1,11 @@
 use ab_glyph::*;
 use approx::assert_relative_eq;
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 
 const EXO2_TTF: &[u8] = include_bytes!("../fonts/Exo2-Light.ttf");
 const EXO2_OTF: &[u8] = include_bytes!("../fonts/Exo2-Light.otf");
 
-const SENTENCE: &str =
-    "a set of words that is complete in itself, typically containing a subject and predicate, \
+const SENTENCE: &str = "a set of words that is complete in itself, typically containing a subject and predicate, \
      conveying a statement, question, exclamation, or command, and consisting of a main \
      clause and sometimes one or more subordinate clauses.";
 

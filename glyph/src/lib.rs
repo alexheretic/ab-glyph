@@ -2,7 +2,7 @@
 //!
 //! # Example
 //! ```
-//! use ab_glyph::{point, Font, FontRef, Glyph};
+//! use ab_glyph::{Font, FontRef, Glyph, point};
 //!
 //! # fn main() -> Result<(), ab_glyph::InvalidFont> {
 //! let font = FontRef::try_from_slice(include_bytes!("../../dev/fonts/Exo2-Light.otf"))?;
@@ -49,6 +49,6 @@ pub use crate::{
     scale::*,
     ttfp::{FontRef, FontVec},
 };
-pub use ab_glyph_rasterizer::{point, Point};
+pub use ab_glyph_rasterizer::{Point, point};
 #[cfg(feature = "variable-fonts")]
 pub use variable::*;

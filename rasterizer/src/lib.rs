@@ -32,5 +32,5 @@ compile_error!("You need to activate either the `std` or `libm` feature.");
 mod geometry;
 mod raster;
 
-pub use geometry::{point, Point};
+pub use geometry::{Point, point};
 pub use raster::Rasterizer;
